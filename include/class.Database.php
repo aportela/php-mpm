@@ -1,4 +1,5 @@
 <?php
+    namespace PHP_MPM;
 
 	require_once "configuration.php";
 
