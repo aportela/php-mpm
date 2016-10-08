@@ -19,8 +19,15 @@
 
     define("APP_ROOT_LOCAL_PATH", basename(__DIR__));
 
-    if (ENVIRONMENT_DEV && DEBUG) {
+    if (ENVIRONMENT_DEV) {
 		ini_set('display_errors', 'On');
+        ini_set('display_startup_errors', 'On');
+        ini_set('log_errors', 'On');
 		error_reporting(E_ALL);	
-	} 
+	} else {
+		ini_set('display_errors', 'Off');
+        ini_set('display_startup_errors', 'Off');
+        ini_set('log_errors', 'On');
+		error_reporting(E_ALL);	        
+    }
 ?>
