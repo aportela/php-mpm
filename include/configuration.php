@@ -1,4 +1,6 @@
 <?php
+    namespace PHP_MPM;
+
     define('VERSION', 0.1);
 
     define("ENVIRONMENT_DEV", true);

@@ -29,7 +29,7 @@
 		public function null(string $name) {
             $this->name = $name;
             $this->value = null;
-            $this->type = PDO::PARAM_NULL;
+            $this->type = \PDO::PARAM_NULL;
 		}
 
         /**
@@ -38,7 +38,7 @@
 		public function bool(string $name, bool $value) {
             $this->name = $name;
             $this->value = $value;
-            $this->type = PDO::PARAM_BOOL; 
+            $this->type = \PDO::PARAM_BOOL; 
 		}
 
         /**
@@ -47,7 +47,7 @@
 		public function int(string $name, int $value) {
             $this->name = $name;
             $this->value = $value;
-            $this->type = PDO::PARAM_INT;
+            $this->type = \PDO::PARAM_INT;
 		}
 
         /**
@@ -56,7 +56,7 @@
 		public function str(string $name, $value) {
             $this->name = $name;
             $this->value = $value;
-            $this->type = PDO::PARAM_STR;
+            $this->type = \PDO::PARAM_STR;
 		}
 	}
 
@@ -72,7 +72,7 @@
 			$dbh = null;
 			$stmt = null;
 			try {
-				$dbh = new PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 				$stmt = $dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
@@ -90,7 +90,7 @@
 		public static function execWithResult($sql, $params = array()): array {
 			$rows = array();
 			try {
-				$dbh = new PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+				$dbh = new PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 				$stmt = $dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
