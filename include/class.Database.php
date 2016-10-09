@@ -91,7 +91,7 @@
 		public static function execWithResult($sql, $params = array()): array {
 			$rows = array();
 			try {
-				$dbh = new PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
+				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 				$stmt = $dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
