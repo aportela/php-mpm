@@ -14,6 +14,7 @@
     require_once "../../include/configuration.php";
     require_once "../../include/class.User.php";
     require_once "../../include/class.CustomExceptions.php";
+    require_once "../../include/class.Error.php";
 
     ob_start();    
     $result = array("success" => false);
