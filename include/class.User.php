@@ -70,7 +70,7 @@
         *   get (by id/email) user data
         */
         private function get() {
-            if (empty($this->id) || empty($this->email)) {
+            if (empty($this->id) && empty($this->email)) {
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
