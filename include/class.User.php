@@ -134,5 +134,12 @@
         public static function isAuthenticatedAsAdmin(): bool {
             return(isset($_SESSION["user_type"]) && intval($_SESSION["user_type"]) == 1);
         }
+
+        /**
+        *   return session user id
+        */
+        public static function getSessionUserId(): bool {
+            return(isset($_SESSION["user_id"]) ? $_SESSION["user_id"]: null); 
+        }
     }
 ?>
