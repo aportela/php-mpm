@@ -7,9 +7,9 @@
     *   database (PDO) param wrapper class
     */
 	class DatabaseParam {
-		private $name;
-		private $value;
-		private $type;
+		public $name;
+		public $value;
+		public $type;
 
 		public function __construct () { }
 
