@@ -32,6 +32,12 @@
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
+    } catch (\PDOException $e) {
+        ob_clean();
+        header("HTTP/1.1 500 Internal Server Error", 500, true);        
+        if (ENVIRONMENT_DEV && DEBUG) {
+            $result["exception"] = print_r($e, true);
+        }    
     } catch (\Throwable $e) {
         ob_clean();
         header("HTTP/1.1 500 Internal Server Error", 500, true);        
