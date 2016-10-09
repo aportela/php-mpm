@@ -23,7 +23,8 @@
         $u->set(
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["email"]) ? $_POST["email"]: "", 
-            isset($_POST["password"]) ? $_POST["password"]: ""
+            isset($_POST["password"]) ? $_POST["password"]: "",
+            0
         );
         $u->add();
         $result["success"] = true;

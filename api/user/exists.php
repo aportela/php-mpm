@@ -18,7 +18,7 @@
     $result = array("success" => false, "exists" => false);
     try {
         $u = new User();         
-        $u->set("", isset($_POST["email"]) ? $_POST["email"]: "", "");
+        $u->set("", isset($_POST["email"]) ? $_POST["email"]: "", "", 0);
         $result["exists"] = $u->exists();
         ob_clean();
         if ($result["exists"]) {
