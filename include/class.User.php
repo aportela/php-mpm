@@ -41,7 +41,7 @@
         /**
         *   add new user
         */
-        public function add() {            
+        public function add() {
             if ($this->exists()) {
                 throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
@@ -64,6 +64,38 @@
                     Database::execWithoutResult(" INSERT INTO USER (id, email, password, created) VALUES (:id, :email, :password, CURRENT_TIMESTAMP) ", $params);
                 }
             }
+        }
+
+        /**
+        *   get (by id/email) user data
+        */
+        private function get() {
+            if (empty($this->id) || empty($this->email)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else {
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                $param->str(":email", $this->email);
+                $params[] = $param;                
+                $rows = Database::execWithResult(" SELECT id, email, password FROM USER WHERE id = :id OR email = :email ", $params);
+                if (count($rows) != 1) {
+                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                } else {
+                    $this->password = $rows[0]->password;
+                }                                                
+            }            
+        }
+
+        /**
+        *   sign in with specified password
+        */
+        public function login(): bool {
+            $userPassword = $this->password;
+            $this->get();
+            return(password_verify($userPassword, $this->password));
         }        
     }
 ?>
