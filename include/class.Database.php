@@ -100,7 +100,7 @@
 					}
 				}				
 				if ($stmt->execute()) {
-					while ($row = $stmt->fetch()) {
+					while ($row = $stmt->fetchObject()) {
 						$rows[] = $row;
 					}
 				}
