@@ -31,12 +31,14 @@
         *   check user (by email) existence
         */
         public function exists() {
-            if (empty($this->name)) {                
+            if (empty($this->id) && empty($this->name)) {                
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $param = new DatabaseParam();
+                $param->str(":id", $this->id);                
+                $param = new DatabaseParam();
                 $param->str(":name", $this->name);                
-                $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE name = :name ", array($param));
+                $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
                 return(count($rows) > 0);                
             }            
         }
@@ -72,12 +74,54 @@
                     $param = new DatabaseParam();
                     $param->str(":creator", User::getSessionUserId());
                     $params[] = $param;                
-                    $params[] = $param;
                     // TODO: transaction support
                     Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
                     if (count($this->users) > 0) {
                         foreach($users as $user) {
                             $this->addUser($user->id);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+        *   add new group
+        */
+        public function update() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                if (empty($this->id)) {
+                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                                    
+                } else {
+                    if (! $this->exists()) {    
+                        throw new MPMNotFoundException(print_r(get_object_vars($this), true));    
+                    } else {
+                        $params = array();
+                        $param = new DatabaseParam();
+                        $param->str(":id", $this->id);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        $param->str(":name", $this->name);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        if (! empty($this->description)) {
+                            $param->str(":description", $this->description);
+                        } else {
+                            $param->null(":description");
+                        }
+                        $params[] = $param;
+                        // TODO: transaction support
+                        Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
+                        // TODO: better check user diffs ¿?
+                        $this->removeAllUsers();
+                        if (count($this->users) > 0) {
+                            foreach($users as $user) {
+                                $this->addUser($user->id);
+                            }
                         }
                     }
                 }
