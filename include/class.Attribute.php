@@ -33,6 +33,20 @@
             $this->name = $name;
             $this->description = $description;
             $this->type = $type;            
-        }                
+        }
+
+        /**
+        *   search (list) groups
+        */
+        public static function search($page, $resultsPage) {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException("");
+            } else {
+                // TODO: pagination & filtering
+                // TODO: type is returned as string (not integer)
+                return(Database::execWithResult(" SELECT id, name, description, type FROM [ATTRIBUTE] ORDER BY name ", array()));
+            }
+        }
+        
     }
 ?>
