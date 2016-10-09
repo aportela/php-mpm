@@ -34,11 +34,14 @@
             if (empty($this->id) && empty($this->name)) {                
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
+                $params = array();
                 $param = new DatabaseParam();
-                $param->str(":id", $this->id);                
+                $param->str(":id", $this->id);
+                $params[] = $param;                
                 $param = new DatabaseParam();
-                $param->str(":name", $this->name);                
-                $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                $param->str(":name", $this->name);
+                $params[] = $param;                
+                $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -199,6 +202,40 @@
                 $params[] = $param;                                
                 Database::execWithoutResult(" DELETE FROM [GROUP] WHERE id = :id ", $params);
             }
+        }
+
+        /**
+        *   get group users
+        */
+        private function getUsers() {
+            $param = new DatabaseParam();
+            $param->str(":group_id", $this->id);                
+            return(Database::execWithResult(" SELECT GU.user_id AS id, U.email FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
+        }
+
+        /**
+        *   get group (metadata & users)
+        */
+        public function get() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {                
+                if (empty($this->id)) {                
+                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                } else {
+                    $param = new DatabaseParam();
+                    $param->str(":id", $this->id);                
+                    $rows = Database::execWithResult(" SELECT id, name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                    if (count($rows) != 1) {
+                        throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                    } else {
+                        $rows[0]["users"] = $this->getUsers();
+                        return($rows[0]);
+                    }
+                }
+            }                        
         }
     }
 ?>
