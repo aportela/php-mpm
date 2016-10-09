@@ -33,5 +33,17 @@
                 // we do not want to throw (again) on error 
             }
         }
+
+        /**
+        *   search (list) errors
+        */
+        public static function search($page, $resultsPage) {
+            if (false && ! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                // TODO: pagination & filtering
+                return(Database::execWithResult(" SELECT created, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));
+            }
+        }        
     }
 ?>
