@@ -95,7 +95,13 @@
         public function login(): bool {
             $userPassword = $this->password;
             $this->get();
-            return(password_verify($userPassword, $this->password));
-        }        
+            if (! password_verify($userPassword, $this->password)) {
+                return(false);
+            } else {
+                $_SESSION["user_id"] = $this->id;
+                $_SESSION["user_email"] = $this->email;
+                return(true);
+            }
+        }
     }
 ?>
