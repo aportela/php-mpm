@@ -77,8 +77,9 @@
             if (! file_exists(SQLITE_DATABASE_PATH)) {
                 if (! $errors) {
                     $queries = array(
-                        " CREATE TABLE [USER] ([id] VARCHAR(36)  UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254)  UNIQUE NOT NULL, [password] VARCHAR(255)  NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL)",
-                        " INSERT INTO USER (id, email, password) VALUES (\"a5a199c6-a89c-4504-8dd7-729e61551ef9\", \"admin@localhost\", \"" . password_hash("password", PASSWORD_BCRYPT, array("cost" => 12)) . "\")"
+                        " CREATE TABLE [USER] ([id] VARCHAR(36)  UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254)  UNIQUE NOT NULL, [password] VARCHAR(255)  NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL) ",
+                        " CREATE TABLE [ERROR] ([created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL PRIMARY KEY, [class] VARCHAR(64)  NOT NULL, [line] INTEGER  NOT NULL, [filename] VARCHAR(512)  NOT NULL, [code] INTEGER  NOT NULL, [trace] VARCHAR(16384) NOT NULL) ",
+                        " INSERT INTO USER (id, email, password) VALUES (\"00000000-0000-0000-0000-000000000000\", \"admin@localhost\", \"" . password_hash("password", PASSWORD_BCRYPT, array("cost" => 12)) . "\")"
                     );
                     $exception = null;                
                     try {
