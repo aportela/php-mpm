@@ -184,5 +184,18 @@
                 }                                                
             }
         }
+
+        /**
+        *   search (list) users
+        */
+        public static function search($page, $resultsPage) {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                // TODO: pagination & filtering
+                return(Database::execWithResult(" SELECT id, email, type FROM [USER] ORDER BY email ", array()));
+            }
+        }
+        
     }
 ?>
