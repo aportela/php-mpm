@@ -181,6 +181,7 @@
             if (! User::isAuthenticated()) {
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else {
+                // TODO: pagination & filtering
                 return(Database::execWithResult(" SELECT id, name, description FROM [GROUP] ORDER BY name ", array()));
             }
         }
