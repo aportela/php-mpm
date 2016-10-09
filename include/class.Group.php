@@ -86,7 +86,7 @@
         }
 
         /**
-        *   add new group
+        *   update group
         */
         public function update() {
             if (! User::isAuthenticated()) {
