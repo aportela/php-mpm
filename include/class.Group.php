@@ -227,12 +227,14 @@
                 } else {
                     $param = new DatabaseParam();
                     $param->str(":id", $this->id);                
-                    $rows = Database::execWithResult(" SELECT id, name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                    $rows = Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
                     if (count($rows) != 1) {
                         throw new MPMNotFoundException(print_r(get_object_vars($this), true));
                     } else {
-                        $rows[0]["users"] = $this->getUsers();
-                        return($rows[0]);
+                        $this->name = $rows[0]->name;
+                        $this->description = $rows[0]->description;
+                        $this->users = $this->getUsers();
+                        return(get_object_vars($this));
                     }
                 }
             }                        
