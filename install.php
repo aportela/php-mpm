@@ -77,16 +77,23 @@
             if (! file_exists(SQLITE_DATABASE_PATH)) {
                 if (! $errors) {
                     $queries = array(
-                        " CREATE TABLE [USER] ([id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254) UNIQUE NOT NULL, [password] VARCHAR(255) NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [type] BOOLEAN DEFAULT '0' NOT NULL); ",
+                        " CREATE TABLE [USER] ([id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254) UNIQUE NOT NULL, [password] VARCHAR(255) NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL, [type] BOOLEAN DEFAULT '0' NOT NULL); ",
                         " CREATE TABLE [GROUP] ([id] VARCHAR(36) NOT NULL PRIMARY KEY, [name] VARCHAR(32) UNIQUE NOT NULL, [description] VARCHAR(128) NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL); ",
                         " CREATE TABLE [GROUP_USER] ([group_id] VARCHAR(36) NOT NULL, [user_id] VARCHAR(36) NOT NULL, PRIMARY KEY([group_id], [user_id])); ",
                         " CREATE TABLE [ERROR] ([created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL PRIMARY KEY, [class] VARCHAR(64) NOT NULL, [line] INTEGER NOT NULL, [filename] VARCHAR(512)  NOT NULL, [code] INTEGER  NOT NULL, [trace] VARCHAR(16384) NOT NULL); ",
                         " CREATE TABLE [RECOVER_ACCOUNT] ([created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL PRIMARY KEY, [class] VARCHAR(64) NOT NULL, [line] INTEGER NOT NULL, [filename] VARCHAR(512)  NOT NULL, [code] INTEGER  NOT NULL, [trace] VARCHAR(16384) NOT NULL); ",
                         " CREATE TABLE [RECOVER_ACCOUNT_REQUEST] ([created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [token] VARCHAR(255) UNIQUE NOT NULL, [user_id] VARCHAR(36) NOT NULL,PRIMARY KEY ([token],[user_id])) ",
                         " CREATE TABLE [ATTRIBUTE] ([id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY, [name] VARCHAR(32) UNIQUE NOT NULL, [description] VARCHAR(128) NULL, [type] INTEGER DEFAULT '0' NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL) ",
-                        " INSERT INTO [USER] (id, email, password, created, type) VALUES (\"00000000-0000-0000-0000-000000000000\", \"admin@localhost\", \"" . password_hash("password", PASSWORD_BCRYPT, array("cost" => 12)) . "\", CURRENT_TIMESTAMP, '1'); ",
+                        " INSERT INTO [USER] (id, email, password, created, creator, type) VALUES (\"00000000-0000-0000-0000-000000000000\", \"admin@localhost\", \"" . password_hash("password", PASSWORD_BCRYPT, array("cost" => 12)) . "\", CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\", '1'); ",
                         " INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (\"1111111-1111-1111-1111-111111111111\", \"Public\", \"Public (default) common group\", CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\"); ",
-                        " INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (\"1111111-1111-1111-1111-111111111111\", \"00000000-0000-0000-0000-000000000000\"); "
+                        " INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (\"1111111-1111-1111-1111-111111111111\", \"00000000-0000-0000-0000-000000000000\"); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-111111111111\", \"Name\", \"For short (0-255 chars) texts\", 1, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-222222222222\", \"Description\", \"For long (memo) texts\", 2, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-333333333333\", \"Age\", \"Integer values\", 3, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-444444444444\", \"Amount\", \"Decimal values\", 4, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-555555555555\", \"Start date\", \"Date values\", 5, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-666666666666\", \"Hour\", \"Time values\", 6, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-777777777777\", \"Registered on\", \"Date & Time\", 7, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); "                        
                     );
                     $exception = null;                
                     try {
