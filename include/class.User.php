@@ -120,5 +120,19 @@
             }
             session_destroy();
         }
+
+        /**
+        *   check if user has authenticated session
+        */
+        public static function isAuthenticated(): bool {
+            return(isset($_SESSION["user_id"]));
+        }
+
+        /**
+        *   check if user is isAuthenticated as administrator
+        */
+        public static function isAuthenticatedAsAdmin(): bool {
+            return(isset($_SESSION["user_type"]) && intval($_SESSION["user_type"]) == 1);
+        }
     }
 ?>
