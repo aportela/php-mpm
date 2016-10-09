@@ -27,7 +27,7 @@
             ""
         );
         // TODO: WARNING => TEMPORAL while email notification not done!!! 
-        $result["token"] = $u->generateRecover();
+        $result["token"] = $u->generateRecoverAccountToken();
         $result["success"] = true;
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);
