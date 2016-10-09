@@ -79,9 +79,11 @@
                     $queries = array(
                         " CREATE TABLE [USER] ([id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254) UNIQUE NOT NULL, [password] VARCHAR(255) NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [type] BOOLEAN DEFAULT '0' NOT NULL); ",
                         " CREATE TABLE [GROUP] ([id] VARCHAR(36) NOT NULL PRIMARY KEY, [name] VARCHAR(32) UNIQUE NOT NULL, [description] VARCHAR(128) NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL); ",
+                        " CREATE TABLE [GROUP_USER] ([group_id] VARCHAR(36) NOT NULL, [user_id] VARCHAR(36) NOT NULL, PRIMARY KEY([group_id], [user_id])); ",
                         " CREATE TABLE [ERROR] ([created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NULL PRIMARY KEY, [class] VARCHAR(64) NOT NULL, [line] INTEGER NOT NULL, [filename] VARCHAR(512)  NOT NULL, [code] INTEGER  NOT NULL, [trace] VARCHAR(16384) NOT NULL); ",
                         " INSERT INTO [USER] (id, email, password, created, type) VALUES (\"00000000-0000-0000-0000-000000000000\", \"admin@localhost\", \"" . password_hash("password", PASSWORD_BCRYPT, array("cost" => 12)) . "\", CURRENT_TIMESTAMP, '1'); ",
-                        " INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (\"1111111-1111-1111-1111-111111111111\", \"Public\", \"Public (default) common group\", CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\"); "
+                        " INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (\"1111111-1111-1111-1111-111111111111\", \"Public\", \"Public (default) common group\", CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\"); ",
+                        " INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (\"1111111-1111-1111-1111-111111111111\", \"00000000-0000-0000-0000-000000000000\"); "
                     );
                     $exception = null;                
                     try {
