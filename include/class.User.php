@@ -13,6 +13,7 @@
         private $id;
         private $email;
         private $password;
+        private $type;
 
 		public function __construct () { }
 
@@ -80,11 +81,12 @@
                 $param = new DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT id, email, password FROM USER WHERE id = :id OR email = :email ", $params);
+                $rows = Database::execWithResult(" SELECT id, email, password, type FROM USER WHERE id = :id OR email = :email ", $params);
                 if (count($rows) != 1) {
                     throw new MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $this->password = $rows[0]->password;
+                    $this->type = $rows[0]->type;
                 }                                                
             }            
         }
@@ -100,6 +102,7 @@
             } else {
                 $_SESSION["user_id"] = $this->id;
                 $_SESSION["user_email"] = $this->email;
+                $_SESSION["user_type"] = $this->type;
                 return(true);
             }
         }
