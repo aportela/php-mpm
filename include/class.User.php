@@ -19,10 +19,11 @@
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $email = "", string $password = "") {
+        public function set(string $id = "", string $email = "", string $password = "", int $type = 0) {
             $this->id = $id;
             $this->email = $email;
             $this->password = $password;
+            $this->type = $type;
         }
 
         /**
@@ -159,6 +160,29 @@
             $params[] = $param;                
             Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
             return($token);
+        }
+
+        /**
+        *   get user metadata from recover account token
+        */
+        public static function getUserFromRecoverAccountToken(string $token): User {
+            if (empty($token)) {
+                throw new MPMInvalidParamsException("");
+            } else {
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":token", $token);
+                $params[] = $param;
+                // tokens are valid only for 60 minutes 
+                $rows = Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
+                if (count($rows) != 1) {
+                    throw new MPMNotFoundException($token);
+                } else {
+                    $user = new User();
+                    $user->set($rows[0]->id, $rows[0]->email, "", $rows[0]->type);
+                    return(get_object_vars($user));
+                }                                                
+            }
         }
     }
 ?>
