@@ -145,6 +145,7 @@
         /**
         *   generate recover account token
         */
+        public function generateRecoverAccountToken(): string {
             $this->get();
             $params = array();
             $param = new DatabaseParam();
