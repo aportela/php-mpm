@@ -101,5 +101,16 @@
                 Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
             }            
         }
+
+        /**
+        *   search (list) groups
+        */
+        public static function search($page, $resultsPage) {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                return(Database::execWithResult(" SELECT id, name, description FROM [GROUP] ORDER BY name ", array()));
+            }
+        }
     }
 ?>
