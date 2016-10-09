@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>php-mpm</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1>php-mpm tests</h1>
+        <hr />
+        <div class="card">
+            <div class="card-header">
+                /api/user/exists.php
+            </div>
+            <div class="card-block">
+                <form id="frm_u_exists" method="post" action="/api/user/exists.php" />
+                <div class="form-group" id="fg_u_exists_email">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="admin@localhost">
+                    <div class="form-control-feedback" id="feedback_u_exists_email"></div>
+                </div>
+                <div class="form-group" id="fg_u_exists_submit">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-control-feedback" id="feedback_u_exists_submit"></div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="card">
+            <div class="card-header">
+                /api/user/add.php
+            </div>
+            <div class="card-block">
+                <form id="frm_u_add" method="post" action="/api/user/add.php" />
+                <div class="form-group" id="fg_u_add_email">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="admin@localhost">
+                    <div class="form-control-feedback" id="feedback_u_add_email"></div>
+                </div>
+                <div class="form-group" id="fg_u_add_password">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="Enter password" value="password">
+                    <div class="form-control-feedback" id="feedback_u_add_password"></div>
+                </div>
+                <div class="form-group" id="fg_u_add_submit">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-control-feedback" id="feedback_u_add_submit"></div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="card">
+            <div class="card-header">
+                /api/user/login.php
+            </div>
+            <div class="card-block">
+                <form id="frm_u_login" method="post" action="/api/user/login.php" />
+                <div class="form-group" id="fg_u_login_email">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="admin@localhost">
+                    <div class="form-control-feedback" id="feedback_u_login_email"></div>
+                </div>
+                <div class="form-group" id="fg_u_login_password">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="Enter password" value="password">
+                    <div class="form-control-feedback" id="feedback_u_login_password"></div>
+                </div>
+                <div class="form-group" id="fg_u_login_submit">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-control-feedback" id="feedback_u_login_submit"></div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
