@@ -103,6 +103,31 @@
         }
 
         /**
+        * remove user grom group
+        */
+        private function removeUser($userId) {
+            $params = array();
+            $param = new DatabaseParam();
+            $param->str(":group_id", $this->id);
+            $params[] = $param;
+            $param = new DatabaseParam();
+            $param->str(":user_id", $userId);
+            $params[] = $param;
+            Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id AND user_id = :user_id ", $params);
+        }
+
+        /**
+        *   remove all users from group
+        */
+        private function removeAllUsers() {
+            $params = array();
+            $param = new DatabaseParam();
+            $param->str(":group_id", $this->id);
+            $params[] = $param;                                
+            Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id ", $params);
+        }        
+        
+        /**
         *   search (list) groups
         */
         public static function search($page, $resultsPage) {
@@ -110,6 +135,25 @@
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else {
                 return(Database::execWithResult(" SELECT id, name, description FROM [GROUP] ORDER BY name ", array()));
+            }
+        }
+
+        /**
+        *   delete group (and all contained user references)
+        */
+        public function delete() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                // TODO: transaction support
+                $this->removeAllUsers();
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                                
+                Database::execWithoutResult(" DELETE FROM [GROUP] WHERE id = :id ", $params);
             }
         }
     }
