@@ -48,6 +48,7 @@
   </head>
   <body>
     <div class="container">
+        <h1>php-mpm installer</h1>
         <hr />
         <?php
             $errors = false;
@@ -105,6 +106,7 @@
             if (! $errors) {
                 echo putAlert("success", "installation successfully");
             } else {
+                echo putAlert("danger", "php-mpm was not installed correctly");
             }
         ?> 
     </div>
