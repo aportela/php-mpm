@@ -141,5 +141,23 @@
         public static function getSessionUserId(): bool {
             return(isset($_SESSION["user_id"]) ? $_SESSION["user_id"]: null); 
         }
+
+        /**
+        *   generate recover account token
+        */
+            $this->get();
+            $params = array();
+            $param = new DatabaseParam();
+            $param->str(":user_id", $this->id);
+            $params[] = $param;
+            // TODO: transaction support
+            Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
+            $param = new DatabaseParam();
+            $token = password_hash((sha1(uniqid()) . sha1(uniqid)), PASSWORD_BCRYPT, array("cost" => 12));
+            $param->str(":token", $token);
+            $params[] = $param;                
+            Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
+            return($token);
+        }
     }
 ?>
