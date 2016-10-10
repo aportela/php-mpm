@@ -58,30 +58,34 @@
                 if ($this->exists()) {
                     throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
                 } else {
-                    if (empty($this->id)) {
-                        $this->id = Utils::uuid();
-                    }
-                    $params = array();
-                    $param = new DatabaseParam();
-                    $param->str(":id", $this->id);
-                    $params[] = $param;                
-                    $param = new DatabaseParam();
-                    $param->str(":name", $this->name);
-                    $params[] = $param;                
-                    $param = new DatabaseParam();
-                    if (! empty($this->description)) {
-                        $param->str(":description", $this->description);
-                    } else {
-                        $param->null(":description");
-                    }
-                    $param = new DatabaseParam();
-                    $param->str(":creator", User::getSessionUserId());
-                    $params[] = $param;                
-                    // TODO: transaction support
-                    Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
-                    if (count($this->users) > 0) {
-                        foreach($users as $user) {
-                            $this->addUser($user->id);
+                    if (empty($this->name)) {
+                        throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    } else {                    
+                        if (empty($this->id)) {
+                            $this->id = Utils::uuid();
+                        }
+                        $params = array();
+                        $param = new DatabaseParam();
+                        $param->str(":id", $this->id);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        $param->str(":name", $this->name);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        if (! empty($this->description)) {
+                            $param->str(":description", $this->description);
+                        } else {
+                            $param->null(":description");
+                        }
+                        $param = new DatabaseParam();
+                        $param->str(":creator", User::getSessionUserId());
+                        $params[] = $param;                
+                        // TODO: transaction support
+                        Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                        if (count($this->users) > 0) {
+                            foreach($users as $user) {
+                                $this->addUser($user->id);
+                            }
                         }
                     }
                 }
