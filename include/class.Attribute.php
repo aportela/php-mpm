@@ -125,7 +125,23 @@
                     }
                 }
             }
-        }        
+        }
 
+        /**
+        *   delete attribute
+        */
+        public function delete() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                                
+                Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
+            }
+        }
     }
 ?>
