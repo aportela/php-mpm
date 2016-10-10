@@ -63,7 +63,10 @@
                     $param = new DatabaseParam();
                     $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, created) VALUES (:id, :email, :password, CURRENT_TIMESTAMP) ", $params);
+                    $param = new DatabaseParam();
+                    $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
+                    $params[] = $param;                                
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, created, creator) VALUES (:id, :email, :password, CURRENT_TIMESTAMP, :creator) ", $params);
                 }
             }
         }
