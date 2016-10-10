@@ -79,6 +79,7 @@
                         } else {
                             $param->null(":description");
                         }
+                        $params[] = $param;
                         $param = new DatabaseParam();
                         $param->int(":type", $this->type);
                         $params[] = $param;                
@@ -90,5 +91,41 @@
                 }
             }
         }        
+
+        /**
+        *   update attribute
+        */
+        public function update() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                if (! $this->exists()) {
+                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                } else {
+                    if (empty($this->name)) {
+                        throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    } else {                                        
+                        $params = array();
+                        $param = new DatabaseParam();
+                        $param->str(":id", $this->id);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        $param->str(":name", $this->name);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        if (! empty($this->description)) {
+                            $param->str(":description", $this->description);
+                        } else {
+                            $param->null(":description");
+                        }
+                        $params[] = $param;                
+                        Database::execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
+                    }
+                }
+            }
+        }        
+
     }
 ?>
