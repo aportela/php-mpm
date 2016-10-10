@@ -47,6 +47,48 @@
                 return(Database::execWithResult(" SELECT id, name, description, type FROM [ATTRIBUTE] ORDER BY name ", array()));
             }
         }
-        
+
+        /**
+        *   add new attribute
+        */
+        public function add() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                if ($this->exists()) {
+                    throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+                } else {
+                    if (empty($this->name)) {
+                        throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    } else {                                        
+                        if (empty($this->id)) {
+                            $this->id = Utils::uuid();
+                        }
+                        $params = array();
+                        $param = new DatabaseParam();
+                        $param->str(":id", $this->id);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        $param->str(":name", $this->name);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        if (! empty($this->description)) {
+                            $param->str(":description", $this->description);
+                        } else {
+                            $param->null(":description");
+                        }
+                        $param = new DatabaseParam();
+                        $param->int(":type", $this->type);
+                        $params[] = $param;                
+                        $param = new DatabaseParam();
+                        $param->str(":creator", User::getSessionUserId());
+                        $params[] = $param;                
+                        Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                    }
+                }
+            }
+        }        
     }
 ?>
