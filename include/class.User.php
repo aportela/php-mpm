@@ -158,7 +158,7 @@
             // TODO: transaction support
             Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
             $param = new DatabaseParam();
-            $token = password_hash((sha1(uniqid()) . sha1(uniqid)), PASSWORD_BCRYPT, array("cost" => 12));
+            $token = password_hash((sha1(uniqid()) . sha1(uniqid())), PASSWORD_BCRYPT, array("cost" => 12));
             $param->str(":token", $token);
             $params[] = $param;                
             Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
