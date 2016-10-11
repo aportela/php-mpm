@@ -150,6 +150,7 @@
         *   generate recover account token
         */
         public function generateRecoverAccountToken(): string {
+            // TODO: NOT WORKING ¿?
             $this->get();
             $params = array();
             $param = new DatabaseParam();
@@ -168,7 +169,8 @@
         /**
         *   get user metadata from recover account token
         */
-        public static function getUserFromRecoverAccountToken(string $token): User {
+        public static function getUserFromRecoverAccountToken(string $token) {
+            // TODO: NOT WORKING ¿?
             if (empty($token)) {
                 throw new MPMInvalidParamsException("");
             } else {
@@ -182,7 +184,12 @@
                     throw new MPMNotFoundException($token);
                 } else {
                     $user = new User();
-                    $user->set($rows[0]->id, $rows[0]->email, "", $rows[0]->type);
+                    $user->set(
+                        isset($rows[0]->id) ? $rows[0]->id: "", 
+                        isset($rows[0]->email) ? $rows[0]->email: "", 
+                        "", 
+                        isset($rows[0]->type) ? $rows[0]->type: 0
+                    );
                     return(get_object_vars($user));
                 }                                                
             }
@@ -193,7 +200,7 @@
         */
         public static function search($page, $resultsPage) {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
                 return(Database::execWithResult(" SELECT id, email, type FROM [USER] ORDER BY email ", array()));
