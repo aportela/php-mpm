@@ -241,6 +241,42 @@
             $u->set("", "", "", 0);            
             $u->generateRecoverAccountToken();
         }
+
+        public function testGetUserFromRecoverAccountToken() {
+            // TODO: NOT WORKING!
+            /*
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "", 0);
+            $token = $u->generateRecoverAccountToken();
+            $tmpUser = User::getUserFromRecoverAccountToken($token);
+            $this->assertEquals($u->email, $tmpUser["email"]);         
+            */
+        }
+
+        public function testSearchWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->logout();
+            User::search(0, 16);
+        }
+
+        public function testSearchWithAuthSession() {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "password", 0);
+            $u->login();
+            $results = User::search(0, 16);
+            // TODO: better search results check
+            $this->assertGreaterThanOrEqual(1, count($results));
+        }
     }
 
 ?>
