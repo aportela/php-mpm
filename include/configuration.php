@@ -21,9 +21,13 @@
 
     define("CACHE", false);
 
-    define("APP_ROOT_LOCAL_PATH", basename(__DIR__));
-
+    define("APP_ROOT_LOCAL_PATH", dirname(__DIR__));
+    
     define("MIN_PHP_VERSION", 7);
+
+    define("TEMPLATES_PATH", APP_ROOT_LOCAL_PATH . DIRECTORY_SEPARATOR . "templates");
+    define("DEFAULT_TEMPLATE_THEME", "default-bootstrap");
+
 
     if (ENVIRONMENT_DEV) {
 		ini_set('display_errors', 'On');
