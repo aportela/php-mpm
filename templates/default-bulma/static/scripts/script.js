@@ -132,10 +132,17 @@ function refreshUsersTable() {
                             var html = null;
                             if (result.results && result.results.length > 0) {
                                 for (var i = 0; i < result.results.length; i++) {
-                                    html += '<tr>';
-                                    html += '<td>' + result.results[i].id + '</td>';
-                                    html += '<td>' + result.results[i].email + '</td>';
-                                    html += '<td>' + result.results[i].creationDate + '</td>';
+                                    html += '<tr data-id="' + result.results[i].id + '">';
+                                    if (result.results[i].type == 1) {
+                                        html += '<td><i class="fa fa-2x fa-user-md" aria-hidden="true"></i> super</td>';
+                                    } else {
+                                        html += '<td><i class="fa fa-2x fa-user" aria-hidden="true"></i> normal</td>';
+                                    }
+                                    html += '<td>' + result.results[i].name + '</td>';
+                                    html += '<td><a href="mailto:' + result.results[i].email + '">' + result.results[i].email + '<a/></td>';
+                                    html += '<td data-id="' + result.results[i].creatorId + '">' + (result.results[i].creatorId != result.results[i].id ? result.results[i].creatorName : "auto-register") + '</td>';
+                                    html += '<td data-date="' + result.results[i].creationDate + '">' + new moment(result.results[i].creationDate).fromNow() + '</td>';
+                                    html += '<td class="has-text-centered"><a class="button is-small is-info modal-button" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button"  data-target="#modal_delete">Delete</a></td>'
                                     html += '</tr>';
                                 }
                             }
@@ -285,3 +292,19 @@ if ($("table#users").length == 1) {
 } else if ($("table#attributes").length == 1) {
     refreshAttributesTable();
 }
+
+$('table tbody').on("click", ".modal-button", function() {
+    var target = $(this).data('target');
+    $('html').addClass('is-clipped');
+    $(target).addClass('is-active');
+});
+
+$('body').on("click", '.modal-background, .modal-close', function() {
+    $('html').removeClass('is-clipped');
+    $(this).parent().removeClass('is-active');
+});
+
+$('body').on("click", '.modal-card-head .delete, .modal-card-foot .button', function() {
+    $('html').removeClass('is-clipped');
+    $('div.modal').removeClass('is-active');
+});
