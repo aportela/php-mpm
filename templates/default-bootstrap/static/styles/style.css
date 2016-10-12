@@ -1,0 +1,9 @@
+i#ajax_icon {
+    display: block;
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    z-index: 10000;
+    cursor: help;
+    display: none;
+}
