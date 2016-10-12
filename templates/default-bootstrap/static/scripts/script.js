@@ -1,5 +1,20 @@
+$.fn.clearValidationErrors = function() {
+    $("div.form-group").removeClass("has-danger");
+    $("div.form-group .form-control-danger").removeClass("form-control-danger");
+    $("div.form-group div.form-control-feedback").remove();
+}
+
+$.fn.putValidationError = function(elementId, message) {
+    var element = $("div#" + elementId);
+    $(element).append('<div class="form-control-feedback">' + message + '</div>');
+    $(element).find("input").addClass('form-control-danger');
+    $(element).addClass("has-danger");
+}
+
 $("form#frm_signin").submit(function(e) {
     e.preventDefault();
+    var self = $(this);
+    self.clearValidationErrors();
     var xhr = new XMLHttpRequest();
     xhr.open($(this).attr("method"), $(this).attr("action"), true);
     xhr.onreadystatechange = function(e) {
@@ -13,21 +28,27 @@ $("form#frm_signin").submit(function(e) {
                 console.log(xhr.responseText);
                 console.groupEnd();
             } finally {
-                if (result === null) {
-                    redirectToErrorPage();
-                } else {
-                    if (!result.success) {
-                        switch (this.status) {
-                            case 404:
-                                break;
-                            case 200:
-                                break;
-                            default:
-                                break;
+                switch (this.status) {
+                    case 404:
+                        self.putValidationError("fg_email", "email not found");
+                        break;
+                    case 400:
+                        // TODO
+                        break;
+                    case 200:
+                        if (result === null) {
+                            // TODO
+                        } else {
+                            if (!result.success) {
+                                self.putValidationError("fg_password", "invalid password");
+                            } else {
+                                window.location.reload();
+                            }
                         }
-                    } else {
-                        window.location.reload();
-                    }
+                        break;
+                    default:
+                        // TODO
+                        break;
                 }
             }
         }
@@ -50,22 +71,7 @@ $("a#logout").click(function(e) {
                 console.log(xhr.responseText);
                 console.groupEnd();
             } finally {
-                if (result === null) {
-                    redirectToErrorPage();
-                } else {
-                    if (!result.success) {
-                        switch (this.status) {
-                            case 404:
-                                break;
-                            case 200:
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        window.location.reload();
-                    }
-                }
+                window.location.reload();
             }
         }
     };
