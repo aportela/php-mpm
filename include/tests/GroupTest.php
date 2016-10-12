@@ -10,11 +10,14 @@
 
     class GroupTest extends \PHPUnit_Framework_TestCase {
 
-        public function testExistsWithoutAuthSession() {
-            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+        public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+        }
+
+        public function testExistsWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $g = new Group();
             $g->set(
                 "",
@@ -29,9 +32,6 @@
             /*
             // TODO: default (non admin) user
             $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             // TODO: normal (non admin user)
             $u->set("", "admin@localhost", "password", 0);
@@ -48,9 +48,6 @@
         }
 
         public function testExistsWithExistentId() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -65,9 +62,6 @@
         }
 
         public function testExistsWithNotExistentId() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -82,9 +76,6 @@
         }
 
         public function testExistsWithExistentName() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -99,9 +90,6 @@
         }
 
         public function testExistsWithNotExistentName() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -118,9 +106,6 @@
 
         public function testAddWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $g = new Group();
             $g->set(
                 Utils::uuid(),
@@ -135,9 +120,6 @@
             /*
             // TODO: default (non admin) user            
             $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $g = new Group();
             $g->set(
                 Utils::uuid(),
@@ -151,9 +133,6 @@
 
         public function testAddWithExistentId() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -169,9 +148,6 @@
 
         public function testAddWithExistentName() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -187,9 +163,6 @@
 
         public function testAddWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -204,9 +177,6 @@
         }
 
         public function testAddWithoutUsers() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             try {
                 $u = new User();
@@ -230,9 +200,6 @@
 
         public function testAddWithEmptyUserId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
@@ -252,9 +219,6 @@
 
         public function testAddWithNonExistentUserId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
@@ -275,9 +239,6 @@
         }
 
         public function testAddWithExistentUserId() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             try {
                 $err = null;
@@ -306,9 +267,6 @@
 
         public function testUpdateWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $g = new Group();
             $g->update();
         }
@@ -317,9 +275,6 @@
             /*
             // TODO: default (non admin) user                        
             $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $g = new Group();
             $g->update();
             */
@@ -327,9 +282,6 @@
 
         public function testUpdateWithEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -345,9 +297,6 @@
 
         public function testUpdateWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -363,9 +312,6 @@
 
         public function testUpdateWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -380,9 +326,6 @@
         }
 
         public function testUpdateWithoutUsers() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             try {            
                 $u = new User();
@@ -405,9 +348,6 @@
 
         public function testUpdateWithEmptyUserId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -425,9 +365,6 @@
 
         public function testUpdateWithNonExistentUserId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();            
@@ -446,9 +383,6 @@
         }
 
         public function testUpdateWithExistentUserId() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             try {                        
                 $u = new User();
@@ -475,18 +409,12 @@
 
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signout();
             Group::search(0, 16);
         }
 
         public function testSearchWithAuthSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -497,9 +425,6 @@
 
         public function testDeleteWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signout();
             $g = new Group();
@@ -510,9 +435,6 @@
             /*
             // TODO: default (non admin) user            
             $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signout();
             $g = new Group();
@@ -521,9 +443,6 @@
         }
 
         public function testDelete() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $err = null;
             try {
                 $err = null;
@@ -553,9 +472,6 @@
 
         public function testGetWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signout();
             $g = new Group();
@@ -566,9 +482,6 @@
             /*
             // TODO: default (non admin) user                        
             $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signout();
             $g = new Group();
@@ -578,9 +491,6 @@
 
         public function testGetWithoutEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -590,9 +500,6 @@
 
         public function testGetWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
@@ -602,9 +509,6 @@
         }        
 
         public function testGetWithExistentId() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->set("", "admin@localhost", "password", 0);
             $u->login();
