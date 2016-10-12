@@ -225,14 +225,14 @@
             $this->assertTrue($u->login());                        
         }        
 
-        public function testLogout() {
+        public function testSignOut() {
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
             $u = new User();            
             $err = null;
             try {
-                $u->logout();
+                $u->signout();
             } catch (Throwable $e) {
                 $err = e;
             } finally {
@@ -255,7 +255,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $this->assertFalse(User::isAuthenticated());
         }
 
@@ -342,7 +342,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             User::search(0, 16);
         }
 

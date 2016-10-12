@@ -1,6 +1,6 @@
 <?php
     /**
-    *   /api/user/logout.php
+    *   /api/user/signout.php
     *   description: finish (and destroy) authenticated session
     *
     *   request method: POST
@@ -20,7 +20,7 @@
     $result = array("success" => false);
     try {
         $u = new User();                 
-        $u->logout();
+        $u->signout();
         $result["success"] = true; 
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);

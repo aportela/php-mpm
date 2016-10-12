@@ -171,7 +171,7 @@
         *
         *   (Frxstrem) http://stackoverflow.com/a/3512570
         */
-        public function logout() {
+        public function signout() {
             $_SESSION = array();
             if (ini_get("session.use_cookies")) {
                 $params = session_get_cookie_params();

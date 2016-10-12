@@ -34,14 +34,14 @@
                             break;
                             default:
                                 ?>
-                                <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="logout" href="/api/user/logout.php">click here to logout</a></h1>
+                                <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="signout" href="/api/user/signout.php">click here to sign out</a></h1>
                                 <?php                            
                             break;
                         }
 
                     } else {
                         ?>
-                        <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="logout" href="/api/user/logout.php">click here to logout</a></h1>
+                        <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="signout" href="/api/user/signout.php">click here to sign out</a></h1>
                         <?php
                     }
                 ?>

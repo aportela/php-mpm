@@ -90,7 +90,7 @@ $("form#frm_signin").submit(function (e) {
     self.disableSubmit();
 });
 
-$("a#logout").click(function (e) {
+$("a#signout").click(function (e) {
     e.preventDefault();
     var xhr = new XMLHttpRequest();
     xhr.open("GET", $(this).attr("href"), true);

@@ -326,7 +326,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $a = new Attribute();
             $a->delete();
         }
@@ -339,7 +339,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $a = new Attribute();
             $a->delete();
             */            
@@ -378,7 +378,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             Attribute::search(0, 16);
         }
 

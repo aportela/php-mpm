@@ -479,7 +479,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             Group::search(0, 16);
         }
 
@@ -501,7 +501,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $g = new Group();
             $g->delete();
         }
@@ -514,7 +514,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $g = new Group();
             $g->delete();
             */            
@@ -557,7 +557,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $g = new Group();
             $g->get();            
         }        
@@ -570,7 +570,7 @@
                 session_start();
             }
             $u = new User();
-            $u->logout();
+            $u->signout();
             $g = new Group();
             $g->get();
             */            
