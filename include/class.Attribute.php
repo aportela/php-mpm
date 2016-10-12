@@ -36,6 +36,30 @@
         }
 
         /**
+        *   check attribute (by id/name) existence
+        */
+        public function exists() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            }
+            else if (empty($this->id) && empty($this->name)) {                
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else {
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                $param->str(":name", $this->name);
+                $params[] = $param;                
+                $rows = Database::execWithResult(" SELECT * FROM [ATTRIBUTE] WHERE id = :id OR name = :name ", $params);
+                return(count($rows) > 0);                
+            }            
+        }
+
+        /**
         *   search (list) groups
         */
         public static function search($page, $resultsPage) {
