@@ -9,67 +9,78 @@
 
     class UserTest extends \PHPUnit_Framework_TestCase {
 
-        public function testExistsWithExistentEmail() {
+        const EXISTENT_EMAIL = "admin@localhost";
+        const NON_EXISTENT_EMAIL =  "thisemaildonotexists@server.com";
+        const ADMIN_USER_ID = "00000000-0000-0000-0000-000000000000";
+        const ADMIN_EMAIL = "admin@localhost";
+        const ADMIN_PASSWORD = "password";
+
+        public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+        }
+
+        private function signInAsAdmin() {
             $u = new User();
-            $u->set("", "admin@localhost", "", 0);
+            $u->set("", UserTest::ADMIN_EMAIL, UserTest::ADMIN_PASSWORD, "administrator", UserType::DEFAULT);
+            $u->login();            
+        }
+
+        private function signOut() {
+            (new User())->signout();
+        }
+
+        public function testExistsWithExistentEmail() {
+            $u = new User();
+            $u->email = UserTest::EXISTENT_EMAIL;
             $this->assertTrue($u->exists());        
         }
 
         public function testExistsWithNotExistentEmail() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "thisemaildonotexists@server.com", "", 0);
+            $u->email = UserTest::NON_EXISTENT_EMAIL;
             $this->assertFalse($u->exists());        
         }
 
         public function testExistsWithEmptyEmail() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->exists();
         }
 
         public function testSignUpWithExistentEmail() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "admin@localhost", "", 0);
+            $u->email = UserTest::EXISTENT_EMAIL;
             $u->signup();            
         }
 
         public function testSignUpWithEmptyEmail() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->signup();            
         }
 
+
         public function testSignUpWithEmptyPassword() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
+            $u->signup();            
+        }
+
+        public function testSignUpWithEmptyName() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $u = new User();
+            $uuid = Utils::uuid();
+            $u->set($uuid, sprintf("%s@server.com", $uuid), "password", "", UserType::DEFAULT);
             $u->signup();            
         }
 
         public function testSignUp() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();            
-            $u->set(Utils::uuid(), sprintf("%s@server.com", Utils::uuid()), "password", 0);
+            $u = new User();
+            $uuid = Utils::uuid();             
+            $u->set($uuid, sprintf("%s@server.com", $uuid), "password", sprintf("Name: %s", $uuid), UserType::DEFAULT);
             $err = null;
             try {
                 $u->signup();
@@ -80,78 +91,60 @@
             }            
         }
 
+
         public function testAddWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
+            $this->signOut();
             $u = new User();
             $u->add();                    
         }
 
+        // TODO
         public function testAddWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $lu = new User();
-            $lu->set("", "admin@localhost", "password", 0);
-            $lu->login();                        
-            $u = new User();
-            $a->add();
-            */                                
+            //$this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
         }
 
         public function testAddWithExistentEmail() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $lu = new User();
-            $lu->set("", "admin@localhost", "password", 0);
-            $lu->login();            
+            $this->signInAsAdmin();
             $u = new User();
-            $u->set("", "admin@localhost", "", 0);
+            $u->set("", UserTest::EXISTENT_EMAIL, "password", "administrator", UserType::ADMINISTRATOR);
             $u->add();            
         }
 
         public function testAddWithEmptyEmail() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $lu = new User();
-            $lu->set("", "admin@localhost", "password", 0);
-            $lu->login();                        
+            $this->signInAsAdmin();
             $u = new User();
+            $u->set("", "", "password", "administrator", UserType::ADMINISTRATOR);
+            $u->add();            
+        }
+
+        public function testAddWithEmptyName() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->signInAsAdmin();
+            $u = new User();
+            $uuid = Utils::uuid();             
+            $u->set($uuid, sprintf("%s@server.com", $uuid), "password", "", UserType::ADMINISTRATOR);
             $u->add();            
         }
 
         public function testAddWithEmptyPassword() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $lu = new User();
-            $lu->set("", "admin@localhost", "password", 0);
-            $lu->login();                        
+            $this->signInAsAdmin();
             $u = new User();
+            $uuid = Utils::uuid();             
+            $u->set($uuid, sprintf("%s@server.com", $uuid), "", "administrator", UserType::ADMINISTRATOR);
             $u->add();            
         }
 
         public function testAdd() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $lu = new User();
-            $lu->set("", "admin@localhost", "password", 0);
-            $lu->login();                        
-            $u = new User();            
-            $u->set(Utils::uuid(), sprintf("%s@server.com", Utils::uuid()), "password", 0);
+            $this->signInAsAdmin();
             $err = null;
             try {
+                $u = new User();
+                $uuid = Utils::uuid();            
+                $u->set($uuid, sprintf("%s@server.com", $uuid), "password", "administrator", UserType::ADMINISTRATOR);
                 $u->add();
             } catch (Throwable $e) {
                 $err = e;
@@ -162,77 +155,39 @@
 
         public function testLoginWithEmptyIdAndEmail() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
             $u->login();                        
         }        
 
-        public function testLoginWithNotExistentId() {
+        public function testLoginWithNotExistentEmail() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("z-z-z-z-z-z-z-z", "", "", 0);
-            $u->login();
-        }        
-
-        public function testLoginWithNotExistenEmail() {
-            $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("", "thisemaildonotexists@server.com", "", 0);
+            $u->email = UserTest::NON_EXISTENT_EMAIL;
+            $u->password = "password";
             $u->login();                        
         }        
 
-        public function testLoginWithExistentIdAndInvalidPassword() {
+        public function testLoginWithExistentEmailAndInvalidPassword() {
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
             $u = new User();
-            $u->set("00000000-0000-0000-0000-000000000000", "", "WRONG_PASSWORD", 0);
-            $this->assertFalse($u->login());
-        }        
-
-        public function testLoginWithExistenEmailAndInvalidPassword() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("", "admin@localhost", "WRONG_PASSWORD", 0);
+            $u->email = UserTest::EXISTENT_EMAIL;
+            $u->password = Utils::uuid();
             $this->assertFalse($u->login());                        
         }        
 
-        public function testLoginWithExistentIdAndValidPassword() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("00000000-0000-0000-0000-000000000000", "", "password", 0);
-            $this->assertTrue($u->login());
-        }        
-
         public function testLoginWithExistenEmailAndValidPassword() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
+            $u->email = UserTest::EXISTENT_EMAIL;
+            $u->password = "password";
             $this->assertTrue($u->login());                        
         }        
 
         public function testSignOut() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();            
             $err = null;
             try {
-                $u->signout();
+                (new User())->signout();
             } catch (Throwable $e) {
                 $err = e;
             } finally {
@@ -241,122 +196,72 @@
         }
 
         public function testIsAuthenticatedWithAuthSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("00000000-0000-0000-0000-000000000000", "", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $this->assertTrue(User::isAuthenticated());
         }
 
         public function testIsAuthenticatedWithoutAuthSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->signout();
+            $this->signOut();
             $this->assertFalse(User::isAuthenticated());
         }
 
         public function testIsAuthenticatedAsAdminWithAdminSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("00000000-0000-0000-0000-000000000000", "", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $this->assertTrue(User::isAuthenticatedAsAdmin());
         }
 
+        // TODO
         public function testIsAuthenticatedAsAdminWithoutAdminSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            // TODO: example normal (not admin) user
         }
 
         public function testGetSessionUserIdWithSessionStarted() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("00000000-0000-0000-0000-000000000000", "", "password", 0);
-            $u->login();
-            $this->assertEquals("00000000-0000-0000-0000-000000000000", User::getSessionUserId());
+            $this->signInAsAdmin();
+            $this->assertEquals(UserTest::ADMIN_USER_ID, User::getSessionUserId());
         }
 
         public function testGetSessionUserIdWithoutSessionStarted() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
+            $this->signOut();
             $this->assertNull(User::getSessionUserId());            
         }
 
         public function testgenerateRecoverAccountTokenWithExistentEmail() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "admin@localhost", "", 0);            
+            $u->email = UserTest::EXISTENT_EMAIL;
             $this->assertNotEmpty($u->generateRecoverAccountToken());            
         }
 
         public function testgenerateRecoverAccountTokenWithNotExistentEmail() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "thisemaildonotexists@server.com", "", 0);
+            $u->email = UserTest::NON_EXISTENT_EMAIL;
             $u->generateRecoverAccountToken();            
         }
 
         public function testgenerateRecoverAccountTokenWithEmptyEmail() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "", "", 0);            
             $u->generateRecoverAccountToken();
         }
 
         public function testGetUserFromRecoverAccountToken() {
-            // TODO: NOT WORKING!
-            /*
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $u = new User();
-            $u->set("", "admin@localhost", "", 0);
-            $token = $u->generateRecoverAccountToken();
+            $u->email = UserTest::EXISTENT_EMAIL;
+            $token = $u->generateRecoverAccountToken();                        
             $tmpUser = User::getUserFromRecoverAccountToken($token);
             $this->assertEquals($u->email, $tmpUser["email"]);         
-            */
         }
 
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->signout();
-            User::search(0, 16);
+            $this->signOut();
+            User::search(1, 16);
         }
 
         public function testSearchWithAuthSession() {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $results = User::search(0, 16);
             // TODO: better search results check
             $this->assertGreaterThanOrEqual(1, count($results));
         }
     }
-
 ?>
