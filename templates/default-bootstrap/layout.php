@@ -2,7 +2,13 @@
 <html lang="en">
   <?php include "html-head.php"; ?>
   <body>
-    <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?></h1>
+    <?php
+      if ($_TEMPLATE["is_logged"] == false) {
+          include "signin.php";
+      } else {
+          include "app.php";
+      }
+    ?>
     <?php include "html-scripts.php"; ?>
   </body>
 </html>
