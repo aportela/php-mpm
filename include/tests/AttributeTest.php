@@ -99,10 +99,96 @@
                 "this_atribute_Name_DO_NOT_exISt__--",
                 "",
                 AttributeType::NONE
-                );
+            );
             $this->assertFalse($a->exists());       
         }
 
+
+        public function testAddWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $a = new Attribute();
+            $a->set(
+                Utils::uuid(),
+                "Surname",
+                "Type person surname",
+                AttributeType::TEXT_SHORT
+            );
+            $a->add();                    
+        }
+
+        public function testAddWithoutAuthAdminSession() {
+            /*
+            // TODO: default (non admin) user            
+            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $a->set(
+                Utils::uuid(),
+                "Surname",
+                "Type person surname",
+                AttributeType::TEXT_SHORT
+            );
+            $a->add();                    
+            */
+        }
+
+        public function testAddWithExistentId() {
+            $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "password", 0);
+            $u->login();
+            $a = new Attribute();            
+            $a->set(
+                "1111111-1111-1111-0000-111111111111",
+                "Surname",
+                "Type person surname",
+                AttributeType::TEXT_SHORT
+            );
+            $a->add();                    
+        }
+
+        public function testAddWithExistentName() {
+            $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "password", 0);
+            $u->login();            
+            $a = new Attribute();
+            $a->set(
+                Utils::uuid(),
+                "Age",
+                "Used for storing ages",
+                AttributeType::NUMBER_INTEGER
+            );
+            $a->add();                                
+        }
+
+        public function testAddWithEmptyName() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "password", 0);
+            $u->login();            
+            $a = new Attribute();
+            $a->set(
+                Utils::uuid(),
+                "",
+                "Used for storing ages",
+                AttributeType::NUMBER_INTEGER
+            );
+            $a->add();                                
+        }
 
     }
 ?>
