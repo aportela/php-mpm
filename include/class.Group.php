@@ -31,7 +31,12 @@
         *   check user (by email) existence
         */
         public function exists() {
-            if (empty($this->id) && empty($this->name)) {                
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            }
+            else if (empty($this->id) && empty($this->name)) {                
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
@@ -54,39 +59,35 @@
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else if ($this->exists()) {
+                throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+            } else if (empty($this->name)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
-                if ($this->exists()) {
-                    throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+                if (empty($this->id)) {
+                    $this->id = Utils::uuid();
+                }
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                $param->str(":name", $this->name);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                if (! empty($this->description)) {
+                    $param->str(":description", $this->description);
                 } else {
-                    if (empty($this->name)) {
-                        throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
-                    } else {                    
-                        if (empty($this->id)) {
-                            $this->id = Utils::uuid();
-                        }
-                        $params = array();
-                        $param = new DatabaseParam();
-                        $param->str(":id", $this->id);
-                        $params[] = $param;                
-                        $param = new DatabaseParam();
-                        $param->str(":name", $this->name);
-                        $params[] = $param;                
-                        $param = new DatabaseParam();
-                        if (! empty($this->description)) {
-                            $param->str(":description", $this->description);
-                        } else {
-                            $param->null(":description");
-                        }
-                        $param = new DatabaseParam();
-                        $param->str(":creator", User::getSessionUserId());
-                        $params[] = $param;                
-                        // TODO: transaction support
-                        Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
-                        if (count($this->users) > 0) {
-                            foreach($users as $user) {
-                                $this->addUser($user->id);
-                            }
-                        }
+                    $param->null(":description");
+                }
+                $param = new DatabaseParam();
+                $param->str(":creator", User::getSessionUserId());
+                $params[] = $param;                
+                // TODO: transaction support
+                Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                if (count($this->users) > 0) {
+                    foreach($users as $user) {
+                        $this->addUser($user->id);
                     }
                 }
             }
@@ -100,40 +101,34 @@
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
-            } else {
-                if (empty($this->id)) {
-                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                                    
+            } else if (empty($this->id)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                                    
+            } else if (! $this->exists()) {    
+                throw new MPMNotFoundException(print_r(get_object_vars($this), true));    
+            } else if (empty($this->name)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else {                                            
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                $param->str(":name", $this->name);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                if (! empty($this->description)) {
+                    $param->str(":description", $this->description);
                 } else {
-                    if (! $this->exists()) {    
-                        throw new MPMNotFoundException(print_r(get_object_vars($this), true));    
-                    } else {
-                        if (empty($this->name)) {
-                            throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
-                        } else {                                            
-                            $params = array();
-                            $param = new DatabaseParam();
-                            $param->str(":id", $this->id);
-                            $params[] = $param;                
-                            $param = new DatabaseParam();
-                            $param->str(":name", $this->name);
-                            $params[] = $param;                
-                            $param = new DatabaseParam();
-                            if (! empty($this->description)) {
-                                $param->str(":description", $this->description);
-                            } else {
-                                $param->null(":description");
-                            }
-                            $params[] = $param;
-                            // TODO: transaction support
-                            Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
-                            // TODO: better check user diffs ¿?
-                            $this->removeAllUsers();
-                            if (count($this->users) > 0) {
-                                foreach($users as $user) {
-                                    $this->addUser($user->id);
-                                }
-                            }
-                        }
+                    $param->null(":description");
+                }
+                $params[] = $param;
+                // TODO: transaction support
+                Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
+                // TODO: better check user diffs ¿?
+                $this->removeAllUsers();
+                if (count($this->users) > 0) {
+                    foreach($users as $user) {
+                        $this->addUser($user->id);
                     }
                 }
             }
@@ -187,7 +182,7 @@
         */
         public static function search($page, $resultsPage) {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new MPMAuthSessionRequiredException("");
             } else {
                 // TODO: pagination & filtering
                 return(Database::execWithResult(" SELECT id, name, description FROM [GROUP] ORDER BY name ", array()));
@@ -230,23 +225,21 @@
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
-            } else {                
-                if (empty($this->id)) {                
-                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else if (empty($this->id)) {                
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else {
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);                
+                $rows = Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                if (count($rows) != 1) {
+                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
-                    $param = new DatabaseParam();
-                    $param->str(":id", $this->id);                
-                    $rows = Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
-                    if (count($rows) != 1) {
-                        throw new MPMNotFoundException(print_r(get_object_vars($this), true));
-                    } else {
-                        $this->name = $rows[0]->name;
-                        $this->description = $rows[0]->description;
-                        $this->users = $this->getUsers();
-                        return(get_object_vars($this));
-                    }
+                    $this->name = $rows[0]->name;
+                    $this->description = $rows[0]->description;
+                    $this->users = $this->getUsers();
+                    return(get_object_vars($this));
                 }
-            }                        
+            }
         }
     }
 ?>
