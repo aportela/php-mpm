@@ -1,6 +1,11 @@
 <?php
     namespace PHP_MPM;
 
+    require_once "class.CustomExceptions.php";
+    require_once "class.Database.php";
+    require_once "class.User.php";
+    require_once "class.Utils.php";
+
     /**
     *   attribute type definitions
     */
