@@ -10,178 +10,108 @@
 
     class GroupTest extends \PHPUnit_Framework_TestCase {
 
+        const EXISTENT_USER_ID = "00000000-0000-0000-0000-000000000000";
+        const EXISTENT_GROUP_ID = "1111111-1111-1111-1111-111111111111";
+        const EXISTENT_GROUP_NAME = "Public";
+
+        const ADMIN_EMAIL = "admin@localhost";
+        const ADMIN_PASSWORD = "password";
+
         public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
         }
 
+        private function signInAsAdmin() {
+            $u = new User();
+            $u->login();            
+        }
+
+        private function signOut() {
+            (new User())->signout();
+        }
+        
         public function testExistsWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $g = new Group();
-            $g->set(
-                "",
-                "",
-                "",
-                array()
-                );
             $g->exists();                    
         }
 
+        // TODO
         public function testExistsWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $u = new User();
-            // TODO: normal (non admin user)
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
-            $g = new Group();
-            $g->set(
-                "",
-                "",
-                "",
-                array()
-                );
-            $g->exists();
-            */                    
         }
 
         public function testExistsWithExistentId() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "1111111-1111-1111-1111-111111111111",
-                "",
-                "",
-                array()
-                );
+            $g->id = GroupTest::EXISTENT_GROUP_ID;
             $this->assertTrue($g->exists());        
         }
 
         public function testExistsWithNotExistentId() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "z-z-z--z-z-z-z",
-                "",
-                "",
-                array()
-                );
+            $g->id = Utils::uuid();
             $this->assertFalse($g->exists());        
         }
 
         public function testExistsWithExistentName() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "",
-                "Public",
-                "",
-                array()
-                );
+            $g->name = GroupTest::EXISTENT_GROUP_NAME;
             $this->assertTrue($g->exists());        
         }
 
         public function testExistsWithNotExistentName() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "",
-                "this_group_Name_DO_NOT_exISt__--",
-                "",
-                array()
-                );
-            $g->exists(); 
+            $g->name = Utils::uuid();
             $this->assertFalse($g->exists());       
         }
 
         public function testAddWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $g = new Group();
-            $g->set(
-                Utils::uuid(),
-                "Name",
-                "Description",
-                array()
-            );
             $g->add();                    
         }
-
+    
+        // TODO
         public function testAddWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $g = new Group();
-            $g->set(
-                Utils::uuid(),
-                "Name",
-                "Description",
-                array()
-            );
-            $g->add();                    
-            */
         }
 
         public function testAddWithExistentId() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "1111111-1111-1111-1111-111111111111",
-                "New group name",
-                "New group description",
-                array()
-            );
+            $g->id = GroupTest::EXISTENT_GROUP_ID; 
             $g->add();                                
         }
 
         public function testAddWithExistentName() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                Utils::uuid(),
-                "Public",
-                "New group description",
-                array()
-            );
+            $g->id = Utils::uuid();
+            $g->name = GroupTest::EXISTENT_GROUP_NAME; 
             $g->add();                                
         }
 
         public function testAddWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                Utils::uuid(),
-                "",
-                "New group description",
-                array()
-            );
+            $g->id = Utils::uuid();
+            $g->name = ""; 
             $g->add();                                
         }
 
         public function testAddWithoutUsers() {
             $err = null;
             try {
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();            
+                $this->signInAsAdmin();
                 $g = new Group();
                 $uuid = Utils::uuid();
                 $g->set(
@@ -200,10 +130,7 @@
 
         public function testAddWithEmptyUserId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $err = null;
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
             $uuid = Utils::uuid();
             $g->set(
@@ -219,20 +146,17 @@
 
         public function testAddWithNonExistentUserId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            $err = null;
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
             $uuid = Utils::uuid();
-            $nonExistentUserId = new User();
-            $nonExistentUserId->set("z-z-z-z-z-", "", "", 0);
+            $u = new User();
+            $u->id = Utils::uuid();
             $g->set(
                 $uuid,
                 sprintf("Group name: %s", $uuid),
                 sprintf("Group description: %s", $uuid),
                 array(
-                    $nonExistentUserId
+                    $u
                 )
             );
             $g->add();
@@ -241,20 +165,17 @@
         public function testAddWithExistentUserId() {
             $err = null;
             try {
-                $err = null;
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();            
+                $this->signInAsAdmin();
                 $g = new Group();
                 $uuid = Utils::uuid();
-                $existentUserId = new User();
-                $existentUserId->set("00000000-0000-0000-0000-000000000000", "", "", 0);
+                $u = new User();
+                $u->id = GroupTest::EXISTENT_USER_ID;
                 $g->set(
                     $uuid,
                     sprintf("Group name: %s", $uuid),
                     sprintf("Group description: %s", $uuid),
                     array(
-                        $existentUserId
+                        $u
                     )
                 );
                 $g->add();
@@ -267,57 +188,36 @@
 
         public function testUpdateWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $g = new Group();
             $g->update();
         }
 
+        // TODO
         public function testUpdateWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user                        
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $g = new Group();
-            $g->update();
-            */
         }
 
         public function testUpdateWithEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "",
-                "Existent group name",
-                "Existent group description",
-                array()
-            );
             $g->update();                                
         }        
 
         public function testUpdateWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set(
-                "-z-z-z-z-z-z-z",
-                "Existent group name",
-                "Existent group description",
-                array()
-            );
+            $g->id = Utils::uuid();
             $g->update();                                
         }        
 
         public function testUpdateWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
             $g->set(
-                "1111111-1111-1111-1111-111111111111",
+                GroupTest::EXISTENT_GROUP_ID,
                 "",
                 "optional group description",
                 array()
@@ -325,16 +225,14 @@
             $g->update();                                
         }
 
-        public function testUpdateWithoutUsers() {
+        public function testUpdateWithoutUsers() {            
             $err = null;
-            try {            
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();            
+            try {
+                $this->signInAsAdmin();            
                 $g = new Group();
                 $g->set(
-                    "1111111-1111-1111-1111-111111111111",
-                    "Public",
+                    GroupTest::EXISTENT_GROUP_ID,
+                    GroupTest::EXISTENT_GROUP_NAME,
                     "optional group description",
                     array()
                 );
@@ -348,13 +246,11 @@
 
         public function testUpdateWithEmptyUserId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $g = new Group();
             $g->set(
-                "1111111-1111-1111-1111-111111111111",
-                "Public",
+                GroupTest::EXISTENT_GROUP_ID,
+                GroupTest::EXISTENT_GROUP_NAME,
                 "optional group description",
                 array(
                     new User()
@@ -365,18 +261,16 @@
 
         public function testUpdateWithNonExistentUserId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
+            $this->signInAsAdmin();
             $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
-            $nonExistentUserId = new User();
-            $nonExistentUserId->set("z-z-z-z-z-", "", "", 0);
+            $u->id = Utils::uuid();            
             $g = new Group();
             $g->set(
-                "1111111-1111-1111-1111-111111111111",
-                "Public",
+                GroupTest::EXISTENT_GROUP_ID,
+                GroupTest::EXISTENT_GROUP_NAME,
                 "optional group description",
                 array(
-                    $nonExistentUserId
+                    $u
                 )
             );
             $g->update();
@@ -384,19 +278,17 @@
 
         public function testUpdateWithExistentUserId() {
             $err = null;
-            try {                        
+            try {
+                $this->signInAsAdmin();                        
                 $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();            
-                $existentUserId = new User();
-                $existentUserId->set("00000000-0000-0000-0000-000000000000", "", "", 0);
+                $u->id = GroupTest::EXISTENT_USER_ID;            
                 $g = new Group();
                 $g->set(
-                    "1111111-1111-1111-1111-111111111111",
-                    "Public",
+                    GroupTest::EXISTENT_GROUP_ID,
+                    GroupTest::EXISTENT_GROUP_NAME,
                     "optional group description",
                     array(
-                        $existentUserId
+                        $u
                     )
                 );
                 $g->update();  
@@ -409,15 +301,12 @@
 
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            $u = new User();
-            $u->signout();
+            $this->signOut();
             Group::search(0, 16);
         }
 
         public function testSearchWithAuthSession() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $results = Group::search(0, 16);
             // TODO: better search results check
             $this->assertGreaterThanOrEqual(1, count($results));
@@ -425,40 +314,29 @@
 
         public function testDeleteWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            $u = new User();
-            $u->signout();
+            $this->signOut();
             $g = new Group();
             $g->delete();
         }
 
+        // TODO
         public function testDeleteWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $u = new User();
-            $u->signout();
-            $g = new Group();
-            $g->delete();
-            */            
         }
 
         public function testDelete() {
             $err = null;
             try {
-                $err = null;
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();
+                $this->signInAsAdmin();
                 $g = new Group();
                 $uuid = Utils::uuid();
-                $existentUserId = new User();
-                $existentUserId->set("00000000-0000-0000-0000-000000000000", "", "", 0);
+                $u = new User();
+                $u->id = GroupTest::EXISTENT_USER_ID;
                 $g->set(
                     $uuid,
                     sprintf("Group name: %s", $uuid),
                     sprintf("Group description: %s", $uuid),
                     array(
-                        $existentUserId
+                        $u
                     )
                 );
                 $g->add();
@@ -472,49 +350,35 @@
 
         public function testGetWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            $u = new User();
-            $u->signout();
+            $this->signOut();
             $g = new Group();
             $g->get();            
         }        
 
+        // TODO
         public function testGetWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user                        
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $u = new User();
-            $u->signout();
-            $g = new Group();
-            $g->get();
-            */            
         }
 
         public function testGetWithoutEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
             $g->get();                        
         }
 
         public function testGetWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set("z-z-z-z-z-z-z", "", "", array());
-            $g->get();                                    
+            $g->id = Utils::uuid();
+            $g->get();                        
         }        
 
         public function testGetWithExistentId() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $g = new Group();
-            $g->set("1111111-1111-1111-1111-111111111111", "", "", array());
-            $g->get();
+            $g->id = GroupTest::EXISTENT_GROUP_ID;
+            $g->get();                        
             $this->assertEquals($g->name, "Public");                                    
         }        
     }
