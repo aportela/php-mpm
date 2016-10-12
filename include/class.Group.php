@@ -85,7 +85,7 @@
                 $params[] = $param;                
                 // TODO: transaction support
                 Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
-                if (count($this->users) > 0) {
+                if ($this->users && count($this->users) > 0) {
                     foreach($this->users as $user) {
                         $this->addUser($user->id);
                     }
@@ -126,8 +126,8 @@
                 Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
                 // TODO: better check user diffs ¿?
                 $this->removeAllUsers();
-                if (count($this->users) > 0) {
-                    foreach($users as $user) {
+                if ($this->users && count($this->users) > 0) {
+                    foreach($this->users as $user) {
                         $this->addUser($user->id);
                     }
                 }
