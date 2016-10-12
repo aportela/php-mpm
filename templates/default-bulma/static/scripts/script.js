@@ -135,6 +135,7 @@ function refreshUsersTable() {
                                     html += '<tr>';
                                     html += '<td>' + result.results[i].id + '</td>';
                                     html += '<td>' + result.results[i].email + '</td>';
+                                    html += '<td>' + result.results[i].creationDate + '</td>';
                                     html += '</tr>';
                                 }
                             }

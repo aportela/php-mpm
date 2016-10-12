@@ -3,6 +3,7 @@
     <tr>
         <th>Id</th>
         <th>Email</th>
+        <th>Created</th>
   </thead>
   <tbody>
   </tbody>

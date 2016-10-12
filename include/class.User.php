@@ -258,7 +258,7 @@
                 throw new MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT id, email, type FROM [USER] ORDER BY email ", array()));
+                return(Database::execWithResult(" SELECT U.id, U.email, U.type, UC.id AS creatorId, NULL AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id ORDER BY U.created DESC ", array()));
             }
         }
         
