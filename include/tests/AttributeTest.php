@@ -189,6 +189,32 @@
             $a->add();                                
         }
 
+        public function testAdd() {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $err = null;
+            try {
+                $err = null;
+                $u = new User();
+                $u->set("", "admin@localhost", "password", 0);
+                $u->login();
+                $a = new Attribute();
+                $uuid = Utils::uuid();
+                $a->set(
+                    $uuid,
+                    sprintf("Attribute name: %s", $uuid),
+                    sprintf("Attribute description: %s", $uuid),
+                    AttributeType::TEXT_LONG
+                );
+                $a->add();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                        
+        }
+
         public function testUpdateWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             if (session_status() == PHP_SESSION_NONE) {
@@ -344,6 +370,28 @@
             } finally {
                 $this->assertNull($err);
             }                        
+        }
+        
+        public function testSearchWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->logout();
+            Attribute::search(0, 16);
+        }
+
+        public function testSearchWithAuthSession() {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "password", 0);
+            $u->login();
+            $results = Attribute::search(0, 16);
+            // TODO: better search results check
+            $this->assertGreaterThanOrEqual(1, count($results));
         }
         
     }
