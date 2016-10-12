@@ -6,6 +6,14 @@
     require_once "class.Utils.php";
 
     /**
+    *   user type definitions
+    */
+    abstract class UserType {
+        const DEFAULT = 0;          // normal (default) user
+        const ADMINISTRATOR = 1;    // administrator user (all privileges)
+    }
+
+    /**
     *   user class
     */
     class User {
@@ -46,9 +54,9 @@
         }
 
         /**
-        *   add new user
+        *   register new user
         */
-        public function add() {
+        public function signup() {
             if ($this->exists()) {
                 throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
@@ -69,9 +77,51 @@
                     $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
                     $params[] = $param;                                
                     $param = new DatabaseParam();
+                    $param->int(":type", UserType::DEFAULT);
+                    $params[] = $param;                                
+                    $param = new DatabaseParam();
                     $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, created, creator) VALUES (:id, :email, :password, CURRENT_TIMESTAMP, :creator) ", $params);
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, created, creator) VALUES (:id, :email, :password, :type, CURRENT_TIMESTAMP, :creator) ", $params);
+                }
+            }
+        }
+
+        /**
+        *   add new user (admin privileges required)
+        */
+        public function add() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException();
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException();
+            }
+            if ($this->exists()) {
+                throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+            } else {
+                if (empty($this->email) || empty($this->password)) {
+                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                } else {
+                    if (empty($this->id)) {
+                        $this->id = Utils::uuid();
+                    }
+                    $params = array();
+                    $param = new DatabaseParam();
+                    $param->str(":id", $this->id);
+                    $params[] = $param;                
+                    $param = new DatabaseParam();
+                    $param->str(":email", $this->email);
+                    $params[] = $param;                
+                    $param = new DatabaseParam();
+                    $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
+                    $params[] = $param;                                
+                    $param = new DatabaseParam();
+                    $param->int(":type", $this->type);
+                    $params[] = $param;                                
+                    $param = new DatabaseParam();
+                    $param->str(":creator", User::getSessionUserId());
+                    $params[] = $param;                                
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, created, creator) VALUES (:id, :email, :password, :type, CURRENT_TIMESTAMP, :creator) ", $params);
                 }
             }
         }
