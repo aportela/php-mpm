@@ -20,6 +20,7 @@
 
         public $id;
         public $email;
+        public $name;
         public $password;
         public $type;
 
@@ -27,10 +28,11 @@
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $email = "", string $password = "", int $type = 0) {
+        public function set(string $id = "", string $email = "", string $password = "", string $name = "", int $type = 0) {
             $this->id = $id;
             $this->email = $email;
             $this->password = $password;
+            $this->name = $name;
             $this->type = $type;
         }
 
@@ -60,7 +62,7 @@
             if ($this->exists()) {
                 throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
-                if (empty($this->email) || empty($this->password)) {
+                if (empty($this->email) || empty($this->password) || empty($this->name)) {
                     throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
@@ -80,9 +82,12 @@
                     $param->int(":type", UserType::DEFAULT);
                     $params[] = $param;                                
                     $param = new DatabaseParam();
+                    $param->str(":name", $this->name);
+                    $params[] = $param;                                
+                    $param = new DatabaseParam();
                     $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, created, creator) VALUES (:id, :email, :password, :type, CURRENT_TIMESTAMP, :creator) ", $params);
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator) ", $params);
                 }
             }
         }
@@ -99,7 +104,7 @@
             if ($this->exists()) {
                 throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
-                if (empty($this->email) || empty($this->password)) {
+                if (empty($this->email) || empty($this->password) || empty($this->name)) {
                     throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
@@ -117,11 +122,14 @@
                     $params[] = $param;                                
                     $param = new DatabaseParam();
                     $param->int(":type", $this->type);
-                    $params[] = $param;                                
+                    $params[] = $param;
+                    $param = new DatabaseParam();
+                    $param->str(":name", $this->name);
+                    $params[] = $param;                                                                                    
                     $param = new DatabaseParam();
                     $param->str(":creator", User::getSessionUserId());
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, created, creator) VALUES (:id, :email, :password, :type, CURRENT_TIMESTAMP, :creator) ", $params);
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator) ", $params);
                 }
             }
         }
@@ -140,11 +148,13 @@
                 $param = new DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT id, email, password, type FROM USER WHERE id = :id OR email = :email ", $params);
+                $rows = Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE id = :id OR email = :email ", $params);
                 if (count($rows) != 1) {
                     throw new MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
+                    $this->id = $rows[0]->id;
                     $this->password = $rows[0]->password;
+                    $this->name = $rows[0]->name;
                     $this->type = $rows[0]->type;
                 }                                                
             }            
@@ -161,6 +171,7 @@
             } else {
                 $_SESSION["user_id"] = $this->id;
                 $_SESSION["user_email"] = $this->email;
+                $_SESSION["user_name"] = $this->name;
                 $_SESSION["user_type"] = $this->type;
                 return(true);
             }
@@ -172,12 +183,15 @@
         *   (Frxstrem) http://stackoverflow.com/a/3512570
         */
         public function signout() {
+            
             $_SESSION = array();
             if (ini_get("session.use_cookies")) {
                 $params = session_get_cookie_params();
                 setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
             }
-            session_destroy();
+            if (session_status() != PHP_SESSION_NONE) {
+                session_destroy();
+            }
         }
 
         /**
@@ -258,7 +272,7 @@
                 throw new MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT U.id, U.email, U.type, UC.id AS creatorId, NULL AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id ORDER BY U.created DESC ", array()));
+                return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id ORDER BY U.created DESC ", array()));
             }
         }
         
