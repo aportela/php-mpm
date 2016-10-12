@@ -1,7 +1,14 @@
-$.fn.clearValidationErrors = function() {
-    $("div.form-group").removeClass("has-danger");
-    $("div.form-group .form-control-danger").removeClass("form-control-danger");
+$.fn.clearValidationMessages = function() {
+    $("div.form-group").removeClass("has-danger").removeClass("has-warning");
+    $("div.form-group .form-control-danger").removeClass("form-control-danger").removeClass("form-control-warning");
     $("div.form-group div.form-control-feedback").remove();
+}
+
+$.fn.putValidationWarning = function(elementId, message) {
+    var element = $("div#" + elementId);
+    $(element).append('<div class="form-control-feedback">' + message + '</div>');
+    $(element).find("input").addClass('form-control-warning');
+    $(element).addClass("has-warning");
 }
 
 $.fn.putValidationError = function(elementId, message) {
@@ -14,7 +21,7 @@ $.fn.putValidationError = function(elementId, message) {
 $("form#frm_signin").submit(function(e) {
     e.preventDefault();
     var self = $(this);
-    self.clearValidationErrors();
+    self.clearValidationMessages();
     var xhr = new XMLHttpRequest();
     xhr.open($(this).attr("method"), $(this).attr("action"), true);
     xhr.onreadystatechange = function(e) {
@@ -30,7 +37,7 @@ $("form#frm_signin").submit(function(e) {
             } finally {
                 switch (this.status) {
                     case 404:
-                        self.putValidationError("fg_email", "email not found");
+                        self.putValidationWarning("fg_email", "email not found");
                         break;
                     case 400:
                         // TODO
