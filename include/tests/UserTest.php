@@ -36,11 +36,82 @@
             $u->exists();
         }
 
+        public function testSignUpWithExistentEmail() {
+            $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->set("", "admin@localhost", "", 0);
+            $u->signup();            
+        }
+
+        public function testSignUpWithEmptyEmail() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->signup();            
+        }
+
+        public function testSignUpWithEmptyPassword() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->signup();            
+        }
+
+        public function testSignUp() {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();            
+            $u->set(Utils::uuid(), sprintf("%s@server.com", Utils::uuid()), "password", 0);
+            $err = null;
+            try {
+                $u->signup();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }            
+        }
+
+        public function testAddWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->add();                    
+        }
+
+        public function testAddWithoutAuthAdminSession() {
+            /*
+            // TODO: default (non admin) user            
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $lu = new User();
+            $lu->set("", "admin@localhost", "password", 0);
+            $lu->login();                        
+            $u = new User();
+            $a->add();
+            */                                
+        }
+
         public function testAddWithExistentEmail() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+            $lu = new User();
+            $lu->set("", "admin@localhost", "password", 0);
+            $lu->login();            
             $u = new User();
             $u->set("", "admin@localhost", "", 0);
             $u->add();            
@@ -51,6 +122,9 @@
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+            $lu = new User();
+            $lu->set("", "admin@localhost", "password", 0);
+            $lu->login();                        
             $u = new User();
             $u->add();            
         }
@@ -60,6 +134,9 @@
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+            $lu = new User();
+            $lu->set("", "admin@localhost", "password", 0);
+            $lu->login();                        
             $u = new User();
             $u->add();            
         }
@@ -68,6 +145,9 @@
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+            $lu = new User();
+            $lu->set("", "admin@localhost", "password", 0);
+            $lu->login();                        
             $u = new User();            
             $u->set(Utils::uuid(), sprintf("%s@server.com", Utils::uuid()), "password", 0);
             $err = null;
