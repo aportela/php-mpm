@@ -10,172 +10,112 @@
 
     class AttributeTest extends \PHPUnit_Framework_TestCase {
 
+        const ADMIN_EMAIL = "admin@localhost";
+        const ADMIN_PASSWORD = "password";
+
+        const EXISTENT_ATTRIBUTE_ID = "1111111-1111-1111-0000-333333333333";
+        const EXISTENT_ATTRIBUTE_NAME = "Age";
+
         public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
         }
 
+        private function signInAsAdmin() {
+            $u = new User();
+            $u->set("", AttributeTest::ADMIN_EMAIL, AttributeTest::ADMIN_PASSWORD, "administrator", UserType::DEFAULT);
+            $u->login();            
+        }
+
+        private function signOut() {
+            (new User())->signout();
+        }
+        
         public function testExistsWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $a = new Attribute();
             $a->exists();                    
         }
 
+        // TODO
         public function testExistsWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $u = new User();
-            // TODO: normal (non admin user)
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
-            $a = new Attribute();
-            $a->exists();                    
-            */                    
         }
 
         public function testExistsWithExistentId() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $a = new Attribute();
-            $a->set(
-                "1111111-1111-1111-0000-111111111111",
-                "",
-                "",
-                AttributeType::NONE
-            );
+            $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;
             $this->assertTrue($a->exists());        
         }
 
         public function testExistsWithNotExistentId() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $a = new Attribute();
-            $a->set(
-                "z-z-z--z-z-z-z",
-                "",
-                "",
-                AttributeType::NONE
-            );
+            $a->id = Utils::uuid();
             $this->assertFalse($a->exists());        
         }
 
         public function testExistsWithExistentName() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();            
             $a = new Attribute();
-            $a->set(
-                "",
-                "Age",
-                "",
-                AttributeType::NONE
-            );
+            $a->name = AttributeTest::EXISTENT_ATTRIBUTE_NAME;
             $this->assertTrue($a->exists());        
         }
 
         public function testExistsWithNotExistentName() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();            
             $a = new Attribute();
-            $a->set(
-                "",
-                "this_atribute_Name_DO_NOT_exISt__--",
-                "",
-                AttributeType::NONE
-            );
+            $a->name = Utils::uuid();
             $this->assertFalse($a->exists());       
         }
 
         public function testAddWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $a = new Attribute();
-            $a->set(
-                Utils::uuid(),
-                "Surname",
-                "Type person surname",
-                AttributeType::TEXT_SHORT
-            );
             $a->add();                    
         }
 
+        // TODO
         public function testAddWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $a->set(
-                Utils::uuid(),
-                "Surname",
-                "Type person surname",
-                AttributeType::TEXT_SHORT
-            );
-            $a->add();                    
-            */
         }
 
         public function testAddWithExistentId() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
-            $a = new Attribute();            
-            $a->set(
-                "1111111-1111-1111-0000-111111111111",
-                "Surname",
-                "Type person surname",
-                AttributeType::TEXT_SHORT
-            );
+            $this->signInAsAdmin();
+            $a = new Attribute();
+            $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;             
             $a->add();                    
         }
 
         public function testAddWithExistentName() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $a = new Attribute();
-            $a->set(
-                Utils::uuid(),
-                "Age",
-                "Used for storing ages",
-                AttributeType::NUMBER_INTEGER
-            );
+            $a->name = AttributeTest::EXISTENT_ATTRIBUTE_NAME;             
             $a->add();                                
         }
 
         public function testAddWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
+            $this->signInAsAdmin();
             $a = new Attribute();
-            $a->set(
-                Utils::uuid(),
-                "",
-                "Used for storing ages",
-                AttributeType::NUMBER_INTEGER
-            );
             $a->add();                                
         }
 
         public function testAdd() {
             $err = null;
             try {
-                $err = null;
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();
+                $this->signInAsAdmin();
                 $a = new Attribute();
                 $uuid = Utils::uuid();
                 $a->set(
                     $uuid,
                     sprintf("Attribute name: %s", $uuid),
                     sprintf("Attribute description: %s", $uuid),
-                    AttributeType::TEXT_LONG
+                    rand(1, 7)
                 );
                 $a->add();
             } catch (Throwable $e) {
@@ -187,82 +127,49 @@
 
         public function testUpdateWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
             $a = new Attribute();
             $a->update();                    
         }
 
+        // TODO
         public function testUpdateWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $a = new Attribute();
-            $a->set(
-                Utils::uuid(),
-                "Surname",
-                "Type person surname",
-                AttributeType::NONE
-            );
-            $a->update();                    
-            */
         }
 
         public function testUpdateWithEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
+            $this->signInAsAdmin();
             $a = new Attribute();            
-            $a->set(
-                "",
-                "Updated name",
-                "Updated description",
-                AttributeType::TEXT_SHORT
-            );
             $a->update();                    
         }
 
         public function testUpdateWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
-            $a = new Attribute();
-            $a->set(
-                "z-z-z-z-z-z-z-z-z",
-                "Age2",
-                "Used for storing ages2",
-                AttributeType::NONE
-            );
+            $this->signInAsAdmin();
+            $a = new Attribute();            
+            $a->id = Utils::uuid();
+            $a->name = sprintf("Attribute name: %s", Utils::uuid());
             $a->update();                                
         }
 
         public function testUpdateWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();            
-            $a = new Attribute();
-            $a->set(
-                "1111111-1111-1111-0000-111111111111",
-                "",
-                "Used for storing ages",
-                AttributeType::NONE
-            );
+            $this->signInAsAdmin();
+            $a = new Attribute();            
+            $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;
             $a->update();                                
         }
 
         public function testUpdate() {
             $err = null;
             try {
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();            
+                $this->signInAsAdmin();
                 $a = new Attribute();
                 $a->set(
-                    "1111111-1111-1111-0000-111111111111",
-                    "Name",
-                    "For short (0-255 chars) texts",
-                    AttributeType::NONE
+                    AttributeTest::EXISTENT_ATTRIBUTE_ID,
+                    AttributeTest::EXISTENT_ATTRIBUTE_NAME,
+                    "Integer values",
+                    AttributeType::NUMBER_INTEGER
                 );
                 $a->update();
             } catch (Throwable $e) {
@@ -274,37 +181,26 @@
 
         public function testDeleteWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            $u = new User();
-            $u->signout();
+            $this->signOut();
             $a = new Attribute();
             $a->delete();
         }
 
+        // TODO
         public function testDeleteWithoutAuthAdminSession() {
-            /*
-            // TODO: default (non admin) user            
-            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
-            $u = new User();
-            $u->signout();
-            $a = new Attribute();
-            $a->delete();
-            */            
         }
 
         public function testDelete() {
             $err = null;
             try {
-                $err = null;
-                $u = new User();
-                $u->set("", "admin@localhost", "password", 0);
-                $u->login();
+                $this->signInAsAdmin();  
                 $a = new Attribute();
                 $uuid = Utils::uuid();
                 $a->set(
                     $uuid,
                     sprintf("Attribute name: %s", $uuid),
                     sprintf("Attribute description: %s", $uuid),
-                    AttributeType::TEXT_LONG
+                    rand(1, 7)
                 );
                 $a->add();
                 $a->delete();
@@ -317,19 +213,15 @@
         
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
-            $u = new User();
-            $u->signout();
-            Attribute::search(0, 16);
+            $this->signOut();
+            Attribute::search(1, 16);
         }
 
         public function testSearchWithAuthSession() {
-            $u = new User();
-            $u->set("", "admin@localhost", "password", 0);
-            $u->login();
-            $results = Attribute::search(0, 16);
+            $this->signInAsAdmin();
+            $results = Attribute::search(1, 16);
             // TODO: better search results check
             $this->assertGreaterThanOrEqual(1, count($results));
-        }
-        
+        }        
     }
 ?>
