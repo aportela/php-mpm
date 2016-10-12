@@ -11,10 +11,10 @@
     */
     class Group {
 
-        private $id;
-        private $name;
-        private $description;
-        private $users;
+        public $id;
+        public $name;
+        public $description;
+        public $users;
 
 		public function __construct () { }
 
@@ -86,7 +86,7 @@
                 // TODO: transaction support
                 Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
                 if (count($this->users) > 0) {
-                    foreach($users as $user) {
+                    foreach($this->users as $user) {
                         $this->addUser($user->id);
                     }
                 }
@@ -141,14 +141,20 @@
             if (empty($userId)) {
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
-                $params = array();
-                $param = new DatabaseParam();
-                $param->str(":group_id", $this->id);
-                $params[] = $param;                            
-                $param = new DatabaseParam();
-                $param->str(":user_id", $userId);
-                $params[] = $param;                                
-                Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
+                $u = new User();
+                $u->set($userId, "", "", 0);
+                if (! $u->exists()) {
+                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                } else {
+                    $params = array();
+                    $param = new DatabaseParam();
+                    $param->str(":group_id", $this->id);
+                    $params[] = $param;                            
+                    $param = new DatabaseParam();
+                    $param->str(":user_id", $userId);
+                    $params[] = $param;                                
+                    Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
+                }
             }            
         }
 
