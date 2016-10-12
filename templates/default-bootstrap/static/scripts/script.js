@@ -4,44 +4,52 @@
  */
 var $loading = $('i#ajax_icon').hide();
 
-(function() {
+(function () {
     var origOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function() {
+    XMLHttpRequest.prototype.open = function () {
         $loading.show();
-        this.addEventListener('load', function() {
+        this.addEventListener('load', function () {
             $loading.hide();
         });
         origOpen.apply(this, arguments);
     };
 })();
 
-$.fn.clearValidationMessages = function() {
+$.fn.clearValidationMessages = function () {
     $("div.form-group").removeClass("has-danger").removeClass("has-warning");
     $("div.form-group .form-control-danger").removeClass("form-control-danger").removeClass("form-control-warning");
     $("div.form-group div.form-control-feedback").remove();
 }
 
-$.fn.putValidationWarning = function(elementId, message) {
+$.fn.putValidationWarning = function (elementId, message) {
     var element = $("div#" + elementId);
     $(element).append('<div class="form-control-feedback">' + message + '</div>');
     $(element).find("input").addClass('form-control-warning');
     $(element).addClass("has-warning");
 }
 
-$.fn.putValidationError = function(elementId, message) {
+$.fn.putValidationError = function (elementId, message) {
     var element = $("div#" + elementId);
     $(element).append('<div class="form-control-feedback">' + message + '</div>');
     $(element).find("input").addClass('form-control-danger');
     $(element).addClass("has-danger");
 }
 
-$("form#frm_signin").submit(function(e) {
+$.fn.disableSubmit = function () {
+    $("button[type=submit]").addClass("ajax_disabled").prop("disabled", true);
+}
+
+$.fn.enableSubmit = function () {
+    $("button.ajax_disabled").removeClass("ajax_disabled").prop("disabled", false);
+}
+
+$("form#frm_signin").submit(function (e) {
     e.preventDefault();
     var self = $(this);
     self.clearValidationMessages();
     var xhr = new XMLHttpRequest();
     xhr.open($(this).attr("method"), $(this).attr("action"), true);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             var result = null;
             try {
@@ -52,6 +60,7 @@ $("form#frm_signin").submit(function(e) {
                 console.log(xhr.responseText);
                 console.groupEnd();
             } finally {
+                self.enableSubmit();
                 switch (this.status) {
                     case 404:
                         self.putValidationWarning("fg_email", "email not found");
@@ -78,13 +87,14 @@ $("form#frm_signin").submit(function(e) {
         }
     };
     xhr.send(new FormData($(this)[0]), null, 2);
+    self.disableSubmit();
 });
 
-$("a#logout").click(function(e) {
+$("a#logout").click(function (e) {
     e.preventDefault();
     var xhr = new XMLHttpRequest();
     xhr.open("GET", $(this).attr("href"), true);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             var result = null;
             try {
