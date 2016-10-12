@@ -8,6 +8,7 @@
     *   @param string id 
     *   @param string email
     *   @param string password
+    *   @param int type
     */
     namespace PHP_MPM;
 
@@ -24,7 +25,7 @@
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["email"]) ? $_POST["email"]: "", 
             isset($_POST["password"]) ? $_POST["password"]: "",
-            0
+            isset($_POST["type"]) ? $_POST["type"]: 0
         );
         $u->add();
         $result["success"] = true;
@@ -43,6 +44,20 @@
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
+    } catch (MPMAuthSessionRequiredException $e) {
+        Error::save($e);
+        ob_clean();
+        header("HTTP/1.0 403 Forbidden", 403, true);
+        if (ENVIRONMENT_DEV && DEBUG) {
+            $result["exception"] = print_r($e, true);
+        }        
+    } catch (MPMAdminPrivilegesRequiredException $e) {
+        Error::save($e);
+        ob_clean();
+        header("HTTP/1.0 403 Forbidden", 403, true);
+        if (ENVIRONMENT_DEV && DEBUG) {
+            $result["exception"] = print_r($e, true);
+        }                
     } catch (\PDOException $e) {
         Error::save($e);
         ob_clean();
