@@ -293,5 +293,58 @@
                 $this->assertNull($err);
             }            
         }
+
+        public function testDeleteWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->logout();
+            $a = new Attribute();
+            $a->delete();
+        }
+
+        public function testDeleteWithoutAuthAdminSession() {
+            /*
+            // TODO: default (non admin) user            
+            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $u = new User();
+            $u->logout();
+            $a = new Attribute();
+            $a->delete();
+            */            
+        }
+
+        public function testDelete() {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $err = null;
+            try {
+                $err = null;
+                $u = new User();
+                $u->set("", "admin@localhost", "password", 0);
+                $u->login();
+                $a = new Attribute();
+                $uuid = Utils::uuid();
+                $a->set(
+                    $uuid,
+                    sprintf("Attribute name: %s", $uuid),
+                    sprintf("Attribute description: %s", $uuid),
+                    AttributeType::TEXT_LONG
+                );
+                $a->add();
+                $a->delete();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                        
+        }
+        
     }
 ?>
