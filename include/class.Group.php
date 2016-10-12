@@ -28,7 +28,7 @@
         }
 
         /**
-        *   check user (by email) existence
+        *   check group (by id/name) existence
         */
         public function exists() {
             if (! User::isAuthenticated()) {
