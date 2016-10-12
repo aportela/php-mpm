@@ -1,13 +1,36 @@
+<nav class="nav">
+  <div class="nav-left">
+    <a class="nav-item is-brand" href="#">
+      php-mpm
+    </a>
+  </div>
+  <div class="nav-center">
+    <a class="nav-item" href="https://github.com/aportela/php-mpm" title="github project page">
+      <span class="icon">
+        <i class="fa fa-github"></i>
+      </span>
+    </a>  
+  </div>
+  <div class="nav-right nav-menu">
+  <a class="nav-item" href="#">
+      Signed as <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>
+    </a>
+    <a class="nav-item" id="signout" href="/api/user/signout.php">
+      <i class="fa fa-sign-out" aria-hidden="true"></i>
+ Sign Out
+    </a>
+  </div>
+</nav>
 <section class="section">
     <div class="container-fluid">
         <div class="columns">
             <div class="column is-2">
                 <aside class="menu">
                 <p class="menu-label">
-                    General
+                    General                    
                 </p>
                 <ul class="menu-list">
-                    <li><a href="index.php">Home</a></li>
+                    <li><a href="index.php" <?= ! isset($_GET["page"]) ? 'class="is-active"' : null ?>>Home</a></li>
                 </ul>
                 <p class="menu-label">
                     Administration
@@ -34,14 +57,14 @@
                             break;
                             default:
                                 ?>
-                                <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="signout" href="/api/user/signout.php">click here to sign out</a></h1>
+                                <h1>TA-DA!</h1>
                                 <?php                            
                             break;
                         }
 
                     } else {
                         ?>
-                        <h1>Hello <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>, <a id="signout" href="/api/user/signout.php">click here to sign out</a></h1>
+                        <h1>TA-DA!</h1>
                         <?php
                     }
                 ?>
