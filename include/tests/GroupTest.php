@@ -25,6 +25,7 @@
 
         private function signInAsAdmin() {
             $u = new User();
+            $u->set("", GroupTest::ADMIN_EMAIL, GroupTest::ADMIN_PASSWORD, "administrator", UserType::DEFAULT);
             $u->login();            
         }
 
