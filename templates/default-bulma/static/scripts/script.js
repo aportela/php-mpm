@@ -108,3 +108,179 @@ $("a#logout").click(function(e) {
     };
     xhr.send();
 });
+
+function refreshUsersTable() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/user/search.php", true);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            var result = null;
+            try {
+                result = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.groupCollapsed("Error parsing JSON response");
+                console.log(e);
+                console.log(xhr.responseText);
+                console.groupEnd();
+            } finally {
+                switch (this.status) {
+                    case 200:
+                        if (result === null) {
+                            // TODO: error
+                            console.log(this.status);
+                        } else {
+                            var html = null;
+                            if (result.results && result.results.length > 0) {
+                                for (var i = 0; i < result.results.length; i++) {
+                                    html += '<tr>';
+                                    html += '<td>' + result.results[i].id + '</td>';
+                                    html += '<td>' + result.results[i].email + '</td>';
+                                    html += '</tr>';
+                                }
+                            }
+                            $("table#users tbody").html(html);
+                        }
+                        break;
+                    default:
+                        // TODO: error
+                        console.log(this.status);
+                        break;
+                }
+            }
+        }
+    }
+    var formData = new FormData();
+    formData.append("page", 1);
+    formData.append("resultsPage", 16);
+    xhr.send(formData, null, 2);
+}
+
+function refreshGroupsTable() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/group/search.php", true);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            var result = null;
+            try {
+                result = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.groupCollapsed("Error parsing JSON response");
+                console.log(e);
+                console.log(xhr.responseText);
+                console.groupEnd();
+            } finally {
+                switch (this.status) {
+                    case 200:
+                        if (result === null) {
+                            // TODO: error
+                            console.log(this.status);
+                        } else {
+                            var html = null;
+                            if (result.results && result.results.length > 0) {
+                                for (var i = 0; i < result.results.length; i++) {
+                                    html += '<tr>';
+                                    html += '<td>' + result.results[i].id + '</td>';
+                                    html += '<td>' + result.results[i].name + '</td>';
+                                    html += '<td>' + result.results[i].description + '</td>';
+                                    html += '</tr>';
+                                }
+                            }
+                            $("table#groups tbody").html(html);
+                        }
+                        break;
+                    default:
+                        // TODO: error
+                        console.log(this.status);
+                        break;
+                }
+            }
+        }
+    }
+    var formData = new FormData();
+    formData.append("page", 1);
+    formData.append("resultsPage", 16);
+    xhr.send(formData, null, 2);
+}
+
+function refreshAttributesTable() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/attribute/search.php", true);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            var result = null;
+            try {
+                result = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.groupCollapsed("Error parsing JSON response");
+                console.log(e);
+                console.log(xhr.responseText);
+                console.groupEnd();
+            } finally {
+                switch (this.status) {
+                    case 200:
+                        if (result === null) {
+                            // TODO: error
+                            console.log(this.status);
+                        } else {
+                            var html = null;
+                            if (result.results && result.results.length > 0) {
+                                for (var i = 0; i < result.results.length; i++) {
+                                    html += '<tr>';
+                                    html += '<td>' + result.results[i].id + '</td>';
+                                    html += '<td>' + result.results[i].name + '</td>';
+                                    html += '<td>' + result.results[i].description + '</td>';
+                                    html += '<td>';
+                                    switch (parseInt(result.results[i].type)) {
+                                        case 1:
+                                            html += 'short text';
+                                            break;
+                                        case 2:
+                                            html += 'long text';
+                                            break;
+                                        case 3:
+                                            html += 'number integer';
+                                            break;
+                                        case 4:
+                                            html += 'number decimal';
+                                            break;
+                                        case 5:
+                                            html += 'date';
+                                            break;
+                                        case 6:
+                                            html += 'time';
+                                            break;
+                                        case 7:
+                                            html += 'datetime';
+                                            break;
+                                        default:
+                                            html += 'none';
+                                            break;
+                                    }
+                                    html += '</td>';
+                                    html += '</tr>';
+                                }
+                            }
+                            $("table#attributes tbody").html(html);
+                        }
+                        break;
+                    default:
+                        // TODO: error
+                        console.log(this.status);
+                        break;
+                }
+            }
+        }
+    }
+    var formData = new FormData();
+    formData.append("page", 1);
+    formData.append("resultsPage", 16);
+    xhr.send(formData, null, 2);
+}
+
+if ($("table#users").length == 1) {
+    refreshUsersTable();
+} else if ($("table#groups").length == 1) {
+    refreshGroupsTable();
+} else if ($("table#attributes").length == 1) {
+    refreshAttributesTable();
+}
