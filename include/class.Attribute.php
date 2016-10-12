@@ -110,7 +110,7 @@
                         $param = new DatabaseParam();
                         $param->str(":creator", User::getSessionUserId());
                         $params[] = $param;                
-                        Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                        Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
                     }
                 }
             }
