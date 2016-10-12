@@ -47,11 +47,6 @@
                 $param->str(":name", $this->name);
                 $params[] = $param;                
                 $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", $params);
-                if (count($rows) != 1) {
-                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
-                } else {
-                    return(true);
-                }
                 return(count($rows) > 0);                
             }            
         }
