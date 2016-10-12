@@ -10,10 +10,10 @@
     */
     class User {
 
-        private $id;
-        private $email;
-        private $password;
-        private $type;
+        public $id;
+        public $email;
+        public $password;
+        public $type;
 
 		public function __construct () { }
 
@@ -30,12 +30,17 @@
         *   check user (by email) existence
         */
         public function exists() {
-            if (empty($this->email)) {                
+            if (empty($this->email) && empty($this->id)) {                
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
+                $params = array();
                 $param = new DatabaseParam();
-                $param->str(":email", $this->email);                
-                $rows = Database::execWithResult(" SELECT * FROM USER WHERE email = :email ", array($param));
+                $param->str(":id", $this->id);
+                $params[] = $param;                
+                $param = new DatabaseParam();
+                $param->str(":email", $this->email);
+                $params[] = $param;                
+                $rows = Database::execWithResult(" SELECT * FROM USER WHERE email = :email OR id = :id ", $params);
                 return(count($rows) > 0);                
             }            
         }
