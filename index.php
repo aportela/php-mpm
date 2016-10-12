@@ -12,6 +12,6 @@
 
     $t = new Template("layout.php");
 
-    $t->render(array("is_logged" => User::isAuthenticated(), "name" => "john doe"));
+    $t->render(array("is_logged" => User::isAuthenticated(), "name" => User::isAuthenticated() ? $_SESSION["user_name"] : "john doe"));
     ob_flush();
 ?>
