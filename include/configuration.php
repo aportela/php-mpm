@@ -22,6 +22,8 @@
     define("CACHE", false);
 
     define("APP_ROOT_LOCAL_PATH", dirname(__DIR__));
+    define("INCLUDE_PATH", __DIR__);
+    
     
     define("MIN_PHP_VERSION", 7);
 
@@ -40,4 +42,14 @@
         ini_set('log_errors', 'On');
 		error_reporting(E_ALL);	        
     }
+
+    spl_autoload_register(function($className) {
+        // https://github.com/twigphp/Twig/blob/1.x/lib/Twig/Autoloader.php
+        if (0 !== strpos($className, "PHP_MPM\\")) {
+        } else {
+            if (is_file($file = INCLUDE_PATH . str_replace("PHP_MPM\\", "\\class.", $className) .'.php')) {
+                require_once $file;
+            }
+        }        
+    });    
 ?>
