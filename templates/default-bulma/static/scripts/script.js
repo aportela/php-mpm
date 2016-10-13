@@ -186,10 +186,12 @@ function refreshGroupsTable() {
                             var html = null;
                             if (result.results && result.results.length > 0) {
                                 for (var i = 0; i < result.results.length; i++) {
-                                    html += '<tr>';
-                                    html += '<td>' + result.results[i].id + '</td>';
+                                    html += '<tr data-id="' + result.results[i].id + '">';
                                     html += '<td>' + result.results[i].name + '</td>';
-                                    html += '<td>' + result.results[i].description + '</td>';
+                                    html += '<td>' + (result.results[i].description ? result.results[i].description : "") + '</td>';
+                                    html += '<td data-id="' + result.results[i].creatorId + '">' + (result.results[i].creatorId != result.results[i].id ? result.results[i].creatorName : "auto-register") + '</td>';
+                                    html += '<td data-date="' + result.results[i].creationDate + '">' + new moment(result.results[i].creationDate).fromNow() + '</td>';
+                                    html += '<td class="has-text-centered"><a class="button is-small is-info modal-button" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button"  data-target="#modal_delete">Delete</a></td>';
                                     html += '</tr>';
                                 }
                             }
@@ -233,8 +235,7 @@ function refreshAttributesTable() {
                             var html = null;
                             if (result.results && result.results.length > 0) {
                                 for (var i = 0; i < result.results.length; i++) {
-                                    html += '<tr>';
-                                    html += '<td>' + result.results[i].id + '</td>';
+                                    html += '<tr data-id="' + result.results[i].id + '">';
                                     html += '<td>' + result.results[i].name + '</td>';
                                     html += '<td>' + result.results[i].description + '</td>';
                                     html += '<td>';
@@ -265,6 +266,9 @@ function refreshAttributesTable() {
                                             break;
                                     }
                                     html += '</td>';
+                                    html += '<td data-id="' + result.results[i].creatorId + '">' + (result.results[i].creatorId != result.results[i].id ? result.results[i].creatorName : "auto-register") + '</td>';
+                                    html += '<td data-date="' + result.results[i].creationDate + '">' + new moment(result.results[i].creationDate).fromNow() + '</td>';
+                                    html += '<td class="has-text-centered"><a class="button is-small is-info modal-button" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button"  data-target="#modal_delete">Delete</a></td>';
                                     html += '</tr>';
                                 }
                             }
