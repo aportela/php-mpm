@@ -191,7 +191,7 @@
                 throw new MPMAuthSessionRequiredException("");
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT id, name, description FROM [GROUP] ORDER BY name ", array()));
+                return(Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, G.created AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));
             }
         }
 

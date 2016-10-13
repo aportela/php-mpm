@@ -73,7 +73,7 @@
             } else {
                 // TODO: pagination & filtering
                 // TODO: type is returned as string (not integer)
-                return(Database::execWithResult(" SELECT id, name, description, type FROM [ATTRIBUTE] ORDER BY name ", array()));
+                return(Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, A.created AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
             }
         }
 
