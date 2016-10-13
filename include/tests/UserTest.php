@@ -263,5 +263,39 @@
             // TODO: better search results check
             $this->assertGreaterThanOrEqual(1, count($results));
         }
+
+        public function testDeleteWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
+            $u = new User();
+            $u->delete();
+        }
+
+        // TODO
+        public function testDeleteWithoutAuthAdminSession() {
+        }
+
+        public function testDeleteWithoutId() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->signInAsAdmin();
+            $u = new User();
+            $u->delete();
+        }
+
+        public function testDelete() {
+            $err = null;
+            try {
+                $this->signInAsAdmin();
+                $uuid = Utils::uuid();
+                $u = new User();             
+                $u->set($uuid, sprintf("%s@server.com", $uuid), "password", sprintf("Name: %s", $uuid), UserType::DEFAULT);
+                $u->signup();
+                $u->delete();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                        
+        }        
     }
 ?>
