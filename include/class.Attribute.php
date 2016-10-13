@@ -162,6 +162,8 @@
                 throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else if (empty($this->id)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
                 $param = new DatabaseParam();

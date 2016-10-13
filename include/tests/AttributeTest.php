@@ -190,6 +190,13 @@
         public function testDeleteWithoutAuthAdminSession() {
         }
 
+        public function testDeleteWithoutId() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->signInAsAdmin();
+            $a = new Attribute();
+            $a->delete();
+        }
+
         public function testDelete() {
             $err = null;
             try {
