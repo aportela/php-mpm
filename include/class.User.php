@@ -275,6 +275,26 @@
                 return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id ORDER BY U.created DESC ", array()));
             }
         }
+
+        /**
+        *   delete user (and references ?)
+        */
+        public function delete() {
+            if (! User::isAuthenticated()) {
+                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (! User::isAuthenticatedAsAdmin()) {
+                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else if (empty($this->id)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                
+            } else {
+                $params = array();
+                $param = new DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;
+                // TODO: reference CASCADE delete vs set deleted flag...                                
+                Database::execWithoutResult(" DELETE FROM [USER] WHERE id = :id ", $params);
+            }
+        }
         
     }
 ?>
