@@ -24,3 +24,12 @@ table tbody tr:hover td a.button {
 div#auth_container {
     margin-top: 64px;
 }
+
+
+/* 
+    fix icon vertical alingn
+*/
+
+table span.icon {
+    line-height: 22px !important;
+}
