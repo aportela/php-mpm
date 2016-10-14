@@ -2,7 +2,7 @@
 <html lang="en">
   <?php include "html-head.php"; ?>
   <body>
-  <i id="ajax_icon" class="fa fa-cog fa-spin fa-1x fa-fw"></i>
+  <i id="ajax_icon" class="fa fa-cog fa-spin fa-2x fa-fw"></i>
     <?php
       if ($_TEMPLATE["is_logged"] == false) {
           include "signin.php";
