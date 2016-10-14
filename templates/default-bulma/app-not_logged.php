@@ -13,7 +13,7 @@
                     </div>        
                 </div>            
                 <div class="card-content">
-                    <form class="" id="frm_signin" method="post" action="/api/user/login.php">
+                    <form class="tab-content" id="frm_signin" method="post" action="/api/user/login.php">
                         <p class="control has-icon" id="c_email">
                             <input class="input" type="email" name="email" placeholder="Email" value="admin@localhost">
                             <i class="fa fa-envelope"></i>
@@ -26,7 +26,7 @@
                             <button type="submit" class="button is-success">sign in</button>
                         </p>
                     </form>
-                    <form class="is-hidden" id="frm_signup" method="post" action="/api/user/signup.php">
+                    <form class="tab-content is-hidden" id="frm_signup" method="post" action="/api/user/signup.php">
                         <p class="control has-icon" id="c_email">
                             <input class="input" type="email" name="email" placeholder="Email" value="admin@localhost">
                             <i class="fa fa-envelope"></i>
@@ -43,7 +43,7 @@
                             <button type="submit" class="button is-success">sign up</button>
                         </p>
                     </form>
-                    <form class="is-hidden" id="frm_recover_account" method="post" action="#">
+                    <form class="tab-content is-hidden" id="frm_recover_account" method="post" action="#">
                         <p class="control has-icon" id="c_email">
                             <input class="input" type="email" name="email" placeholder="Email" value="admin@localhost">
                             <i class="fa fa-envelope"></i>

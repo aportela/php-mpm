@@ -27,7 +27,8 @@ $("div.tabs ul li a").click(function(e) {
     e.preventDefault();
     $(this).closest("ul").find("li").removeClass("is-active");
     $(this).closest("li").addClass("is-active");
-    console.log($(this).data("target"));
+    $(".tab-content").addClass("is-hidden");
+    $("#" + $(this).data("target")).removeClass("is-hidden");
 });
 
 
