@@ -87,7 +87,7 @@
                     $param = new DatabaseParam();
                     $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator) ", $params);
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }
@@ -129,7 +129,7 @@
                     $param = new DatabaseParam();
                     $param->str(":creator", User::getSessionUserId());
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator) ", $params);
+                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }
@@ -148,7 +148,7 @@
                 $param = new DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE id = :id OR email = :email ", $params);
+                $rows = Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
                 if (count($rows) != 1) {
                     throw new MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
@@ -219,7 +219,6 @@
         *   generate recover account token
         */
         public function generateRecoverAccountToken(): string {
-            // TODO: NOT WORKING ¿?
             $this->get();
             $params = array();
             $param = new DatabaseParam();
@@ -248,7 +247,7 @@
                 $param->str(":token", $token);
                 $params[] = $param;
                 // tokens are valid only for 60 minutes 
-                $rows = Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
+                $rows = Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
                 if (count($rows) != 1) {
                     throw new MPMNotFoundException($token);
                 } else {
@@ -272,7 +271,7 @@
                 throw new MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id ORDER BY U.created DESC ", array()));
+                return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
             }
         }
 
@@ -291,8 +290,7 @@
                 $param = new DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
-                // TODO: reference CASCADE delete vs set deleted flag...                                
-                Database::execWithoutResult(" DELETE FROM [USER] WHERE id = :id ", $params);
+                Database::execWithoutResult(" UPDATE [USER] SET deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
             }
         }
         
