@@ -28,28 +28,28 @@ function refreshAttributesTable() {
                                     html += '<td>';
                                     switch (parseInt(result.results[i].type)) {
                                         case 1:
-                                            html += 'short text';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-file-text" aria-hidden="true"></i></span> short text';
                                             break;
                                         case 2:
-                                            html += 'long text';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-file-text-o" aria-hidden="true"></i></span> long text';
                                             break;
                                         case 3:
-                                            html += 'number integer';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-square" aria-hidden="true"></i></span> number integer';
                                             break;
                                         case 4:
-                                            html += 'number decimal';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-square-o" aria-hidden="true"></i></span> number decimal';
                                             break;
                                         case 5:
-                                            html += 'date';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-calendar" aria-hidden="true"></i></span> date';
                                             break;
                                         case 6:
-                                            html += 'time';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-clock-o" aria-hidden="true"></i></span> time';
                                             break;
                                         case 7:
-                                            html += 'datetime';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-calendar-check-o" aria-hidden="true"></i></span> datetime';
                                             break;
                                         default:
-                                            html += 'none';
+                                            html += '<span class="icon is-small"><i class="fa fa-1x fa-user-md" aria-hidden="true"></i></span> none';
                                             break;
                                     }
                                     html += '</td>';
