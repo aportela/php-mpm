@@ -1,26 +1,3 @@
-<nav class="nav">
-  <div class="nav-left">
-    <a class="nav-item is-brand" href="#">
-      php-mpm
-    </a>
-  </div>
-  <div class="nav-center">
-    <a class="nav-item" href="https://github.com/aportela/php-mpm" title="github project page">
-      <span class="icon">
-        <i class="fa fa-github"></i>
-      </span>
-    </a>  
-  </div>
-  <div class="nav-right nav-menu">
-  <a class="nav-item" href="#">
-      Signed as <?= isset($_TEMPLATE["name"]) ? $_TEMPLATE["name"]: "undefined"; ?>
-    </a>
-    <a class="nav-item" id="signout" href="/api/user/signout.php">
-      <i class="fa fa-sign-out" aria-hidden="true"></i>
- Sign Out
-    </a>
-  </div>
-</nav>
 <section class="section">
     <div class="container-fluid">
         <div class="columns">
@@ -72,4 +49,3 @@
         </div>
     </div>
 </section>
-

@@ -1,3 +1,8 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+<script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<script src="/templates/default-bulma/static/scripts/common.js"></script>
+<script src="/templates/default-bulma/static/scripts/non_auth.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-users.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-groups.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-attributes.js"></script>
 <script src="/templates/default-bulma/static/scripts/script.js"></script>

@@ -1,8 +1,26 @@
 i#ajax_icon {
     display: block;
     position: fixed;
-    right: 16px;
-    top: 16px;
+    left: 10px;
+    top: 10px;
     z-index: 10000;
-    display: none;
+    display: block;
+}
+
+nav#top_bar {
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 3px hsla(0, 0%, 7%, .1), 0 0 0 1px hsla(0, 0%, 7%, .1);
+}
+
+table tbody tr td a.button {
+    opacity: 0.1;
+    transition: opacity 0.1s linear;
+}
+
+table tbody tr:hover td a.button {
+    opacity: 1;
+}
+
+div#auth_container {
+    margin-top: 64px;
 }

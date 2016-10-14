@@ -1,22 +1,8 @@
-<nav class="nav" id="top_bar">
-    <div class="nav-left">
-    </div>
-    <div class="nav-center">
-        <span class="nav-item">php-mpm</span>
-        <a class="nav-item" href="https://github.com/aportela/php-mpm" title="github project page">
-            <span class="icon"><i class="fa fa-github"></i></span>
-        </a>
-        </div>
-    </div>
-    <div class="nav-right">
-    </div>
-</nav>
-
 <div class="content">
     <div class="columns">
         <div class="column is-5"></div>
         <div class="column">
-            <div class="card is-fullwidth">
+            <div class="card is-fullwidth" id="auth_container">
                 <div>
                     <div class="tabs is-boxed">
                         <ul>
@@ -65,7 +51,7 @@
                         <p class="control">
                             <button type="submit" class="button is-success">recover</button>
                         </p>
-                    </form>
+                    </form>                    
                 </div>
             </div>
         </div>
