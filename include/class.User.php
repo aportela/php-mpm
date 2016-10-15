@@ -298,6 +298,42 @@
                 \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET email = :email, deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
             }
         }
+
+        /**
+        *   update user
+        */
+        public function update() {
+            if (! User::isAuthenticated()) {
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (empty($this->id) || empty($this->email) || empty($this->name)) {
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else if ($this->id != User::getSessionUserId() && ! User::isAuthenticatedAsAdmin()) {
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else {
+                $params = array();
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":email", $this->email);
+                $params[] = $param;
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":name", $this->name);
+                $params[] = $param;
+                if (! empty($this->password)) {
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
+                    $params[] = $param;                    
+                }
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":id", $this->id);
+                $params[] = $param;
+                $sql = null;
+                if (! empty($this->password)) {
+                    $sql = " UPDATE [USER] SET name = :name, email = :email, password = :password WHERE id = :id ";
+                } else {
+                    $sql = " UPDATE [USER] SET name = :name, email = :email WHERE id = :id ";
+                }
+                \PHP_MPM\Database::execWithoutResult($sql, $params);
+            }
+        }
         
     }
 ?>
