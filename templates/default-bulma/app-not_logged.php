@@ -43,7 +43,7 @@
                             <button type="submit" class="button is-success">sign up</button>
                         </p>
                     </form>
-                    <form class="tab-content is-hidden" id="frm_recover_account" method="post" action="#">
+                    <form class="tab-content is-hidden" id="frm_recover_account" method="post" action="/api/user/request_recover_account_token.php">
                         <p class="control has-icon" id="c_recover_account_email">
                             <input class="input" type="email" name="email" placeholder="Email" value="admin@localhost" maxlength="254" required>
                             <i class="fa fa-envelope"></i>
