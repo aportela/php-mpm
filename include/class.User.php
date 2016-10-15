@@ -214,6 +214,20 @@
         }
 
         /**
+        *   return session user name
+        */
+        public static function getSessionUserName() {
+            return(isset($_SESSION["user_name"]) ? $_SESSION["user_name"]: null);
+        }
+
+        /**
+        *   return session user email
+        */
+        public static function getSessionUserEmail() {
+            return(isset($_SESSION["user_email"]) ? $_SESSION["user_email"]: null);
+        }
+
+        /**
         *   generate recover account token
         */
         public function generateRecoverAccountToken(): string {
