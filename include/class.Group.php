@@ -189,7 +189,7 @@
             } else {
                 $data = new \PHP_MPM\SearchResults();
                 $data->setPager(0, 1, 0);
-                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, G.created AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));                
+                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));                
                 return($data);
             }
         }

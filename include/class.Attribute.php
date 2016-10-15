@@ -70,7 +70,7 @@
             } else {
                 $data = new \PHP_MPM\SearchResults();
                 $data->setPager(0, 1, 0);                
-                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, A.created AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
+                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
                 return($data);
             }
         }
