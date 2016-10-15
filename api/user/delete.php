@@ -16,6 +16,9 @@
     require_once "../../include/class.Error.php";
 
     ob_start();    
+    
+    session_start();
+
     $result = array("success" => false);
     try {
         $u = new \PHP_MPM\User();
