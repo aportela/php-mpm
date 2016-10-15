@@ -48,13 +48,13 @@ mpm.form.putValidationSuccess = function(elementId, message) {
 
 
 mpm.form.submit = function(form, callback) {
-    mpm.form.disableSubmit();
-    mpm.form.clearValidationMessages();
+    mpm.form.disableSubmit(form);
+    mpm.form.clearValidationMessages(form);
     var xhr = new XMLHttpRequest();
     xhr.open($(form).attr("method"), $(form).attr("action"), true);
     xhr.onreadystatechange = function(e) {
         if (this.readyState == 4) {
-            mpm.form.enableSubmit();
+            mpm.form.enableSubmit(form);
             var result = null;
             try {
                 result = JSON.parse(xhr.responseText);
