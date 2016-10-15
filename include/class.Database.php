@@ -112,6 +112,31 @@
 			}		
 			return($rows);
 		}
+
+		public static function execScalar($sql, $params = array()): int {
+			$result = null;
+			try {
+				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
+				$stmt = $dbh->prepare($sql);
+				$total_params = count($params);
+				if ($total_params > 0) {
+					for ($i = 0; $i < $total_params; $i++) {
+						$stmt->bindValue($params[$i]->name, $params[$i]->value, $params[$i]->type);
+					}
+				}				
+				if ($stmt->execute()) {
+					if ($row = $stmt->fetch()) {
+						$result = $row[0];
+					}
+				}
+                $stmt->closeCursor();
+				$dbh = NULL;
+			} finally {
+				$stmt = null;
+				$dbh = NULL;
+			}		
+			return($result);
+		}
 	}
 
 ?>
