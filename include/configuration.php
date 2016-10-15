@@ -47,7 +47,11 @@
         // https://github.com/twigphp/Twig/blob/1.x/lib/Twig/Autoloader.php
         if (0 !== strpos($className, "PHP_MPM\\")) {
         } else {
-            if (is_file($file = INCLUDE_PATH . str_replace("PHP_MPM\\", "\\class.", $className) .'.php')) {
+            $file = null;
+            $isException = substr($className, -9) === 'Exception';
+            // all custom exceptions are stored in same file       
+            $file = ! $isException ? INCLUDE_PATH . str_replace("PHP_MPM\\", DIRECTORY_SEPARATOR . "class.", $className) . '.php' : INCLUDE_PATH . DIRECTORY_SEPARATOR . 'class.CustomExceptions.php';
+            if (is_file($file)) {
                 require_once $file;
             }
         }        
