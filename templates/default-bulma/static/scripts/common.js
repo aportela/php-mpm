@@ -18,3 +18,7 @@ var $loading = $('i#ajax_icon').hide();
         origOpen.apply(this, arguments);
     };
 })();
+
+$("a#export_table").click(function(e) {
+    e.preventDefault();
+});

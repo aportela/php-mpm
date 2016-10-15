@@ -3,7 +3,8 @@
       <tr>
         <form class="frm_search_users" method="post" action="/api/user/search.php">
         <input type="hidden" name="page" class="i_page" value="1">
-        <th colspan="4">
+        <th colspan="1"><span class="icon is-small"><i class="fa fa-table" aria-hidden="true"></i></span> <span><a id="export_table">export data</a></th>
+        <th colspan="3">
           <p class="control has-addons">
             <span class="select">
               <select id="s_results_page" name="resultsPage">
