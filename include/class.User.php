@@ -41,7 +41,7 @@
         */
         public function exists() {
             if (empty($this->email) && empty($this->id)) {                
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
                 $param = new DatabaseParam();
@@ -60,10 +60,10 @@
         */
         public function signup() {
             if ($this->exists()) {
-                throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
                 if (empty($this->email) || empty($this->password) || empty($this->name)) {
-                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
                         $this->id = Utils::uuid();
@@ -97,15 +97,15 @@
         */
         public function add() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException();
+                throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException();
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException();
             }
             if ($this->exists()) {
-                throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
                 if (empty($this->email) || empty($this->password) || empty($this->name)) {
-                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
                         $this->id = Utils::uuid();
@@ -139,7 +139,7 @@
         */
         private function get() {
             if (empty($this->id) && empty($this->email)) {
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
                 $param = new DatabaseParam();
@@ -150,7 +150,7 @@
                 $params[] = $param;                
                 $rows = Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
                 if (count($rows) != 1) {
-                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $this->id = $rows[0]->id;
                     $this->password = $rows[0]->password;
@@ -240,7 +240,7 @@
         public static function getUserFromRecoverAccountToken(string $token) {
             // TODO: NOT WORKING ¿?
             if (empty($token)) {
-                throw new MPMInvalidParamsException("");
+                throw new \PHP_MPM\MPMInvalidParamsException("");
             } else {
                 $params = array();
                 $param = new DatabaseParam();
@@ -249,7 +249,7 @@
                 // tokens are valid only for 60 minutes 
                 $rows = Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
                 if (count($rows) != 1) {
-                    throw new MPMNotFoundException($token);
+                    throw new \PHP_MPM\MPMNotFoundException($token);
                 } else {
                     $user = new User();
                     $user->set(
@@ -268,7 +268,7 @@
         */
         public static function search($page, $resultsPage) {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException();
+                throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
                 return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
@@ -280,13 +280,13 @@
         */
         public function delete() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else if (empty($this->id)) {
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else if ($this->id == User::getSessionUserId()) {
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));                
             } else {
                 $params = array();
                 $param = new DatabaseParam();

@@ -14,7 +14,7 @@
 		public function __construct (string $name = "") {
             $this->path = TEMPLATES_PATH . DIRECTORY_SEPARATOR . DEFAULT_TEMPLATE_THEME . DIRECTORY_SEPARATOR . $name;             
             if (! file_exists($this->path)) {
-                throw new MPMCustomTemplatingException("template not found on path " . $this->path);
+                throw new \PHP_MPM\MPMCustomTemplatingException("template not found on path " . $this->path);
             } else {
                 $this->name = $name;
             }

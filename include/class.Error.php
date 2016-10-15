@@ -39,9 +39,9 @@
         */
         public static function search($page, $resultsPage) {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
                 // TODO: pagination & filtering
                 return(Database::execWithResult(" SELECT created, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));

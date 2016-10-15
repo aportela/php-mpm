@@ -45,12 +45,12 @@
         */
         public function exists() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             }
             else if (empty($this->id) && empty($this->name)) {                
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
                 $param = new DatabaseParam();
@@ -69,7 +69,7 @@
         */
         public static function search($page, $resultsPage) {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException("");
+                throw new \PHP_MPM\MPMAuthSessionRequiredException("");
             } else {
                 // TODO: pagination & filtering
                 // TODO: type is returned as string (not integer)
@@ -82,15 +82,15 @@
         */
         public function add() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
                 if ($this->exists()) {
-                    throw new MPMAlreadyExistsException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMAlreadyExistsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->name)) {
-                        throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                        throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                     } else {                                        
                         if (empty($this->id)) {
                             $this->id = Utils::uuid();
@@ -126,14 +126,14 @@
         */
         public function update() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
                 if (empty($this->id) || empty($this->name)) {
-                    throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else if (! $this->exists()) {
-                    throw new MPMNotFoundException(print_r(get_object_vars($this), true));
+                    throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $params = array();
                     $param = new DatabaseParam();
@@ -159,11 +159,11 @@
         */
         public function delete() {
             if (! User::isAuthenticated()) {
-                throw new MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
-                throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else if (empty($this->id)) {
-                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
                 $param = new DatabaseParam();
