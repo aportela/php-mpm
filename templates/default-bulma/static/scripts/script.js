@@ -29,11 +29,6 @@ $("a#signout").click(function(e) {
     xhr.send();
 });
 
-
-if ($("table#attributes").length == 1) {
-    refreshAttributesTable();
-}
-
 $('table tbody').on("click", ".modal-button", function() {
     var target = $(this).data('target');
     $('html').addClass('is-clipped');
