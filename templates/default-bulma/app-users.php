@@ -34,14 +34,14 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Update user</p>
-      <button class="delete"></button>
+      <button class="delete modal_close"></button>
     </header>
     <section class="modal-card-body">
       <!-- Content ... -->
     </section>
     <footer class="modal-card-foot">
       <a class="button is-primary">Save changes</a>
-      <a class="button">Cancel</a>
+      <a class="button modal_close">Cancel</a>
     </footer>
   </div>
 </div>
@@ -49,16 +49,34 @@
 <div class="modal" id="modal_delete">
   <div class="modal-background"></div>
   <div class="modal-card">
+    <form id="frm_delete_user" method="post" action="/api/user/delete.php">
+      <input type="hidden" name="id" id="delete_user_id" value="" />
     <header class="modal-card-head">
       <p class="modal-card-title">Delete user</p>
-      <button class="delete"></button>
+      <button class="delete modal_close"></button>
     </header>
     <section class="modal-card-body">
-      <!-- Content ... -->
+      <article class="message is-warning">
+        <div class="message-header">
+          Warning
+        </div>
+        <div class="message-body">
+          <p>Are you really sure you want to delete user: &laquo;<strong id="delete_user_name"></strong>&raquo;.</p>
+          <p>This operation cannot be undone. Would you like to proceed ?</p>
+        </div>
+      </article>      
+      <article class="message is-danger is-hidden modal_error">
+        <div class="message-header">
+          Error
+        </div>
+        <div class="message-body">
+        </div>
+      </article>          
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-primary">Delete</a>
-      <a class="button">Cancel</a>
+      <button type="submit" class="button is-primary">Delete</button>
+      <a class="button modal_close">Cancel</a>
     </footer>
+    </form>
   </div>
 </div>
