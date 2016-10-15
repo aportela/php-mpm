@@ -269,8 +269,21 @@
                 throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else {
                 $data = new \PHP_MPM\SearchResults();
-                $data->setPager(0, 1, 0);
-                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                if ($resultsPage > 0) {
+                    $totalResults = \PHP_MPM\Database::execScalar(" SELECT COUNT(U.id) FROM [USER] U WHERE U.deleted IS NULL ", array());
+                    $data->setPager($totalResults, $page, $resultsPage);
+                    $params = array();
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":start", (($page - 1) * $resultsPage));
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":results_page", $resultsPage);
+                    $params[] = $param;
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC LIMIT :start, :results_page ", $params));
+                } else {
+                    $data->setPager(0, 1, 0);
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                }                                
                 return($data);
             }
         }
