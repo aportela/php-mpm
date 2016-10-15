@@ -290,9 +290,12 @@
             } else {
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":email", "deleted_email_on_" . microtime(true));
+                $params[] = $param;
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET email = :email, deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
             }
         }
         
