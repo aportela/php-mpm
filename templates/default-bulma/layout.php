@@ -31,6 +31,31 @@
         include "app-logged.php";
       }
     ?>
+
+    <div class="modal" id="modal_general_error">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">General error</p>
+          <button class="delete modal_close"></button>
+        </header>
+        <section class="modal-card-body">
+          <article class="message is-danger">
+            <div class="message-header">
+            <i class="fa fa-ambulance fa-2x" aria-hidden="true"></i> Error
+            </div>
+            <div class="message-body">
+              <p>php-mpm kernel panic - sorry for any inconvenience</p>
+              <div class="notification" id="stack_trace">
+              </div>
+            </div>
+          </article>      
+        </section>
+        <footer class="modal-card-foot">
+          <a class="button modal_close">Close</a>
+        </footer>
+      </div>
+    </div>    
     <?php include "html-scripts.php"; ?>
   </body>
 </html>
