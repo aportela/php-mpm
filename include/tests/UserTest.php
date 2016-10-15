@@ -11,6 +11,7 @@
         const NON_EXISTENT_EMAIL =  "thisemaildonotexists@server.com";
         const ADMIN_USER_ID = "00000000-0000-0000-0000-000000000000";
         const ADMIN_EMAIL = "admin@localhost";
+        const ADMIN_USER_NAME = "administrator";        
         const ADMIN_PASSWORD = "password";
 
         public function __construct () { 
@@ -220,6 +221,26 @@
         public function testGetSessionUserIdWithoutSessionStarted() {
             $this->signOut();
             $this->assertNull(User::getSessionUserId());            
+        }
+
+        public function testGetSessionUserNameWithSessionStarted() {
+            $this->signInAsAdmin();
+            $this->assertEquals(UserTest::ADMIN_USER_NAME, User::getSessionUserName());
+        }
+
+        public function testGetSessionUserNameWithoutSessionStarted() {
+            $this->signOut();
+            $this->assertNull(User::getSessionUserName());            
+        }
+
+        public function testGetSessionUserEmailWithSessionStarted() {
+            $this->signInAsAdmin();
+            $this->assertEquals(UserTest::ADMIN_EMAIL, User::getSessionUserEmail());
+        }
+
+        public function testGetSessionUserEmailWithoutSessionStarted() {
+            $this->signOut();
+            $this->assertNull(User::getSessionUserEmail());            
         }
 
         public function testgenerateRecoverAccountTokenWithExistentEmail() {
