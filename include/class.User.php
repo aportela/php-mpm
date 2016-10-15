@@ -279,10 +279,10 @@
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->int(":results_page", $resultsPage);
                     $params[] = $param;
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC LIMIT :start, :results_page ", $params));
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name ASC, U.email ASC LIMIT :start, :results_page ", $params));
                 } else {
                     $data->setPager(0, 1, 0);
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name ASC, U.email ASC ", array()));
                 }                                
                 return($data);
             }
