@@ -32,9 +32,7 @@ $("a#signout").click(function(e) {
 
 
 
-if ($("table#users").length == 1) {
-    refreshUsersTable();
-} else if ($("table#groups").length == 1) {
+if ($("table#groups").length == 1) {
     refreshGroupsTable();
 } else if ($("table#attributes").length == 1) {
     refreshAttributesTable();
