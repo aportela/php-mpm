@@ -21,13 +21,8 @@
 
     $result = array("success" => false);
     try {
-        $g = new \PHP_MPM\Attribute();         
-        $g->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            "", 
-            "",
-            array()
-        );
+        $g = new \PHP_MPM\Group();         
+        $g->id = isset($_POST["id"]) ? $_POST["id"]: ""; 
         $g->delete();
         $result["success"] = true;
         ob_clean();
