@@ -364,7 +364,7 @@
                 $this->signInAsAdmin();
                 $uuid1 = \PHP_MPM\Utils::uuid();
                 $u1 = new \PHP_MPM\User();
-                $u1->set(UserTest::ADMIN_USER_ID, UserTest::ADMIN_EMAIL, UserTest::ADMIN_PASSWORD, "admin@localhost", \PHP_MPM\UserType::ADMINISTRATOR);
+                $u1->set(UserTest::ADMIN_USER_ID, UserTest::ADMIN_EMAIL, UserTest::ADMIN_PASSWORD, "administrator", \PHP_MPM\UserType::ADMINISTRATOR);
                 $u1->update();
             } catch (Throwable $e) {
                 $err = e;
