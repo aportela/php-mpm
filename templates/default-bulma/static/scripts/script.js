@@ -69,6 +69,7 @@ $('table tbody').on("click", ".modal-button", function() {
     var target = $(this).data('target');
     $('html').addClass('is-clipped');
     $(target).addClass('is-active');
+    $(".modal_error").addClass("is-hidden");
 });
 
 $('body').on("click", '.modal-background, .modal_close', function() {
