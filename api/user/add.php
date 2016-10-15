@@ -28,6 +28,7 @@
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["email"]) ? $_POST["email"]: "", 
             isset($_POST["password"]) ? $_POST["password"]: "",
+            isset($_POST["name"]) ? $_POST["name"]: "",
             isset($_POST["type"]) ? $_POST["type"]: 0
         );
         $u->add();

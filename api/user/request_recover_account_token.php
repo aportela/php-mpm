@@ -25,6 +25,7 @@
             "",
             isset($_POST["email"]) ? $_POST["email"]: "", 
             "",
+            "",
             0
         );
         // TODO: WARNING => TEMPORAL while email notification not done!!! 
