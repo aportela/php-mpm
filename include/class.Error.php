@@ -43,8 +43,23 @@
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
-                // TODO: pagination & filtering
-                return(\PHP_MPM\Database::execWithResult(" SELECT created, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));
+                $data = new \PHP_MPM\SearchResults();
+                if ($resultsPage > 0) {
+                    $totalResults = \PHP_MPM\Database::execScalar(" SELECT COUNT(E.created) FROM [ERROR] E ", array());
+                    $data->setPager($totalResults, $page, $resultsPage);
+                    $params = array();
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":start", (($page - 1) * $resultsPage));
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":results_page", $resultsPage);
+                    $params[] = $param;                    
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT datetime(created, 'localtime') AS creationDate, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC LIMIT :start, :results_page ", $params));
+                } else {
+                    $data->setPager(0, 1, 0);
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT datetime(created, 'localtime') AS creationDate, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));
+                }                                
+                return($data);                
             }
         }        
     }
