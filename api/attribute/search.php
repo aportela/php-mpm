@@ -21,7 +21,10 @@
 
     $result = array("success" => false, "data" => null);
     try {
-        $result["data"] = Attribute::search(1, 16);
+        $result["data"] = Attribute::search(
+            isset($_POST["page"]) ? $_POST["page"]: 1,
+            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16            
+        );
         $result["success"] = true;
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);
