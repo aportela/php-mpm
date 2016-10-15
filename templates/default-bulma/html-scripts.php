@@ -3,8 +3,26 @@
 <script src="/templates/default-bulma/static/scripts/common.js"></script>
 <script src="/templates/default-bulma/static/scripts/mpm.js"></script>
 <script src="/templates/default-bulma/static/scripts/non_auth.js"></script>
+<?php
+    if (isset($_GET["page"])) {
+        switch($_GET["page"]) {
+            case "users":
+                ?>
 <script src="/templates/default-bulma/static/scripts/app-users.js"></script>
+                <?php
+            break;
+            case "groups":
+                ?>
 <script src="/templates/default-bulma/static/scripts/app-groups.js"></script>
+                <?php
+            break;
+            case "attributes":
+                ?>
 <script src="/templates/default-bulma/static/scripts/app-attributes.js"></script>
+                <?php
+            break;
+        }
+    }
+?>
 <script src="/templates/default-bulma/static/scripts/script.js"></script>
 <script src="/templates/default-bulma/static/scripts/locale-en.js"></script>
