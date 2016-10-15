@@ -3,7 +3,7 @@
     <tr>
       <form class="frm_search_groups" method="post" action="/api/group/search.php">
       <input type="hidden" name="page" class="i_page" value="1">
-      <th colspan="3">
+      <th colspan="4">
         <p class="control has-addons">
           <span class="select">
             <select id="s_results_page" name="resultsPage">
@@ -40,6 +40,7 @@
         <th>Operations</th>        
         <th>Name</th>
         <th>Description</th>
+        <th>Total users</th>
         <th>Created by</th>
         <th>Created <i class="fa fa-fw fa-sort-amount-asc" aria-hidden="true"></i></th>
   </thead>
@@ -50,7 +51,7 @@
 <div class="modal" id="modal_update">
   <div class="modal-background"></div>
   <div class="modal-card">
-    <form id="frm_update_user" method="post" action="/api/group/update.php">
+    <form id="frm_update_group" method="post" action="/api/group/update.php">
       <input type="hidden" name="id" id="update_group_id" value="" />
       <header class="modal-card-head">
         <p class="modal-card-title">Update group</p>
@@ -58,8 +59,12 @@
       </header>
       <section class="modal-card-body">
         <p class="control has-icon" id="c_name">
-            <input class="input" type="text" name="name" id="update_group_name" placeholder="Name" value="administrator" maxlength="32" required>
+            <input class="input" type="text" name="name" id="update_group_name" placeholder="Name" maxlength="32" required>
             <i class="fa fa-users"></i>
+        </p>
+        <p class="control has-icon" id="c_description">
+            <input class="input" type="text" name="description" id="update_group_description" placeholder="Description" value="administrator" maxlength="128">
+            <i class="fa fa-comments-o" aria-hidden="true"></i>
         </p>
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
@@ -80,7 +85,7 @@
 <div class="modal" id="modal_delete">
   <div class="modal-background"></div>
   <div class="modal-card">
-    <form id="frm_delete_user" method="post" action="/api/group/delete.php">
+    <form id="frm_delete_group" method="post" action="/api/group/delete.php">
       <input type="hidden" name="id" id="delete_group_id" value="" />
       <header class="modal-card-head">
         <p class="modal-card-title">Delete group</p>
