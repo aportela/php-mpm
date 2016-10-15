@@ -1,28 +1,3 @@
-$.fn.clearValidationMessages = function() {
-    $("input.input").removeClass("is-danger").removeClass("is-warning");
-    $("span.help").remove();
-}
-
-$.fn.putValidationWarning = function(elementId, message) {
-    var element = $("p#" + elementId);
-    $(element).find("input.input").addClass("is-warning");
-    $(element).append('<span class="help is-warning">' + message + '</span>');
-}
-
-$.fn.putValidationError = function(elementId, message) {
-    var element = $("p#" + elementId);
-    $(element).find("input.input").addClass("is-danger");
-    $(element).append('<span class="help is-danger">' + message + '</span>');
-}
-
-$.fn.disableSubmit = function() {
-    $("button[type=submit]").addClass("ajax_disabled").prop("disabled", true);
-}
-
-$.fn.enableSubmit = function() {
-    $("button.ajax_disabled").removeClass("ajax_disabled").prop("disabled", false);
-}
-
 $("div.tabs ul li a").click(function(e) {
     e.preventDefault();
     $(this).closest("ul").find("li").removeClass("is-active");
