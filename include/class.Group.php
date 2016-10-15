@@ -188,8 +188,21 @@
                 throw new \PHP_MPM\MPMAuthSessionRequiredException("");
             } else {
                 $data = new \PHP_MPM\SearchResults();
-                $data->setPager(0, 1, 0);
-                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));                
+                if ($resultsPage > 0) {
+                    $totalResults = \PHP_MPM\Database::execScalar(" SELECT COUNT(G.id) FROM [GROUP] G ", array());
+                    $data->setPager($totalResults, $page, $resultsPage);
+                    $params = array();
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":start", (($page - 1) * $resultsPage));
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->int(":results_page", $resultsPage);
+                    $params[] = $param;                    
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name LIMIT :start, :results_page ", $params));
+                } else {
+                    $data->setPager(0, 1, 0);
+                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));
+                }                                
                 return($data);
             }
         }
