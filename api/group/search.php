@@ -21,7 +21,11 @@
 
     $result = array("success" => false, "data" => null);
     try {
-        $result["data"] = Group::search(1, 16);
+        $result["data"] = Group::search(
+            isset($_POST["page"]) ? $_POST["page"]: 1,
+            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16
+                
+        );
         $result["success"] = true;
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);
