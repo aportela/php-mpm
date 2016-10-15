@@ -7,15 +7,14 @@
           <p class="control has-addons">
             <span class="select">
               <select id="s_results_page" name="resultsPage">
-                <option value="2" selected>2 results/page</option>
-                <option value="4">4 results/page</option>
-                <option value="16">16 results/page</option>
+                <option value="8">8 results/page</option>
+                <option value="16" selected>16 results/page</option>
                 <option value="32">32 results/page</option>
                 <option value="64">64 results/page</option>
                 <option value="0">no pagination</option>
               </select>
             </span>
-            <input class="input is-expanded" type="text" placeholder="text filter">
+            <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
           </p>                
         </th>
         <th colspan="3">
@@ -37,15 +36,14 @@
         </th>
         </form>
       </tr>   
-    <tr>
-        <th>Operations</th>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Created by</th>
-        <th>Created <i class="fa fa-fw fa-sort-amount-asc" aria-hidden="true"></i>
-</th>
-      </tr>
+      <tr>
+          <th>Operations</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Created by</th>
+          <th>Created <i class="fa fa-fw fa-sort-amount-asc" aria-hidden="true"></i></th>
+        </tr>
   </thead>
   <tbody>
   </tbody>
