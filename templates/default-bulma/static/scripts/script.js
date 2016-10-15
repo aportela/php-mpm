@@ -40,3 +40,19 @@ $('body').on("click", '.modal-background, .modal_close', function() {
     $('html').removeClass('is-clipped');
     $('div.modal').removeClass('is-active');
 });
+
+
+$("select#export_table_data_format").change(function(e) {
+    e.preventDefault();
+    var format = $(this).val();
+    if (format) {
+        $("#btn_export_table_data").removeClass("is-disabled").data("format", format);
+    } else {
+        $("#btn_export_table_data").addClass("is-disabled").data("format", null);
+    }
+});
+
+$("#btn_export_table_data").click(function(e) {
+    e.preventDefault();
+    mpm.data.tableExport($(this).closest("table"), $(this).data("format"));
+});
