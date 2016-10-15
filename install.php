@@ -98,7 +98,7 @@
                     $exception = null;                
                     try {
                         foreach($queries as $query) {
-                            Database::execWithoutResult($query, array());
+                            \PHP_MPM\Database::execWithoutResult($query, array());
                         }
                     } catch (\PDOException $e) {
                         $exception = $e;

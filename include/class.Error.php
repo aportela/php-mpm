@@ -28,7 +28,7 @@
             $param->str(":trace", print_r($e->getTrace(), true));
             $params[] = $param;
             try {
-                Database::execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, trace) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :trace) ", $params);
+                \PHP_MPM\Database::execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, trace) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :trace) ", $params);
             } catch (\Throwable $e) {
                 // we do not want to throw (again) on error 
             }
@@ -44,7 +44,7 @@
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT created, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));
+                return(\PHP_MPM\Database::execWithResult(" SELECT created, class, line, filename, code, trace FROM [ERROR] ORDER BY created DESC ", array()));
             }
         }        
     }

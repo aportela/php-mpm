@@ -59,7 +59,7 @@
                 $param = new DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT * FROM [ATTRIBUTE] WHERE id = :id OR name = :name ", $params);
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM [ATTRIBUTE] WHERE id = :id OR name = :name ", $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -73,7 +73,7 @@
             } else {
                 // TODO: pagination & filtering
                 // TODO: type is returned as string (not integer)
-                return(Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, A.created AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
+                return(\PHP_MPM\Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, A.created AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
             }
         }
 
@@ -115,7 +115,7 @@
                         $param = new DatabaseParam();
                         $param->str(":creator", User::getSessionUserId());
                         $params[] = $param;                
-                        Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
+                        \PHP_MPM\Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
                     }
                 }
             }
@@ -149,7 +149,7 @@
                         $param->null(":description");
                     }
                     $params[] = $param;                
-                    Database::execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
+                    \PHP_MPM\Database::execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
                 }
             }
         }
@@ -169,7 +169,7 @@
                 $param = new DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
-                Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
             }
         }
     }

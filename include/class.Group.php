@@ -46,7 +46,7 @@
                 $param = new DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", $params);
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -84,7 +84,7 @@
                 $param->str(":creator", User::getSessionUserId());
                 $params[] = $param;                
                 // TODO: transaction support
-                Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                \PHP_MPM\Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
                 if ($this->users && count($this->users) > 0) {
                     foreach($this->users as $user) {
                         $this->addUser($user->id);
@@ -123,7 +123,7 @@
                 }
                 $params[] = $param;
                 // TODO: transaction support
-                Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" UPDATE [GROUP] SET name = :name, description = :description WHERE id = :id ", $params);
                 // TODO: better check user diffs ¿?
                 $this->removeAllUsers();
                 if ($this->users && count($this->users) > 0) {
@@ -153,7 +153,7 @@
                     $param = new DatabaseParam();
                     $param->str(":user_id", $userId);
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
+                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
                 }
             }            
         }
@@ -169,7 +169,7 @@
             $param = new DatabaseParam();
             $param->str(":user_id", $userId);
             $params[] = $param;
-            Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id AND user_id = :user_id ", $params);
+            \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id AND user_id = :user_id ", $params);
         }
 
         /**
@@ -180,7 +180,7 @@
             $param = new DatabaseParam();
             $param->str(":group_id", $this->id);
             $params[] = $param;                                
-            Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id ", $params);
+            \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id ", $params);
         }        
         
         /**
@@ -191,7 +191,7 @@
                 throw new \PHP_MPM\MPMAuthSessionRequiredException("");
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, G.created AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));
+                return(\PHP_MPM\Database::execWithResult(" SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, G.created AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ", array()));
             }
         }
 
@@ -210,7 +210,7 @@
                 $param = new DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
-                Database::execWithoutResult(" DELETE FROM [GROUP] WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP] WHERE id = :id ", $params);
             }
         }
 
@@ -220,7 +220,7 @@
         private function getUsers() {
             $param = new DatabaseParam();
             $param->str(":group_id", $this->id);                
-            return(Database::execWithResult(" SELECT GU.user_id AS id, U.email FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
+            return(\PHP_MPM\Database::execWithResult(" SELECT GU.user_id AS id, U.email FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
         }
 
         /**
@@ -236,7 +236,7 @@
             } else {
                 $param = new DatabaseParam();
                 $param->str(":id", $this->id);                
-                $rows = Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {

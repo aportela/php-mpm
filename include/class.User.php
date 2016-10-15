@@ -50,7 +50,7 @@
                 $param = new DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT * FROM USER WHERE email = :email OR id = :id ", $params);
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM USER WHERE email = :email OR id = :id ", $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -87,7 +87,7 @@
                     $param = new DatabaseParam();
                     $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
+                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }
@@ -129,7 +129,7 @@
                     $param = new DatabaseParam();
                     $param->str(":creator", User::getSessionUserId());
                     $params[] = $param;                                
-                    Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
+                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }
@@ -148,7 +148,7 @@
                 $param = new DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
-                $rows = Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
@@ -225,12 +225,12 @@
             $param->str(":user_id", $this->id);
             $params[] = $param;
             // TODO: transaction support
-            Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
+            \PHP_MPM\Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
             $param = new DatabaseParam();
             $token = password_hash((sha1(uniqid()) . sha1(uniqid())), PASSWORD_BCRYPT, array("cost" => 12));
             $param->str(":token", $token);
             $params[] = $param;                
-            Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
+            \PHP_MPM\Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
             return($token);
         }
 
@@ -247,7 +247,7 @@
                 $param->str(":token", $token);
                 $params[] = $param;
                 // tokens are valid only for 60 minutes 
-                $rows = Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException($token);
                 } else {
@@ -271,7 +271,7 @@
                 throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else {
                 // TODO: pagination & filtering
-                return(Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                return(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
             }
         }
 
@@ -292,7 +292,7 @@
                 $param = new DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
-                Database::execWithoutResult(" UPDATE [USER] SET deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
             }
         }
         
