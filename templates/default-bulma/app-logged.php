@@ -20,6 +20,13 @@
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "groups" ? 'class="is-active"': null ?>href="index.php?page=groups"><span class="icon"><i class="fa fa-users"></i></span> Groups</a></li>
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "attributes" ? 'class="is-active"': null ?>href="index.php?page=attributes"><span class="icon"><i class="fa fa-object-group"></i></span> Attributes</a></li>
                 </ul>
+                <p class="menu-label">
+                    Tools
+                </p>
+                <ul class="menu-list">
+                    <li><a <?= isset($_GET["page"]) && $_GET["page"]== "errors" ? 'class="is-active"': null ?> href="index.php?page=errors"><span class="icon"><i class="fa fa-exclamation-triangle"></i></span> Errors</a></li>
+                </ul>
+                
                 <?php
                 }
                 ?>
@@ -37,6 +44,9 @@
                             break;
                             case "attributes":
                                 include "app-attributes.php";
+                            break;
+                            case "errors":
+                                include "app-errors.php";
                             break;
                             default:
                                 ?>
