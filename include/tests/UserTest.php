@@ -306,6 +306,90 @@
             } finally {
                 $this->assertNull($err);
             }                        
-        }        
+        }
+
+        public function testUpdateWithoutAuthSession() {
+            $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
+            $this->signOut();
+            $u = new \PHP_MPM\User();
+            $u->update();
+        }
+
+        public function testUpdateWithoutId() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->signInAsAdmin();
+            $u = new \PHP_MPM\User();
+            $u->delete();
+        }
+
+        public function testUpdateWithoutAdminAuthOnAnotherUser() {
+            $this->setExpectedException('PHP_MPM\MPMAdminPrivilegesRequiredException');
+            $this->signInAsAdmin();
+            $uuid1 = \PHP_MPM\Utils::uuid();
+            $uuid2 = \PHP_MPM\Utils::uuid();
+            $u1 = new \PHP_MPM\User();
+            $u1->set($uuid1, sprintf("%s@server.com", $uuid1), "password", sprintf("Name: %s", $uuid1), \PHP_MPM\UserType::DEFAULT);
+            $u1->add();
+            $u2 = new \PHP_MPM\User();
+            $u2->set($uuid2, sprintf("%s@server.com", $uuid2), "password", sprintf("Name: %s", $uuid2), \PHP_MPM\UserType::DEFAULT);
+            $u2->add();
+            $this->signOut();
+            $u1->login();
+            $u2->update();
+        }                        
+
+        public function testUpdateWithoutAdminAuthOnSameUser() {
+            $err = null;
+            try {            
+                $this->signInAsAdmin();
+                $uuid1 = \PHP_MPM\Utils::uuid();
+                $u1 = new \PHP_MPM\User();
+                $u1->set($uuid1, sprintf("%s@server.com", $uuid1), "password", sprintf("Name: %s", $uuid1), \PHP_MPM\UserType::DEFAULT);
+                $u1->add();
+                $this->signOut();
+                $u1->login();
+                $u1->name = "updated name for " . $u1->id;
+                $u1->email = sprintf("upd_%s@server.com", $u1->id);
+                $u1->update();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                                    
+        }                        
+
+        public function testUpdateWithAdminAuthOnSameUser() {
+            $err = null;
+            try {            
+                $this->signInAsAdmin();
+                $uuid1 = \PHP_MPM\Utils::uuid();
+                $u1 = new \PHP_MPM\User();
+                $u1->set(UserTest::ADMIN_USER_ID, UserTest::ADMIN_EMAIL, UserTest::ADMIN_PASSWORD, "admin@localhost", \PHP_MPM\UserType::ADMINISTRATOR);
+                $u1->update();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                                    
+        }                        
+
+        public function testUpdateWithAdminAuthOnOtherUser() {
+            $err = null;
+            try {            
+                $this->signInAsAdmin();
+                $uuid1 = \PHP_MPM\Utils::uuid();
+                $u1 = new \PHP_MPM\User();
+                $u1->set($uuid1, sprintf("%s@server.com", $uuid1), "password", sprintf("Name: %s", $uuid1), \PHP_MPM\UserType::DEFAULT);
+                $u1->add();
+                $u1->name = "updated name for " . $u1->id;
+                $u1->email = sprintf("upd_%s@server.com", $u1->id);
+                $u1->update();
+            } catch (Throwable $e) {
+                $err = e;
+            } finally {
+                $this->assertNull($err);
+            }                                    
+        }                        
+
     }
 ?>
