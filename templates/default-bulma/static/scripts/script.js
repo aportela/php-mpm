@@ -30,11 +30,7 @@ $("a#signout").click(function(e) {
 });
 
 
-
-
-if ($("table#groups").length == 1) {
-    refreshGroupsTable();
-} else if ($("table#attributes").length == 1) {
+if ($("table#attributes").length == 1) {
     refreshAttributesTable();
 }
 
