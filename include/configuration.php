@@ -48,9 +48,17 @@
         if (0 !== strpos($className, "PHP_MPM\\")) {
         } else {
             $file = null;
-            $isException = substr($className, -9) === 'Exception';
             // all custom exceptions are stored in same file       
-            $file = ! $isException ? INCLUDE_PATH . str_replace("PHP_MPM\\", DIRECTORY_SEPARATOR . "class.", $className) . '.php' : INCLUDE_PATH . DIRECTORY_SEPARATOR . 'class.CustomExceptions.php';
+            $isException = strlen($className) > 17 ? substr($className, -9) === 'Exception': false;
+            // database class file has Database & DatabaseParam definitions
+            $isDatabase = strlen($className) > 16 ? substr($className, 8, 8) === 'Database' : false;
+            if ($isException) {
+                $file = INCLUDE_PATH . DIRECTORY_SEPARATOR . 'class.CustomExceptions.php';
+            } else if ($isDatabase) {
+                $file = INCLUDE_PATH . DIRECTORY_SEPARATOR . 'class.Database.php';
+            } else {
+                $file = INCLUDE_PATH . str_replace("PHP_MPM\\", DIRECTORY_SEPARATOR . "class.", $className) . '.php';
+            }
             if (is_file($file)) {
                 require_once $file;
             }
