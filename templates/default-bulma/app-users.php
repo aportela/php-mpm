@@ -61,11 +61,11 @@
       </header>
       <section class="modal-card-body">
         <p class="control has-icon" id="c_email">
-            <input class="input" type="email" name="email" id="update_user_email" placeholder="Email" value="admin@localhost">
+            <input class="input" type="email" name="email" id="update_user_email" placeholder="Email" value="admin@localhost" maxlength="254" required>
             <i class="fa fa-envelope"></i>
         </p>
         <p class="control has-icon" id="c_name">
-            <input class="input" type="text" name="name" id="update_user_name" placeholder="Name" value="administrator">
+            <input class="input" type="text" name="name" id="update_user_name" placeholder="Name" value="administrator" maxlength="32" required>
             <i class="fa fa-user"></i>
         </p>
         <p class="control has-icon" id="c_password">
