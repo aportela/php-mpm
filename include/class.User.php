@@ -276,7 +276,7 @@
         }
 
         /**
-        *   delete user (and references ?)
+        *   delete user
         */
         public function delete() {
             if (! User::isAuthenticated()) {
@@ -284,6 +284,8 @@
             } else if (! User::isAuthenticatedAsAdmin()) {
                 throw new MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else if (empty($this->id)) {
+                throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else if ($this->id == User::getSessionUserId()) {
                 throw new MPMInvalidParamsException(print_r(get_object_vars($this), true));                
             } else {
                 $params = array();

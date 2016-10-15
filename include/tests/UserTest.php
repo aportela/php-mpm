@@ -282,6 +282,18 @@
             $u->delete();
         }
 
+        public function testDeleteOwnUser() {
+            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->signInAsAdmin();
+            $uuid = Utils::uuid();
+            $u = new User();             
+            $u->set($uuid, sprintf("%s@server.com", $uuid), "password", sprintf("Name: %s", $uuid), UserType::ADMINISTRATOR);
+            $u->add();
+            $this->signOut();            
+            $u->login();
+            $u->delete();
+        }        
+
         public function testDelete() {
             $err = null;
             try {
@@ -289,7 +301,7 @@
                 $uuid = Utils::uuid();
                 $u = new User();             
                 $u->set($uuid, sprintf("%s@server.com", $uuid), "password", sprintf("Name: %s", $uuid), UserType::DEFAULT);
-                $u->signup();
+                $u->add();
                 $u->delete();
             } catch (Throwable $e) {
                 $err = e;
