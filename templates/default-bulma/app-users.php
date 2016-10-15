@@ -3,7 +3,7 @@
       <tr>
         <form class="frm_search_users" method="post" action="/api/user/search.php">
         <input type="hidden" name="page" class="i_page" value="1">
-        <th colspan="3">
+        <th colspan="4">
           <p class="control has-addons">
             <span class="select">
               <select id="s_results_page" name="resultsPage">
@@ -17,7 +17,7 @@
             <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
           </p>                
         </th>
-        <th colspan="3">
+        <th colspan="2">
           <nav class="pagination">
             <a class="button is-info btn_previous_page is-disabled">Previous</a>
             <a class="button is-info btn_next_page is-disabled">Next page</a>
