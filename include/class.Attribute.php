@@ -50,10 +50,10 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
                 $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM [ATTRIBUTE] WHERE id = :id OR name = :name ", $params);
@@ -93,23 +93,23 @@
                             $this->id = Utils::uuid();
                         }
                         $params = array();
-                        $param = new DatabaseParam();
+                        $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":id", $this->id);
                         $params[] = $param;                
-                        $param = new DatabaseParam();
+                        $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":name", $this->name);
                         $params[] = $param;                
-                        $param = new DatabaseParam();
+                        $param = new \PHP_MPM\DatabaseParam();
                         if (! empty($this->description)) {
                             $param->str(":description", $this->description);
                         } else {
                             $param->null(":description");
                         }
                         $params[] = $param;
-                        $param = new DatabaseParam();
+                        $param = new \PHP_MPM\DatabaseParam();
                         $param->int(":type", $this->type);
                         $params[] = $param;                
-                        $param = new DatabaseParam();
+                        $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":creator", User::getSessionUserId());
                         $params[] = $param;                
                         \PHP_MPM\Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
@@ -133,13 +133,13 @@
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $params = array();
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":id", $this->id);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":name", $this->name);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     if (! empty($this->description)) {
                         $param->str(":description", $this->description);
                     } else {
@@ -163,7 +163,7 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
                 \PHP_MPM\Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);

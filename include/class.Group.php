@@ -37,10 +37,10 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
                 $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM [GROUP] WHERE id = :id OR name = :name ", $params);
@@ -65,19 +65,19 @@
                     $this->id = Utils::uuid();
                 }
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 if (! empty($this->description)) {
                     $param->str(":description", $this->description);
                 } else {
                     $param->null(":description");
                 }
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":creator", User::getSessionUserId());
                 $params[] = $param;                
                 // TODO: transaction support
@@ -106,13 +106,13 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {                                            
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":name", $this->name);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 if (! empty($this->description)) {
                     $param->str(":description", $this->description);
                 } else {
@@ -144,10 +144,10 @@
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $params = array();
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":group_id", $this->id);
                     $params[] = $param;                            
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":user_id", $userId);
                     $params[] = $param;                                
                     \PHP_MPM\Database::execWithoutResult(" INSERT INTO [GROUP_USER] (group_id, user_id) VALUES (:group_id, :user_id) ", $params);
@@ -160,10 +160,10 @@
         */
         private function removeUser($userId) {
             $params = array();
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":group_id", $this->id);
             $params[] = $param;
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":user_id", $userId);
             $params[] = $param;
             \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id AND user_id = :user_id ", $params);
@@ -174,7 +174,7 @@
         */
         private function removeAllUsers() {
             $params = array();
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":group_id", $this->id);
             $params[] = $param;                                
             \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP_USER] WHERE group_id = :group_id ", $params);
@@ -204,7 +204,7 @@
                 // TODO: transaction support
                 $this->removeAllUsers();
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
                 \PHP_MPM\Database::execWithoutResult(" DELETE FROM [GROUP] WHERE id = :id ", $params);
@@ -215,7 +215,7 @@
         *   get group users
         */
         private function getUsers() {
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":group_id", $this->id);                
             return(\PHP_MPM\Database::execWithResult(" SELECT GU.user_id AS id, U.email FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
         }
@@ -231,7 +231,7 @@
             } else if (empty($this->id)) {                
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);                
                 $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
                 if (count($rows) != 1) {

@@ -12,19 +12,19 @@
         */
         public static function save($e) {
             $params = array();
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":class", get_class($e));
             $params[] = $param;
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->int(":line", $e->getLine());
             $params[] = $param;
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":filename", $e->getFile());
             $params[] = $param;
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->int(":code", intval($e->getCode()));
             $params[] = $param;
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":trace", print_r($e->getTrace(), true));
             $params[] = $param;
             try {

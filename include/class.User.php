@@ -42,10 +42,10 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
                 $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM USER WHERE email = :email OR id = :id ", $params);
@@ -67,22 +67,22 @@
                         $this->id = Utils::uuid();
                     }
                     $params = array();
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":id", $this->id);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":email", $this->email);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
                     $params[] = $param;                                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->int(":type", UserType::DEFAULT);
                     $params[] = $param;                                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":name", $this->name);
                     $params[] = $param;                                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
                     \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
@@ -109,22 +109,22 @@
                         $this->id = Utils::uuid();
                     }
                     $params = array();
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":id", $this->id);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":email", $this->email);
                     $params[] = $param;                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
                     $params[] = $param;                                
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->int(":type", $this->type);
                     $params[] = $param;
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":name", $this->name);
                     $params[] = $param;                                                                                    
-                    $param = new DatabaseParam();
+                    $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":creator", User::getSessionUserId());
                     $params[] = $param;                                
                     \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
@@ -140,10 +140,10 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;                
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":email", $this->email);
                 $params[] = $param;                
                 $rows = \PHP_MPM\Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
@@ -219,12 +219,12 @@
         public function generateRecoverAccountToken(): string {
             $this->get();
             $params = array();
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $param->str(":user_id", $this->id);
             $params[] = $param;
             // TODO: transaction support
             \PHP_MPM\Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
-            $param = new DatabaseParam();
+            $param = new \PHP_MPM\DatabaseParam();
             $token = password_hash((sha1(uniqid()) . sha1(uniqid())), PASSWORD_BCRYPT, array("cost" => 12));
             $param->str(":token", $token);
             $params[] = $param;                
@@ -241,7 +241,7 @@
                 throw new \PHP_MPM\MPMInvalidParamsException("");
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":token", $token);
                 $params[] = $param;
                 // tokens are valid only for 60 minutes 
@@ -287,7 +287,7 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));                
             } else {
                 $params = array();
-                $param = new DatabaseParam();
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
                 \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
