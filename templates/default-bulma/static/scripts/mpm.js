@@ -70,3 +70,38 @@ mpm.form.submit = function(form, callback) {
     }
     xhr.send(new FormData($(form)[0]), null, 2);
 };
+
+mpm.pagination = mpm.pagination || {};
+
+mpm.pagination.setControls = function(actualPage, totalPages) {
+    $(".pager_actual_page").text(actualPage);
+    $(".pager_total_pages").text(totalPages);
+    if (actualPage < totalPages) {
+        $(".btn_next_page").removeClass("is-disabled");
+    } else {
+        $(".btn_next_page").addClass("is-disabled");
+    }
+    if (actualPage > 1) {
+        $(".btn_previous_page").removeClass("is-disabled");
+    } else {
+        $(".btn_previous_page").addClass("is-disabled");
+    }
+}
+
+mpm.error = mpm.error || {};
+
+mpm.error.getStackTrace = function() {
+    var stackTrace = null;
+    try {
+        throw new Error();
+    } catch (e) {
+        stackTrace = e.stack;
+    }
+    return (stackTrace);
+};
+
+mpm.error.showModal = function(stackTrace) {
+    $("div#stack_trace").text(mpm.error.getStackTrace());
+    $('html').addClass('is-clipped');
+    $("div#modal_general_error").addClass('is-active');
+}
