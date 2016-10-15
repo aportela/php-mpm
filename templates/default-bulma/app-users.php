@@ -23,13 +23,13 @@
             <a class="button is-info btn_next_page is-disabled">Next page</a>
             <ul>
               <li>
-                <a class="button is-primary pager_actual_page">1</a>
+                <a class="button is-primary pager_actual_page is-disabled">1</a>
               </li>
               <li>
                 <span>...</span>
               </li>
               <li>
-                <a class="button pager_total_pages">1</a>
+                <a class="button pager_total_pages is-disabled">1</a>
               </li>
             </ul>
           </nav>        
