@@ -19,7 +19,7 @@
 
     $result = array("success" => false);
     try {
-        $u = new User();                 
+        $u = new \PHP_MPM\User();                 
         $u->signout();
         $result["success"] = true; 
         ob_clean();

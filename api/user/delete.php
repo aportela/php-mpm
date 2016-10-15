@@ -18,33 +18,33 @@
     ob_start();    
     $result = array("success" => false);
     try {
-        $u = new User();
+        $u = new \PHP_MPM\User();
         $u->id = isset($_POST["id"]) ? $_POST["id"]: "";         
         $u->delete();
         $result["success"] = true;
         ob_clean();
-    } catch (MPMInvalidParamsException $e) {
+    } catch (\PHP_MPM\MPMInvalidParamsException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.1 400 Bad Request", 400, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
-    } catch (MPMNotFoundException $e) {
+    } catch (\PHP_MPM\MPMNotFoundException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.0 404 Not Found", 404, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
-    } catch (MPMAuthSessionRequiredException $e) {
+    } catch (\PHP_MPM\MPMAuthSessionRequiredException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.0 403 Forbidden", 403, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }        
-    } catch (MPMAdminPrivilegesRequiredException $e) {
+    } catch (\PHP_MPM\MPMAdminPrivilegesRequiredException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.0 403 Forbidden", 403, true);

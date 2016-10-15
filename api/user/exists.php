@@ -17,7 +17,7 @@
     ob_start();    
     $result = array("success" => false, "exists" => false);
     try {
-        $u = new User();         
+        $u = new \PHP_MPM\User();         
         $u->set("", isset($_POST["email"]) ? $_POST["email"]: "", "", 0);
         $result["exists"] = $u->exists();
         ob_clean();
@@ -27,7 +27,7 @@
             header("HTTP/1.0 404 Not Found", 404, true);
         }
         $result["success"] = true;
-    } catch (MPMInvalidParamsException $e) {
+    } catch (\PHP_MPM\MPMInvalidParamsException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.1 400 Bad Request", 400, true);

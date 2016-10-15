@@ -90,7 +90,7 @@
                         throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                     } else {                                        
                         if (empty($this->id)) {
-                            $this->id = Utils::uuid();
+                            $this->id = \PHP_MPM\Utils::uuid();
                         }
                         $params = array();
                         $param = new \PHP_MPM\DatabaseParam();

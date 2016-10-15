@@ -21,7 +21,7 @@
     ob_start();    
     $result = array("success" => false);
     try {
-        $g = new Group();         
+        $g = new \PHP_MPM\Group();         
         $u->set(
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["name"]) ? $_POST["name"]: "", 
@@ -31,28 +31,28 @@
         $g->add();
         $result["success"] = true;
         ob_clean();
-    } catch (MPMInvalidParamsException $e) {
+    } catch (\PHP_MPM\MPMInvalidParamsException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.1 400 Bad Request", 400, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
-    } catch (MPMAlreadyExistsException $e) {
+    } catch (\PHP_MPM\MPMAlreadyExistsException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.1 409 Conflict", 409, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
-    } catch (MPMAuthSessionRequiredException $e) {
+    } catch (\PHP_MPM\MPMAuthSessionRequiredException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.0 403 Forbidden", 403, true);
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }        
-    } catch (MPMAdminPrivilegesRequiredException $e) {
+    } catch (\PHP_MPM\MPMAdminPrivilegesRequiredException $e) {
         Error::save($e);
         ob_clean();
         header("HTTP/1.0 403 Forbidden", 403, true);

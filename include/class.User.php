@@ -64,7 +64,7 @@
                     throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
-                        $this->id = Utils::uuid();
+                        $this->id = \PHP_MPM\Utils::uuid();
                     }
                     $params = array();
                     $param = new \PHP_MPM\DatabaseParam();
@@ -77,7 +77,7 @@
                     $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
                     $params[] = $param;                                
                     $param = new \PHP_MPM\DatabaseParam();
-                    $param->int(":type", UserType::DEFAULT);
+                    $param->int(":type", \PHP_MPM\UserType::DEFAULT);
                     $params[] = $param;                                
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":name", $this->name);
@@ -106,7 +106,7 @@
                     throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 } else {
                     if (empty($this->id)) {
-                        $this->id = Utils::uuid();
+                        $this->id = \PHP_MPM\Utils::uuid();
                     }
                     $params = array();
                     $param = new \PHP_MPM\DatabaseParam();
@@ -249,7 +249,7 @@
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException($token);
                 } else {
-                    $user = new User();
+                    $user = new \PHP_MPM\User();
                     $user->set(
                         isset($rows[0]->id) ? $rows[0]->id: "", 
                         isset($rows[0]->email) ? $rows[0]->email: "", 

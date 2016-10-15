@@ -62,7 +62,7 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 if (empty($this->id)) {
-                    $this->id = Utils::uuid();
+                    $this->id = \PHP_MPM\Utils::uuid();
                 }
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
@@ -138,7 +138,7 @@
             if (empty($userId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
-                $u = new User();
+                $u = new \PHP_MPM\User();
                 $u->set($userId, "", "", 0);
                 if (! $u->exists()) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));

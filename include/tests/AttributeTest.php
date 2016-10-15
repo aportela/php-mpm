@@ -1,10 +1,7 @@
 <?php
     namespace PHP_MPM;
 
-    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "class.User.php";
-    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "class.Attribute.php";
-    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "class.Utils.php";
-    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "class.CustomExceptions.php";
+    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "configuration.php";
 
     ob_start();    
 
@@ -23,19 +20,19 @@
         }
 
         private function signInAsAdmin() {
-            $u = new User();
-            $u->set("", AttributeTest::ADMIN_EMAIL, AttributeTest::ADMIN_PASSWORD, "administrator", UserType::DEFAULT);
+            $u = new \PHP_MPM\User();
+            $u->set("", AttributeTest::ADMIN_EMAIL, AttributeTest::ADMIN_PASSWORD, "administrator", \PHP_MPM\UserType::DEFAULT);
             $u->login();            
         }
 
         private function signOut() {
-            (new User())->signout();
+            (new \PHP_MPM\User())->signout();
         }
         
         public function testExistsWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->exists();                    
         }
 
@@ -45,36 +42,36 @@
 
         public function testExistsWithExistentId() {
             $this->signInAsAdmin();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;
             $this->assertTrue($a->exists());        
         }
 
         public function testExistsWithNotExistentId() {
             $this->signInAsAdmin();
-            $a = new Attribute();
-            $a->id = Utils::uuid();
+            $a = new \PHP_MPM\Attribute();
+            $a->id = \PHP_MPM\Utils::uuid();
             $this->assertFalse($a->exists());        
         }
 
         public function testExistsWithExistentName() {
             $this->signInAsAdmin();            
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->name = AttributeTest::EXISTENT_ATTRIBUTE_NAME;
             $this->assertTrue($a->exists());        
         }
 
         public function testExistsWithNotExistentName() {
             $this->signInAsAdmin();            
-            $a = new Attribute();
-            $a->name = Utils::uuid();
+            $a = new \PHP_MPM\Attribute();
+            $a->name = \PHP_MPM\Utils::uuid();
             $this->assertFalse($a->exists());       
         }
 
         public function testAddWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->add();                    
         }
 
@@ -85,7 +82,7 @@
         public function testAddWithExistentId() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
             $this->signInAsAdmin();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;             
             $a->add();                    
         }
@@ -93,7 +90,7 @@
         public function testAddWithExistentName() {
             $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
             $this->signInAsAdmin();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->name = AttributeTest::EXISTENT_ATTRIBUTE_NAME;             
             $a->add();                                
         }
@@ -101,7 +98,7 @@
         public function testAddWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
             $this->signInAsAdmin();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->add();                                
         }
 
@@ -109,8 +106,8 @@
             $err = null;
             try {
                 $this->signInAsAdmin();
-                $a = new Attribute();
-                $uuid = Utils::uuid();
+                $a = new \PHP_MPM\Attribute();
+                $uuid = \PHP_MPM\Utils::uuid();
                 $a->set(
                     $uuid,
                     sprintf("Attribute name: %s", $uuid),
@@ -128,7 +125,7 @@
         public function testUpdateWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->update();                    
         }
 
@@ -139,23 +136,23 @@
         public function testUpdateWithEmptyId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
             $this->signInAsAdmin();
-            $a = new Attribute();            
+            $a = new \PHP_MPM\Attribute();            
             $a->update();                    
         }
 
         public function testUpdateWithNonExistentId() {
             $this->setExpectedException('PHP_MPM\MPMNotFoundException');
             $this->signInAsAdmin();
-            $a = new Attribute();            
-            $a->id = Utils::uuid();
-            $a->name = sprintf("Attribute name: %s", Utils::uuid());
+            $a = new \PHP_MPM\Attribute();            
+            $a->id = \PHP_MPM\Utils::uuid();
+            $a->name = sprintf("Attribute name: %s", \PHP_MPM\Utils::uuid());
             $a->update();                                
         }
 
         public function testUpdateWithEmptyName() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
             $this->signInAsAdmin();
-            $a = new Attribute();            
+            $a = new \PHP_MPM\Attribute();            
             $a->id = AttributeTest::EXISTENT_ATTRIBUTE_ID;
             $a->update();                                
         }
@@ -164,7 +161,7 @@
             $err = null;
             try {
                 $this->signInAsAdmin();
-                $a = new Attribute();
+                $a = new \PHP_MPM\Attribute();
                 $a->set(
                     AttributeTest::EXISTENT_ATTRIBUTE_ID,
                     AttributeTest::EXISTENT_ATTRIBUTE_NAME,
@@ -182,7 +179,7 @@
         public function testDeleteWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->delete();
         }
 
@@ -193,7 +190,7 @@
         public function testDeleteWithoutId() {
             $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
             $this->signInAsAdmin();
-            $a = new Attribute();
+            $a = new \PHP_MPM\Attribute();
             $a->delete();
         }
 
@@ -201,8 +198,8 @@
             $err = null;
             try {
                 $this->signInAsAdmin();  
-                $a = new Attribute();
-                $uuid = Utils::uuid();
+                $a = new \PHP_MPM\Attribute();
+                $uuid = \PHP_MPM\Utils::uuid();
                 $a->set(
                     $uuid,
                     sprintf("Attribute name: %s", $uuid),
