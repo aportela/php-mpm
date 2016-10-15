@@ -71,12 +71,7 @@ $('table tbody').on("click", ".modal-button", function() {
     $(target).addClass('is-active');
 });
 
-$('body').on("click", '.modal-background, .modal-close', function() {
-    $('html').removeClass('is-clipped');
-    $(this).parent().removeClass('is-active');
-});
-
-$('body').on("click", '.modal-card-head .delete, .modal-card-foot .button', function() {
+$('body').on("click", '.modal-background, .modal_close', function() {
     $('html').removeClass('is-clipped');
     $('div.modal').removeClass('is-active');
 });
