@@ -2,7 +2,6 @@
     namespace PHP_MPM;
 
     require_once __DIR__ . DIRECTORY_SEPARATOR . "configuration.php";
-    require_once __DIR__ . DIRECTORY_SEPARATOR . "class.CustomExceptions.php";
 
     /**
     *   simple (temporal ?) templating class

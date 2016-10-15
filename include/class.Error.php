@@ -1,7 +1,7 @@
 <?php
     namespace PHP_MPM;
 
-    require_once "class.Database.php";
+    require_once __DIR__ . DIRECTORY_SEPARATOR . "configuration.php";
 
     /**
     *   error class
