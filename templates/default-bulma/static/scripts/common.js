@@ -46,6 +46,14 @@ $.fn.putFormValidationError = function(elementId, message) {
 }
 
 /**
+ * put form (input field) validation success message
+ */
+$.fn.putFormValidationSuccess = function(elementId, message) {
+    var element = $("p#" + elementId);
+    $(element).append('<span class="help is-success">' + message + '</span>');
+}
+
+/**
  * disable form (button type="submit") submit
  */
 $.fn.disableSubmit = function() {
