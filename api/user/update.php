@@ -1,7 +1,7 @@
 <?php
     /**
-    *   /api/user/add.php
-    *   description: add new user
+    *   /api/user/update.php
+    *   description: update user
     *
     *   request method: POST
     *
