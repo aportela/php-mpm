@@ -223,9 +223,9 @@
 
         public function testSearchWithAuthSession() {
             $this->signInAsAdmin();
-            $results = Attribute::search(1, 16);
+            $data = Attribute::search(1, 16);
             // TODO: better search results check
-            $this->assertGreaterThanOrEqual(1, count($results));
+            $this->assertGreaterThanOrEqual(1, count($data->results));
         }        
     }
 ?>

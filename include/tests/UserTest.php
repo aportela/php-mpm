@@ -257,9 +257,9 @@
 
         public function testSearchWithAuthSession() {
             $this->signInAsAdmin();
-            $results = User::search(0, 16);
+            $data = User::search(0, 16);
             // TODO: better search results check
-            $this->assertGreaterThanOrEqual(1, count($results));
+            $this->assertGreaterThanOrEqual(1, count($data->results));
         }
 
         public function testDeleteWithoutAuthSession() {

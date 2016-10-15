@@ -268,8 +268,10 @@
             if (! User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else {
-                // TODO: pagination & filtering
-                return(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                $data = new \PHP_MPM\SearchResults();
+                $data->setPager(0, 1, 0);
+                $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, U.created AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.created DESC ", array()));
+                return($data);
             }
         }
 

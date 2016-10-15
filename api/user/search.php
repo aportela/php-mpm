@@ -19,9 +19,9 @@
 
     session_start();
 
-    $result = array("success" => false, "results" => array());
+    $result = array("success" => false, "data" => null);
     try {
-        $result["results"] = User::search(1, 16);
+        $result["data"] = User::search(1, 16);
         $result["success"] = true;
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);
