@@ -9,6 +9,9 @@
                 <ul class="menu-list">
                     <li><a href="index.php" <?= ! isset($_GET["page"]) ? 'class="is-active"' : null ?>><span class="icon"><i class="fa fa-home"></i></span> Home</a></li>
                 </ul>
+                <?php
+                if ($_TEMPLATE["session_user_is_admin"] == 1) {
+                ?>
                 <p class="menu-label">
                     Administration
                 </p>
@@ -17,6 +20,9 @@
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "groups" ? 'class="is-active"': null ?>href="index.php?page=groups"><span class="icon"><i class="fa fa-users"></i></span> Groups</a></li>
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "attributes" ? 'class="is-active"': null ?>href="index.php?page=attributes"><span class="icon"><i class="fa fa-object-group"></i></span> Attributes</a></li>
                 </ul>
+                <?php
+                }
+                ?>
                 </aside>            
             </div>
             <div class="column">

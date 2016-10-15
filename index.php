@@ -14,6 +14,11 @@
 
     $t = new \PHP_MPM\Template("layout.php");
 
-    $t->render(array("is_logged" => User::isAuthenticated(), "name" => \PHP_MPM\User::isAuthenticated() ? $_SESSION["user_name"] : "john doe"));
+    $t->render(array(
+        "session_user_is_logged" => User::isAuthenticated(), 
+        "session_user_id" => \PHP_MPM\User::getSessionUserId(),
+        "session_user_name" => \PHP_MPM\User::getSessionUserName(),
+        "session_user_is_admin" => \PHP_MPM\User::isAuthenticatedAsAdmin() ? 1 : 0
+    ));
     ob_flush();
 ?>
