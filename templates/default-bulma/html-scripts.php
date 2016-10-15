@@ -6,3 +6,4 @@
 <script src="/templates/default-bulma/static/scripts/app-groups.js"></script>
 <script src="/templates/default-bulma/static/scripts/app-attributes.js"></script>
 <script src="/templates/default-bulma/static/scripts/script.js"></script>
+<script src="/templates/default-bulma/static/scripts/locale-en.js"></script>
