@@ -69,7 +69,43 @@ $("form#frm_delete_user").submit(function(e) {
             } finally {
                 switch (this.status) {
                     case 200:
-                        $(".modal_close:first").click();
+                        $('html').removeClass('is-clipped');
+                        $('div.modal').removeClass('is-active');
+                        refreshUsersTable();
+                        break;
+                    default:
+                        $(".modal_error").removeClass("is-hidden");
+                        $(".modal_error .message-body").text("operation error");
+                        // TODO: error
+                        console.log(this.status);
+                        break;
+                }
+            }
+        }
+    }
+    xhr.send(new FormData($(this)[0]), null, 2);
+});
+
+$("form#frm_update_user").submit(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var xhr = new XMLHttpRequest();
+    xhr.open($(this).attr("method"), $(this).attr("action"), true);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            var response = null;
+            try {
+                response = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.groupCollapsed("Error parsing JSON response");
+                console.log(e);
+                console.log(xhr.responseText);
+                console.groupEnd();
+            } finally {
+                switch (this.status) {
+                    case 200:
+                        $('html').removeClass('is-clipped');
+                        $('div.modal').removeClass('is-active');
                         refreshUsersTable();
                         break;
                     default:
@@ -88,4 +124,10 @@ $("form#frm_delete_user").submit(function(e) {
 $('table tbody').on("click", ".btn_delete_user", function(e) {
     $("input#delete_user_id").val($(this).closest("tr").data("id"));
     $("strong#delete_user_name").text($(this).closest("tr").find("td:nth-child(3)").text());
+});
+
+$('table tbody').on("click", ".btn_update_user", function(e) {
+    $("input#update_user_id").val($(this).closest("tr").data("id"));
+    $("input#update_user_email").val($(this).closest("tr").find("td:nth-child(4)").text());
+    $("input#update_user_name").val($(this).closest("tr").find("td:nth-child(3)").text());
 });
