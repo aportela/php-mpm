@@ -150,4 +150,15 @@ $("select#s_results_page").change(function(e) {
     $("form.frm_search_users").submit();
 });
 
+var timer = null;
+$("input#fast_search_filter").keyup(function(e) {
+    e.preventDefault();
+    if (timer) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(function() {
+        $("form.frm_search_users").submit();
+    }, 500);
+});
+
 $("form.frm_search_users").submit();
