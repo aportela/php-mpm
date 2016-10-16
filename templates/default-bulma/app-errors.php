@@ -3,7 +3,7 @@
     <tr>
       <form class="frm_search_errors" method="post" action="/api/error/search.php">
       <input type="hidden" name="page" class="i_page" value="1">
-      <th colspan="2">
+      <th colspan="6">
         <div class="columns">
           <div class="column is-2">
             <p class="control has-addons has-addons-right">
@@ -54,6 +54,10 @@
     </tr>   
     <tr>
         <th>Created <i class="fa fa-fw fa-sort-amount-asc" aria-hidden="true"></i></th>
+        <th>User</th>
+        <th>Remote address</th>
+        <th>Operating system</th>
+        <th>Browser</th>
         <th>Details</th>
     </tr>        
   </thead>
