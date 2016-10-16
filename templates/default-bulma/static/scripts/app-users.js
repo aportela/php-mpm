@@ -34,6 +34,26 @@ $("form.frm_search_users").submit(function(e) {
     });
 });
 
+$("form#frm_add_user").submit(function(e) {
+    e.preventDefault();
+    mpm.form.submit(this, function(httpStatusCode, result) {
+        switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("ca_email", USER_ADD_EMAIL_EXISTS);
+                break;
+            case 200:
+                $('html').removeClass('is-clipped');
+                $('div.modal').removeClass('is-active');
+                $("form.frm_search_users").submit();
+                break;
+            default:
+                mpm.error.showModal();
+                break;
+        }
+    });
+});
+
+
 $("form#frm_delete_user").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, result) {
@@ -54,6 +74,9 @@ $("form#frm_update_user").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, result) {
         switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("cu_email", USER_UPDATE_EMAIL_EXISTS);
+                break;
             case 200:
                 $('html').removeClass('is-clipped');
                 $('div.modal').removeClass('is-active');
@@ -64,6 +87,12 @@ $("form#frm_update_user").submit(function(e) {
                 break;
         }
     });
+});
+
+$('table thead').on("click", ".btn_add_user", function(e) {
+    $("input#add_user_email").val("");
+    $("input#add_user_name").val("");
+    $("input#add_user_password").val("");
 });
 
 $('table tbody').on("click", ".btn_delete_user", function(e) {

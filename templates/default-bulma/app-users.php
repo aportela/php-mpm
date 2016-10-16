@@ -17,6 +17,9 @@
                 <a id="btn_export_table_data" class="button is-primary is-disabled">Export data</a>
               </p>          
             </div>
+            <div class="column is-1">
+              <a class="button is-primary modal-button btn_add_user" data-target="#modal_add">add new user</a>              
+            </div>
             <div class="column is-5">
               <p class="control has-addons">
                 <span class="select">
@@ -31,7 +34,7 @@
                 <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
               </p>                          
             </div>
-            <div class="column is-5">
+            <div class="column is-4">
               <nav class="pagination">
                 <a class="button is-info btn_previous_page is-disabled">Previous</a>
                 <a class="button is-info btn_next_page is-disabled">Next page</a>
@@ -65,6 +68,42 @@
   </tbody>
 </table>
 
+<div class="modal" id="modal_add">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <form id="frm_add_user" method="post" action="/api/user/add.php">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add user</p>
+        <button class="delete modal_close"></button>
+      </header>
+      <section class="modal-card-body">
+        <p class="control has-icon" id="ca_email">
+            <input class="input" type="email" name="email" id="add_user_email" placeholder="Email" maxlength="254" required>
+            <i class="fa fa-envelope"></i>
+        </p>
+        <p class="control has-icon" id="ca_name">
+            <input class="input" type="text" name="name" id="add_user_name" placeholder="Name" maxlength="32" required>
+            <i class="fa fa-user"></i>
+        </p>
+        <p class="control has-icon" id="ca_password">
+            <input class="input" type="password" name="password" id="add_user_password" placeholder="Password" value="">
+            <i class="fa fa-lock"></i>
+        </p>    
+        <article class="message is-danger is-hidden modal_error">
+          <div class="message-header">
+            Error
+          </div>
+          <div class="message-body">
+          </div>
+        </article>          
+      </section>
+      <footer class="modal-card-foot">
+        <button type="submit" class="button is-primary">Add</button>
+        <a class="button modal_close">Cancel</a>
+      </footer>
+    </form>
+  </div>
+</div>
 
 <div class="modal" id="modal_update">
   <div class="modal-background"></div>
@@ -76,15 +115,15 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
-        <p class="control has-icon" id="c_email">
+        <p class="control has-icon" id="cu_email">
             <input class="input" type="email" name="email" id="update_user_email" placeholder="Email" value="admin@localhost" maxlength="254" required>
             <i class="fa fa-envelope"></i>
         </p>
-        <p class="control has-icon" id="c_name">
+        <p class="control has-icon" id="cu_name">
             <input class="input" type="text" name="name" id="update_user_name" placeholder="Name" value="administrator" maxlength="32" required>
             <i class="fa fa-user"></i>
         </p>
-        <p class="control has-icon" id="c_password">
+        <p class="control has-icon" id="cu_password">
             <input class="input" type="password" name="password" placeholder="Password" value="">
             <i class="fa fa-lock"></i>
         </p>    
