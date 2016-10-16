@@ -24,6 +24,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
+            case "templates":
+                ?>
+<script src="/templates/default-bulma/static/scripts/app-templates.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
+                <?php
+            break;
             case "errors":
                 ?>
 <script src="/templates/default-bulma/static/scripts/app-errors.js"></script>

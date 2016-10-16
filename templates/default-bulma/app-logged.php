@@ -19,6 +19,7 @@
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "users" ? 'class="is-active"': null ?> href="index.php?page=users"><span class="icon"><i class="fa fa-user"></i></span> Users</a></li>
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "groups" ? 'class="is-active"': null ?>href="index.php?page=groups"><span class="icon"><i class="fa fa-users"></i></span> Groups</a></li>
                     <li><a <?= isset($_GET["page"]) && $_GET["page"]== "attributes" ? 'class="is-active"': null ?>href="index.php?page=attributes"><span class="icon"><i class="fa fa-object-group"></i></span> Attributes</a></li>
+                    <li><a <?= isset($_GET["page"]) && $_GET["page"]== "templates" ? 'class="is-active"': null ?>href="index.php?page=templates"><span class="icon"><i class="fa fa-file-o"></i></span> Templates</a></li>
                 </ul>
                 <p class="menu-label">
                     Tools
@@ -44,6 +45,9 @@
                             break;
                             case "attributes":
                                 include "app-attributes.php";
+                            break;
+                            case "templates":
+                                include "app-templates.php";
                             break;
                             case "errors":
                                 include "app-errors.php";
