@@ -218,12 +218,12 @@
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            Attribute::search(1, 16);
+            Attribute::search(1, 16, "");
         }
 
         public function testSearchWithAuthSession() {
             $this->signInAsAdmin();
-            $data = Attribute::search(1, 16);
+            $data = Attribute::search(1, 16, "");
             // TODO: better search results check
             $this->assertGreaterThanOrEqual(1, count($data->results));
         }        
