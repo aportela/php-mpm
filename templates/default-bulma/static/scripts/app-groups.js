@@ -154,4 +154,55 @@ $("input#fast_search_filter").keyup(function(e) {
     }, 500);
 });
 
+var formData = new FormData();
+formData.append("page", 1);
+formData.append("resultsPage", 0);
+mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
+    switch (httpStatusCode) {
+        case 200:
+            if (!(response && response.success)) {
+                mpm.error.showModal();
+            } else {
+                var html = '<option value="">select user</option>';
+                if (response.data && response.data.results.length > 0) {
+                    for (var i = 0; i < response.data.results.length; i++) {
+                        html += '<option value="' + response.data.results[i].id + '" data-id="' + response.data.results[i].id + '" data-name="' + response.data.results[i].name + '" data-email="' + response.data.results[i].email + '">' + response.data.results[i].name + ' (' + response.data.results[i].email + ')</option>'
+                    }
+                }
+                $("select#add_group_user_list").html(html);
+            }
+            break;
+        default:
+            mpm.error.showModal();
+            break;
+    }
+});
+
+$("select#add_group_user_list").change(function(e) {
+    e.preventDefault();
+    var v = $(this).val()
+    if (v) {
+        if ($('table#add_group_userlist tbody tr[data-id="' + $("select#add_group_user_list option:selected").data("id") + '"]').length > 0) {
+            $("#btn_add_group_user").addClass("is-disabled");
+        } else {
+            $("#btn_add_group_user").removeClass("is-disabled");
+        }
+    } else {
+        console.log("no");
+        $("#btn_add_group_user").addClass("is-disabled");
+    }
+});
+
+$("#btn_add_group_user").click(function(e) {
+    var o = $("select#add_group_user_list option:selected");
+    var html = "";
+    html += '<tr data-id="' + $(o).data("id") + '">';
+    html += "<td>" + $(o).data("name") + "</td>";
+    html += "<td>" + $(o).data("email") + "</td>";
+    html += "</tr>";
+    $("table#add_group_userlist tbody").append(html);
+    $("select#add_group_user_list").val("");
+    $("#btn_add_group_user").addClass("is-disabled");
+});
+
 $("form.frm_search_groups").submit();

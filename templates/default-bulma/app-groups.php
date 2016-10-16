@@ -76,14 +76,43 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
-        <p class="control has-icon" id="ca_name">
-            <input class="input" type="text" name="name" id="add_group_name" placeholder="Name" maxlength="32" required>
-            <i class="fa fa-users"></i>
-        </p>
-        <p class="control has-icon" id="ca_description">
-            <input class="input" type="text" name="description" id="add_group_description" placeholder="Description" maxlength="128">
-            <i class="fa fa-comments-o" aria-hidden="true"></i>
-        </p>
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a data-target="add_group_tab_metadata" href="#">Metadata</a></li>
+            <li><a data-target="add_group_tab_users" href="#">Users</a></li>
+          </ul>
+        </div>
+        <div class="tab-content" id="add_group_tab_metadata">            
+          <p class="control has-icon" id="ca_name">
+              <input class="input" type="text" name="name" id="add_group_name" placeholder="Name" maxlength="32" required>
+              <i class="fa fa-users"></i>
+          </p>
+          <p class="control has-icon" id="ca_description">
+              <input class="input" type="text" name="description" id="add_group_description" placeholder="Description" maxlength="128">
+              <i class="fa fa-comments-o" aria-hidden="true"></i>
+          </p>
+        </div>
+        <div class="tab-content is-hidden" id="add_group_tab_users">
+          <p class="control has-addons">
+            <span class="select">
+              <select id="add_group_user_list">
+                <option value="">select user</option>
+              </select>
+            </span>
+            <a id="btn_add_group_user" class="button is-primary is-disabled">Add</a>
+          </p>
+           <table id="add_group_userlist" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>                  
+        </div>
+        
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
             Error
