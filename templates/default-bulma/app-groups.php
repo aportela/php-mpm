@@ -17,6 +17,9 @@
               <a id="btn_export_table_data" class="button is-primary is-disabled">Export data</a>
             </p>          
           </div>
+          <div class="column is-1">
+            <a class="button is-primary modal-button btn_add_group" data-target="#modal_add">add new group</a>              
+          </div>          
           <div class="column is-5">
             <p class="control has-addons">
               <span class="select">
@@ -31,7 +34,7 @@
               <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
             </p>                          
           </div>
-          <div class="column is-5">
+          <div class="column is-4">
             <nav class="pagination">
               <a class="button is-info btn_previous_page is-disabled">Previous</a>
               <a class="button is-info btn_next_page is-disabled">Next page</a>
@@ -63,6 +66,39 @@
   <tbody>
   </tbody>
 </table>
+
+<div class="modal" id="modal_add">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <form id="frm_add_group" method="post" action="/api/group/add.php">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add group</p>
+        <button class="delete modal_close"></button>
+      </header>
+      <section class="modal-card-body">
+        <p class="control has-icon" id="ca_name">
+            <input class="input" type="text" name="name" id="add_group_name" placeholder="Name" maxlength="32" required>
+            <i class="fa fa-users"></i>
+        </p>
+        <p class="control has-icon" id="ca_description">
+            <input class="input" type="text" name="description" id="add_group_description" placeholder="Description" maxlength="128">
+            <i class="fa fa-comments-o" aria-hidden="true"></i>
+        </p>
+        <article class="message is-danger is-hidden modal_error">
+          <div class="message-header">
+            Error
+          </div>
+          <div class="message-body">
+          </div>
+        </article>          
+      </section>
+      <footer class="modal-card-foot">
+        <button type="submit" class="button is-primary">Add</button>
+        <a class="button modal_close">Cancel</a>
+      </footer>
+    </form>
+  </div>
+</div>
 
 <div class="modal" id="modal_update">
   <div class="modal-background"></div>

@@ -1,22 +1,22 @@
 $("form.frm_search_groups").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
-                if (result === null) {
+                if (!(response && response.success)) {
                     mpm.error.showModal();
                 } else {
-                    mpm.pagination.setControls(result.data.pager.actualPage, result.data.pager.totalPages);
+                    mpm.pagination.setControls(response.data.pager.actualPage, response.data.pager.totalPages);
                     var html = null;
-                    if (result.data && result.data.results.length > 0) {
-                        for (var i = 0; i < result.data.results.length; i++) {
-                            html += '<tr data-id="' + result.data.results[i].id + '">';
+                    if (response.data && response.data.results.length > 0) {
+                        for (var i = 0; i < response.data.results.length; i++) {
+                            html += '<tr data-id="' + response.data.results[i].id + '">';
                             html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_group" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_group" data-target="#modal_delete">Delete</a></td>';
-                            html += '<td>' + result.data.results[i].name + '</td>';
-                            html += '<td>' + (result.data.results[i].description ? result.data.results[i].description : "") + '</td>';
+                            html += '<td>' + response.data.results[i].name + '</td>';
+                            html += '<td>' + (response.data.results[i].description ? response.data.results[i].description : "") + '</td>';
                             html += '<td>0</td>';
-                            html += '<td data-id="' + result.data.results[i].creatorId + '">' + (result.data.results[i].creatorId != result.data.results[i].id ? result.data.results[i].creatorName : "auto-register") + '</td>';
-                            html += '<td data-date="' + result.data.results[i].creationDate + '">' + new moment(result.data.results[i].creationDate).fromNow() + '</td>';
+                            html += '<td data-id="' + response.data.results[i].creatorId + '">' + (response.data.results[i].creatorId != response.data.results[i].id ? response.data.results[i].creatorName : "auto-register") + '</td>';
+                            html += '<td data-date="' + response.data.results[i].creationDate + '">' + new moment(response.data.results[i].creationDate).fromNow() + '</td>';
                             html += '</tr>';
                         }
                     }
@@ -30,14 +30,40 @@ $("form.frm_search_groups").submit(function(e) {
     });
 });
 
+$("form#frm_add_group").submit(function(e) {
+    e.preventDefault();
+    mpm.form.submit(this, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("ca_name", GROUP_ADD_NAME_EXISTS);
+                break;
+            case 200:
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    $('html').removeClass('is-clipped');
+                    $('div.modal').removeClass('is-active');
+                    $("form.frm_search_groups").submit();
+                }
+                break;
+            default:
+                mpm.error.showModal();
+                break;
+        }
+    });
+});
 $("form#frm_delete_group").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
-                $('html').removeClass('is-clipped');
-                $('div.modal').removeClass('is-active');
-                $("form.frm_search_groups").submit();
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    $('html').removeClass('is-clipped');
+                    $('div.modal').removeClass('is-active');
+                    $("form.frm_search_groups").submit();
+                }
                 break;
             default:
                 mpm.error.showModal();
@@ -48,18 +74,27 @@ $("form#frm_delete_group").submit(function(e) {
 
 $("form#frm_update_group").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
-                $('html').removeClass('is-clipped');
-                $('div.modal').removeClass('is-active');
-                $("form.frm_search_groups").submit();
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    $('html').removeClass('is-clipped');
+                    $('div.modal').removeClass('is-active');
+                    $("form.frm_search_groups").submit();
+                }
                 break;
             default:
                 mpm.error.showModal();
                 break;
         }
     });
+});
+
+$('table thead').on("click", ".btn_add_group", function(e) {
+    $("input#add_group_name").val("");
+    $("input#add_group_description").val("");
 });
 
 $('table tbody').on("click", ".btn_delete_group", function(e) {
