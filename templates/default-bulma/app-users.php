@@ -53,7 +53,7 @@
         </form>
       </tr>   
       <tr>
-          <th>Operations</th>
+          <th class="ignore_on_export">Operations</th>
           <th>Type</th>
           <th>Name</th>
           <th>Email</th>

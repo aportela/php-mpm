@@ -1,6 +1,6 @@
-$("form.frm_search_users").submit(function (e) {
+$("form.frm_search_users").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 200:
                 if (result === null) {
@@ -11,7 +11,7 @@ $("form.frm_search_users").submit(function (e) {
                     if (result.data && result.data.results.length > 0) {
                         for (var i = 0; i < result.data.results.length; i++) {
                             html += '<tr data-id="' + result.data.results[i].id + '">';
-                            html += '<td class="has-text-centered"><a class="button is-small is-info modal-button btn_update_user" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_user"  data-target="#modal_delete">Delete</a></td>'
+                            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_user" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_user"  data-target="#modal_delete">Delete</a></td>'
                             if (result.data.results[i].type == 1) {
                                 html += '<td ><span class="icon is-small"><i class="fa fa-1x fa-user-md" aria-hidden="true"></i></span> <span>super</span></td>';
                             } else {
@@ -34,9 +34,9 @@ $("form.frm_search_users").submit(function (e) {
     });
 });
 
-$("form#frm_delete_user").submit(function (e) {
+$("form#frm_delete_user").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 200:
                 $('html').removeClass('is-clipped');
@@ -50,9 +50,9 @@ $("form#frm_delete_user").submit(function (e) {
     });
 });
 
-$("form#frm_update_user").submit(function (e) {
+$("form#frm_update_user").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    mpm.form.submit(this, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 200:
                 $('html').removeClass('is-clipped');
@@ -66,18 +66,18 @@ $("form#frm_update_user").submit(function (e) {
     });
 });
 
-$('table tbody').on("click", ".btn_delete_user", function (e) {
+$('table tbody').on("click", ".btn_delete_user", function(e) {
     $("input#delete_user_id").val($(this).closest("tr").data("id"));
     $("strong#delete_user_name").text($(this).closest("tr").find("td:nth-child(3)").text());
 });
 
-$('table tbody').on("click", ".btn_update_user", function (e) {
+$('table tbody').on("click", ".btn_update_user", function(e) {
     $("input#update_user_id").val($(this).closest("tr").data("id"));
     $("input#update_user_email").val($(this).closest("tr").find("td:nth-child(4)").text());
     $("input#update_user_name").val($(this).closest("tr").find("td:nth-child(3)").text());
 });
 
-$(".btn_previous_page").click(function (e) {
+$(".btn_previous_page").click(function(e) {
     var v = parseInt($(".i_page").val());
     v--;
     if (v < 1) {
@@ -90,7 +90,7 @@ $(".btn_previous_page").click(function (e) {
     $("form.frm_search_users").submit();
 });
 
-$(".btn_next_page").click(function (e) {
+$(".btn_next_page").click(function(e) {
     var v = parseInt($(".i_page").val());
     var totalPages = parseInt($(".pager_total_pages").text());
     v++;
@@ -104,7 +104,7 @@ $(".btn_next_page").click(function (e) {
     $("form.frm_search_users").submit();
 });
 
-$("select#s_results_page").change(function (e) {
+$("select#s_results_page").change(function(e) {
     $(".i_page").val(1);
     $("form.frm_search_users").submit();
 });

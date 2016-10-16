@@ -11,7 +11,7 @@ $("form.frm_search_attributes").submit(function(e) {
                     if (result.data && result.data.results.length > 0) {
                         for (var i = 0; i < result.data.results.length; i++) {
                             html += '<tr data-id="' + result.data.results[i].id + '">';
-                            html += '<td class="has-text-centered"><a class="button is-small is-info modal-button btn_update_attribute" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_attribute" data-target="#modal_delete">Delete</a></td>';
+                            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_attribute" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_attribute" data-target="#modal_delete">Delete</a></td>';
                             html += '<td>' + result.data.results[i].name + '</td>';
                             html += '<td>' + result.data.results[i].description + '</td>';
                             html += '<td>';
