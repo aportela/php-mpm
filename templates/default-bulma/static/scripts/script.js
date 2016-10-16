@@ -34,6 +34,7 @@ $('body').on("click", ".modal-button", function() {
     $('html').addClass('is-clipped');
     $(target).addClass('is-active');
     $(".modal_error").addClass("is-hidden");
+    mpm.form.clearValidationMessages($(target).find("form"));
     $(target).find("input:visible:first").focus();
 });
 
