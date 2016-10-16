@@ -37,7 +37,11 @@
                 $this->pager->totalResults = $totalResults;
                 $this->pager->actualPage = $actualPage;
                 $this->pager->resultspage = $resultsPage;
-                $this->pager->totalPages = ceil($this->pager->totalResults / $this->pager->resultspage);
+                if ($this->pager->totalResults > 0) {
+                    $this->pager->totalPages = ceil($this->pager->totalResults / $this->pager->resultspage);
+                } else {
+                    $this->pager->totalPages = 1;
+                }
                 if ($this->pager->actualPage < 0 || $this->pager->actualPage > $this->pager->totalPages) {
                     throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
                 }                
