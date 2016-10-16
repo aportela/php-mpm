@@ -58,3 +58,8 @@ $("#btn_export_table_data").click(function(e) {
     e.preventDefault();
     mpm.data.tableExport($(this).closest("table"), $(this).data("format"));
 });
+
+$("body").on("click", ".btn_delete_row", function(e) {
+    e.preventDefault();
+    $(this).closest("tr").remove();
+});
