@@ -76,25 +76,46 @@
         /**
         *   search (list) groups
         */
-        public static function search($page, $resultsPage) {
+        public static function search($page, $resultsPage, $searchByText) {
             if (! User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException("");
             } else {
                 $data = new \PHP_MPM\SearchResults();
+                $sql = null;
+                $params = array();
                 if ($resultsPage > 0) {
-                    $totalResults = \PHP_MPM\Database::execScalar(" SELECT COUNT(A.id) FROM [ATTRIBUTE] A ", array());
+                    if (! empty($searchByText)) {
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":text", "%" . $searchByText . "%");
+                        $params[] = $param;                        
+                        $sql = " SELECT COUNT(A.id) FROM [ATTRIBUTE] A WHERE (A.name LIKE :text OR A.description LIKE :text) ";
+                    } else {
+                        $sql = " SELECT COUNT(A.id) FROM [ATTRIBUTE] A ";
+                    }
+                    $totalResults = \PHP_MPM\Database::execScalar($sql, $params);
                     $data->setPager($totalResults, $page, $resultsPage);
-                    $params = array();
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->int(":start", (($page - 1) * $resultsPage));
-                    $params[] = $param;
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->int(":results_page", $resultsPage);
-                    $params[] = $param;                    
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name LIMIT :start, :results_page ", $params));
+                    if ($totalResults > 0) {
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->int(":start", (($page - 1) * $resultsPage));
+                        $params[] = $param;
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->int(":results_page", $resultsPage);
+                        $params[] = $param;
+                        if (! empty($searchByText)) {
+                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name LIMIT :start, :results_page ";
+                        } else {
+                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name LIMIT :start, :results_page ";
+                        }                    
+                        $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                    }
                 } else {
                     $data->setPager(0, 1, 0);
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ", array()));
+                    if (! empty($searchByText)) {
+                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name ";
+                    } else {
+                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ";
+                    }
+                    $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                 }                                
                 return($data);
             }
