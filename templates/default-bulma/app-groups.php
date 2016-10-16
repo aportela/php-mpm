@@ -104,6 +104,7 @@
            <table id="add_group_userlist" class="table is-bordered is-narrow">
             <thead>
               <tr>
+                <th>Operation</th>
                 <th>Name</th>
                 <th>Email</th>
               </tr>

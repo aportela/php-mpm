@@ -197,6 +197,7 @@ $("#btn_add_group_user").click(function(e) {
     var o = $("select#add_group_user_list option:selected");
     var html = "";
     html += '<tr data-id="' + $(o).data("id") + '">';
+    html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + $(o).data("name") + "</td>";
     html += "<td>" + $(o).data("email") + "</td>";
     html += "</tr>";
