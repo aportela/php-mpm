@@ -31,7 +31,7 @@
                   <option value="0">no pagination</option>
                 </select>
               </span>
-              <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
+              <input class="input is-expanded" id="fast_search_filter" type="text" name="text" placeholder="text filter">
             </p>                          
           </div>
           <div class="column is-4">
