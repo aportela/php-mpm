@@ -29,7 +29,7 @@
             $params[] = $param;            
             $param = new \PHP_MPM\DatabaseParam();
             $trace = print_r($e->getTrace(), true);
-            if ($trace != print_r(array(), true)) {
+            if (ENVIRONMENT_DEV && $trace != print_r(array(), true)) {
                 $param->str(":trace", $trace);
             } else {
                 $param->null(":trace");
