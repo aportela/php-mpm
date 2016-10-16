@@ -18,7 +18,7 @@
             </p>          
           </div>
           <div class="column is-1">
-            <a class="button is-primary modal-button btn_add_group" data-target="#modal_add">add new group</a>              
+            <a class="button is-primary modal-button btn_add_group" data-target="#modal_add">add group</a>              
           </div>          
           <div class="column is-5">
             <p class="control has-addons">
