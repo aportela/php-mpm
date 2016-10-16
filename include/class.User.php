@@ -35,20 +35,32 @@
         }
 
         /**
-        *   check user (by email) existence
+        *   check user existence
+        *
+        *   only "id" set => search existence by id
+        *   only "email" set => search existence by email
+        *   "id" & "email" set => search existence by id
         */
         public function exists() {
             if (empty($this->email) && empty($this->id)) {                
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
-                $params = array();
-                $param = new \PHP_MPM\DatabaseParam();
-                $param->str(":id", $this->id);
-                $params[] = $param;                
-                $param = new \PHP_MPM\DatabaseParam();
-                $param->str(":email", $this->email);
-                $params[] = $param;                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT * FROM USER WHERE email = :email OR id = :id ", $params);
+                $sql = null;
+                $params = array();                
+                if (empty($this->id)) {
+                    // search by email
+                    $sql = " SELECT * FROM USER WHERE email = :email ";
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->str(":email", $this->email);
+                    $params[] = $param;
+                } else {
+                    // search by id
+                    $sql = " SELECT * FROM USER WHERE id = :id ";                
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->str(":id", $this->id);
+                    $params[] = $param;
+                }
+                $rows = \PHP_MPM\Database::execWithResult($sql, $params);
                 return(count($rows) > 0);                
             }            
         }
