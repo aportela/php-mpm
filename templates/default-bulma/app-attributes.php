@@ -17,6 +17,9 @@
               <a id="btn_export_table_data" class="button is-primary is-disabled">Export data</a>
             </p>          
           </div>
+          <div class="column is-1">
+            <a class="button is-primary modal-button btn_add_attribute" data-target="#modal_add">add attribute</a>              
+          </div>          
           <div class="column is-5">
             <p class="control has-addons">
               <span class="select">
@@ -31,7 +34,7 @@
               <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
             </p>                          
           </div>
-          <div class="column is-5">
+          <div class="column is-4">
             <nav class="pagination">
               <a class="button is-info btn_previous_page is-disabled">Previous</a>
               <a class="button is-info btn_next_page is-disabled">Next page</a>
@@ -64,6 +67,54 @@
   </tbody>
 </table>
 
+<div class="modal" id="modal_add">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <form id="frm_add_attribute" method="post" action="/api/attribute/add.php">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add attribute</p>
+        <button class="delete modal_close"></button>
+      </header>
+      <section class="modal-card-body">
+        <p class="control has-icon" id="ca_name">
+            <input class="input" type="text" name="name" id="add_attribute_name" placeholder="Name" maxlength="32" required>
+            <i class="fa fa-users"></i>
+        </p>
+        <p class="control has-icon" id="ca_description">
+            <input class="input" type="text" name="description" id="add_attribute_description" placeholder="Description" maxlength="128">
+            <i class="fa fa-comments-o" aria-hidden="true"></i>
+        </p>
+        <p class="control" id="ca_type">
+          <span class="select is-expanded">
+            <select id="add_attribute_type" name="type" required>
+              <option value="">select type</option>
+              <option value="1">short text</option>
+              <option value="2">long text</option>
+              <option value="3">integer number</option>
+              <option value="4">decimal number</option>
+              <option value="5">date</option>
+              <option value="6">time</option>
+              <option value="7">datetime</option>
+            </select>
+          </span>
+                  
+        </p>
+        <article class="message is-danger is-hidden modal_error">
+          <div class="message-header">
+            Error
+          </div>
+          <div class="message-body">
+          </div>
+        </article>          
+      </section>
+      <footer class="modal-card-foot">
+        <button type="submit" class="button is-primary">Add</button>
+        <a class="button modal_close">Cancel</a>
+      </footer>
+    </form>
+  </div>
+</div>
+
 <div class="modal" id="modal_update">
   <div class="modal-background"></div>
   <div class="modal-card">
@@ -74,12 +125,12 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
-        <p class="control has-icon" id="c_name">
+        <p class="control has-icon" id="cu_name">
             <input class="input" type="text" name="name" id="update_attribute_name" placeholder="Name" maxlength="32" required>
             <i class="fa fa-users"></i>
         </p>
-        <p class="control has-icon" id="c_description">
-            <input class="input" type="text" name="description" id="update_attribute_description" placeholder="Description" value="" maxlength="128">
+        <p class="control has-icon" id="cu_description">
+            <input class="input" type="text" name="description" id="update_attribute_description" placeholder="Description" maxlength="128">
             <i class="fa fa-comments-o" aria-hidden="true"></i>
         </p>
         <article class="message is-danger is-hidden modal_error">

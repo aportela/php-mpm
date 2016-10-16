@@ -13,7 +13,7 @@ $("form.frm_search_attributes").submit(function(e) {
                             html += '<tr data-id="' + result.data.results[i].id + '">';
                             html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_attribute" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_attribute" data-target="#modal_delete">Delete</a></td>';
                             html += '<td>' + result.data.results[i].name + '</td>';
-                            html += '<td>' + result.data.results[i].description + '</td>';
+                            html += '<td>' + (result.data.results[i].description ? result.data.results[i].description : "") + '</td>';
                             html += '<td>';
                             switch (parseInt(result.data.results[i].type)) {
                                 case 1:
@@ -57,10 +57,36 @@ $("form.frm_search_attributes").submit(function(e) {
     });
 });
 
+$("form#frm_add_attribute").submit(function(e) {
+    e.preventDefault();
+    mpm.form.submit(this, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("ca_name", ATTRIBUTE_ADD_NAME_EXISTS);
+                break;
+            case 200:
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    $('html').removeClass('is-clipped');
+                    $('div.modal').removeClass('is-active');
+                    $("form.frm_search_attributes").submit();
+                }
+                break;
+            default:
+                mpm.error.showModal();
+                break;
+        }
+    });
+});
+
 $("form#frm_delete_attribute").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, result) {
         switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("ca_name", ATTRIBUTE_UPDATE_NAME_EXISTS);
+                break;
             case 200:
                 $('html').removeClass('is-clipped');
                 $('div.modal').removeClass('is-active');
@@ -87,6 +113,12 @@ $("form#frm_update_attribute").submit(function(e) {
                 break;
         }
     });
+});
+
+$('table thead').on("click", ".btn_add_attribute", function(e) {
+    $("input#add_attribute_name").val("");
+    $("input#add_attribute_description").val("");
+    $("select#add_attribute_type").val("");
 });
 
 $('table tbody').on("click", ".btn_delete_attribute", function(e) {
