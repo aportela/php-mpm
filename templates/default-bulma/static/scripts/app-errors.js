@@ -24,7 +24,9 @@ $("form.frm_search_errors").submit(function(e) {
                             if (result.data.results[i].message) {
                                 html += '<div class="card is-fullwidth"><header class="card-header"><p class="card-header-title">Message</p><a class="card-header-icon toggle_stacktrace"><i class="fa fa-angle-down"></i></a></header><div class="card-content is-hidden"><pre>' + result.data.results[i].message + '</pre></div></div>';
                             }
-                            html += '<div class="card is-fullwidth"><header class="card-header"><p class="card-header-title">Stacktrace</p><a class="card-header-icon toggle_stacktrace"><i class="fa fa-angle-down"></i></a></header><div class="card-content is-hidden"><pre>' + result.data.results[i].trace + '</pre></div></div>';
+                            if (result.data.results[i].trace) {
+                                html += '<div class="card is-fullwidth"><header class="card-header"><p class="card-header-title">Stacktrace</p><a class="card-header-icon toggle_stacktrace"><i class="fa fa-angle-down"></i></a></header><div class="card-content is-hidden"><pre>' + result.data.results[i].trace + '</pre></div></div>';
+                            }
                             html += '</td>';
                             html += '</tr>';
                         }
