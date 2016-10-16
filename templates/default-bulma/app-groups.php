@@ -115,7 +115,7 @@
             <i class="fa fa-users"></i>
         </p>
         <p class="control has-icon" id="c_description">
-            <input class="input" type="text" name="description" id="update_group_description" placeholder="Description" value="administrator" maxlength="128">
+            <input class="input" type="text" name="description" id="update_group_description" placeholder="Description" maxlength="128">
             <i class="fa fa-comments-o" aria-hidden="true"></i>
         </p>
         <article class="message is-danger is-hidden modal_error">
