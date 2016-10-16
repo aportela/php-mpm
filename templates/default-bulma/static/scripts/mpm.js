@@ -4,18 +4,18 @@ var mpm = mpm || {};
 
 mpm.form = mpm.form || {};
 
-mpm.form.disableSubmit = function (form) {
+mpm.form.disableSubmit = function(form) {
     $(form).find('button[type="submit"]').prop("disabled", true);
 };
 
-mpm.form.enableSubmit = function (form) {
+mpm.form.enableSubmit = function(form) {
     $(form).find('button[type="submit"]').prop("disabled", false);
 };
 
 /**
  * clear all form (input fields) validation messages
  */
-mpm.form.clearValidationMessages = function (form) {
+mpm.form.clearValidationMessages = function(form) {
     $(form).find("input.input").removeClass("is-danger").removeClass("is-warning");
     $(form).find("span.help").remove();
 }
@@ -23,7 +23,7 @@ mpm.form.clearValidationMessages = function (form) {
 /**
  * put form (input field) validation warning message
  */
-mpm.form.putValidationWarning = function (elementId, message) {
+mpm.form.putValidationWarning = function(elementId, message) {
     var element = $("p#" + elementId);
     $(element).find("input.input").addClass("is-warning");
     $(element).append('<span class="help is-warning">' + message + '</span>');
@@ -32,7 +32,7 @@ mpm.form.putValidationWarning = function (elementId, message) {
 /**
  * put form (input field) validation error message
  */
-mpm.form.putValidationError = function (elementId, message) {
+mpm.form.putValidationError = function(elementId, message) {
     var element = $("p#" + elementId);
     $(element).find("input.input").addClass("is-danger");
     $(element).append('<span class="help is-danger">' + message + '</span>');
@@ -41,18 +41,18 @@ mpm.form.putValidationError = function (elementId, message) {
 /**
  * put form (input field) validation success message
  */
-mpm.form.putValidationSuccess = function (elementId, message) {
+mpm.form.putValidationSuccess = function(elementId, message) {
     var element = $("p#" + elementId);
     $(element).append('<span class="help is-success">' + message + '</span>');
 }
 
 
-mpm.form.submit = function (form, callback) {
+mpm.form.submit = function(form, callback) {
     mpm.form.disableSubmit(form);
     mpm.form.clearValidationMessages(form);
     var xhr = new XMLHttpRequest();
     xhr.open($(form).attr("method"), $(form).attr("action"), true);
-    xhr.onreadystatechange = function (e) {
+    xhr.onreadystatechange = function(e) {
         if (this.readyState == 4) {
             mpm.form.enableSubmit(form);
             var result = null;
@@ -73,7 +73,7 @@ mpm.form.submit = function (form, callback) {
 
 mpm.pagination = mpm.pagination || {};
 
-mpm.pagination.setControls = function (actualPage, totalPages) {
+mpm.pagination.setControls = function(actualPage, totalPages) {
     $(".pager_actual_page").text(actualPage);
     $(".pager_total_pages").text(totalPages);
     if (actualPage < totalPages) {
@@ -90,7 +90,7 @@ mpm.pagination.setControls = function (actualPage, totalPages) {
 
 mpm.error = mpm.error || {};
 
-mpm.error.getStackTrace = function () {
+mpm.error.getStackTrace = function() {
     var stackTrace = null;
     try {
         throw new Error();
@@ -100,7 +100,7 @@ mpm.error.getStackTrace = function () {
     return (stackTrace);
 };
 
-mpm.error.showModal = function () {
+mpm.error.showModal = function() {
     $("div#stack_trace").text(mpm.error.getStackTrace());
     $('html').addClass('is-clipped');
     $("div#modal_general_error").addClass('is-active');
@@ -108,54 +108,70 @@ mpm.error.showModal = function () {
 
 mpm.data = mpm.data || {};
 
-mpm.data.tableExport = function (table, format) {
+// TODO: escape chars!!!
+mpm.data.tableExport = function(table, format) {
     var tableName = $(table).attr("id");
+    var collectionName = tableName || "rows";
     if (!tableName) {
         tableName = "mpm-table-export-" + (new Date()).toISOString().slice(0, 10).replace(/-/g, "");
     } else {
         tableName += "-" + (new Date()).toISOString().slice(0, 10).replace(/-/g, "")
     }
+    // get real cell value (removing icons)
+    var getCellText = function(element) {
+        var cloned = $(element).clone();
+        $(cloned).children("i.fa").remove();
+        return ($(cloned).text().trim());
+    };
     if (format === "json") {
         var fields = [];
-        $(table).find("thead tr:last th").each(function (i) {
-            if (i > 0) {
-                fields.push($(this).text());
+        $(table).find("thead tr:last th").each(function(i) {
+            if (!$(this).hasClass("ignore_on_export")) {
+                fields.push(getCellText($(this)));
             }
         });
-        var data = { groups: [] };
-        $(table).find("tbody tr").each(function (i) {
-            var row = {
-                id: $(this).data("id")
-            };
-            $(this).find("td").each(function (j) {
-                if (j > 0) {
-                    row[fields[j - 1]] = $(this).data("date") ? $(this).data("date") : $(this).text().trim();
+        var data = {};
+        data[collectionName] = [];
+        $(table).find("tbody tr").each(function(i) {
+            var element = {};
+            if ($(this).data("id")) {
+                element.id = $(this).data("id");
+            }
+            var fieldIdx = 0;
+            $(this).find("td").each(function(j) {
+                if (!$(this).hasClass("ignore_on_export")) {
+                    element[fields[fieldIdx]] = $(this).data("date") ? $(this).data("date") : getCellText($(this));
+                    fieldIdx++;
                 }
             });
-            data.groups.push(row);
+            data[collectionName].push(element);
         });
-        saveAs(new Blob([JSON.stringify(data)], { type: "octet/stream" }), tableName + ".json");
+        saveAs(new Blob([JSON.stringify(data)], { type: "application/json; charset=utf-8" }), tableName + ".json");
     } else if (format == "xml") {
         var fields = [];
-        $(table).find("thead tr:last th").each(function (i) {
-            if (i > 0) {
-                fields.push($(this).text());
+        $(table).find("thead tr:last th").each(function(i) {
+            if (!$(this).hasClass("ignore_on_export")) {
+                fields.push(getCellText($(this)));
             }
         });
-        var data = '<xml><groups>';
-        $(table).find("tbody tr").each(function (i) {
-            var row = '<group>';
-            row += '<col name="id">' + $(this).data("id)") + '</col>';
-            $(this).find("td").each(function (j) {
-                if (j > 0) {
-                    row += '<col name="' + fields[j - 1] + '">' + $(this).data("date") ? $(this).data("date") : $(this).text().trim() + '</col>';
+        var data = '<xml><' + collectionName + '>';
+        $(table).find("tbody tr").each(function(i) {
+            var row = '<element>';
+            if ($(this).data("id)")) {
+                row += '<col name="id">' + $(this).data("id)") + '</col>';
+            }
+            var fieldIdx = 0;
+            $(this).find("td").each(function(j) {
+                if (!$(this).hasClass("ignore_on_export")) {
+                    row += '<col name="' + fields[fieldIdx] + '">' + ($(this).data("date") ? $(this).data("date") : getCellText($(this))) + '</col>';
+                    fieldIdx++;
                 }
             });
-            row += '</group>';
+            row += '</element>';
             data += row;
         });
-        data += '</groups></xml>';
-        saveAs(new Blob([data], { type: "octet/stream" }), tableName + ".xml");
+        data += '</' + collectionName + '></xml>';
+        saveAs(new Blob([data], { type: "text/xml; charset=utf-8" }), tableName + ".xml");
     } else {
         mpm.error.showModal();
     }
