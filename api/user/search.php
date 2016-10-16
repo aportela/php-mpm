@@ -6,7 +6,8 @@
     *   request method: POST
     *
     *   @param int page 
-    *   @param int resultsPage 
+    *   @param int resultsPage
+    *   @param string text 
     */
     namespace PHP_MPM;
 
@@ -23,7 +24,8 @@
     try {
         $result["data"] = \PHP_MPM\User::search(
             isset($_POST["page"]) ? $_POST["page"]: 1,
-            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16
+            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16,
+            isset($_POST["text"]) ? $_POST["text"]: ""
         );
         $result["success"] = true;
         ob_clean();
