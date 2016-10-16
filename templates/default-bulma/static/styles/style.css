@@ -33,3 +33,8 @@ div#auth_container {
 table span.icon {
     line-height: 23px !important;
 }
+
+table#errors td div.card {
+    margin-top: 1em;
+    cursor: pointer;
+}

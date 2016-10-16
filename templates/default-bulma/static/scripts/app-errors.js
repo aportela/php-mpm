@@ -19,10 +19,10 @@ $("form.frm_search_errors").submit(function(e) {
                             var browser = getBrowserFromUserAgent(result.data.results[i].userAgent);
                             html += '<td>' + (browser ? (browser.name + ' (version ' + browser.version + ')') : "unknown") + '</td>';
                             html += '<td>';
-                            html += '<h6 class="title is-6">' + result.data.results[i].class + ' (' + result.data.results[i].code + ')</h6>';
-                            html += '<h6 class="subtitle is-6">' + result.data.results[i].filename + ':' + result.data.results[i].line + '</h6>';
+                            html += '<p><strong>File:</strong> ' + result.data.results[i].filename + ':' + result.data.results[i].line + '</p>';
+                            html += '<p"><strong>Exception:</strong> ' + result.data.results[i].class + ' (' + result.data.results[i].code + ')</p>';
                             if (result.data.results[i].message) {
-                                html += '<h6 class="subtitle is-6">' + result.data.results[i].message + '</h6>';
+                                html += '<div class="card is-fullwidth"><header class="card-header"><p class="card-header-title">Message</p><a class="card-header-icon toggle_stacktrace"><i class="fa fa-angle-down"></i></a></header><div class="card-content is-hidden"><pre>' + result.data.results[i].message + '</pre></div></div>';
                             }
                             html += '<div class="card is-fullwidth"><header class="card-header"><p class="card-header-title">Stacktrace</p><a class="card-header-icon toggle_stacktrace"><i class="fa fa-angle-down"></i></a></header><div class="card-content is-hidden"><pre>' + result.data.results[i].trace + '</pre></div></div>';
                             html += '</td>';
