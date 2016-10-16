@@ -55,16 +55,16 @@ mpm.form.submit = function(form, callback) {
     xhr.onreadystatechange = function(e) {
         if (this.readyState == 4) {
             mpm.form.enableSubmit(form);
-            var result = null;
+            var response = null;
             try {
-                result = JSON.parse(xhr.responseText);
+                response = JSON.parse(xhr.responseText);
             } catch (e) {
                 console.groupCollapsed("Error parsing JSON response");
                 console.log(e);
                 console.log(xhr.responseText);
                 console.groupEnd();
             } finally {
-                callback(this.status, result);
+                callback(this.status, response);
             }
         }
     }
