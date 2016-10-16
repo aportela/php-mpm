@@ -14,3 +14,5 @@ const RECOVER_ACCOUNT_SUCCESS_MESSAGE = "account recovery successfully, soon you
 
 const USER_ADD_EMAIL_EXISTS = "email already used";
 const USER_UPDATE_EMAIL_EXISTS = "email already used";
+
+const GROUP_ADD_NAME_EXISTS = "group name already used";
