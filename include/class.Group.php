@@ -77,9 +77,10 @@
                 } else {
                     $param->null(":description");
                 }
+                $params[] = $param;
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":creator", \PHP_MPM\User::getSessionUserId());
-                $params[] = $param;                
+                $params[] = $param;
                 // TODO: transaction support
                 \PHP_MPM\Database::execWithoutResult(" INSERT INTO [GROUP] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
                 if ($this->users && count($this->users) > 0) {
