@@ -31,5 +31,31 @@
                 mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
             );
         }
+
+        /**
+        *   get remote user ip address
+        *
+        *   (Tim Kennedy) http://stackoverflow.com/a/55790
+        */
+        public static function getRemoteIpAddress() {
+            $ip = null;
+            if (isset($_SERVER)) {
+                if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                    $ip = $_SERVER['HTTP_CLIENT_IP'];
+                } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                }
+            }
+            return($ip);            
+        }
+
+        /**
+        *   get remote user browser user agent
+        */
+        public static function getBrowserUserAgent() {
+            return(isset($_SERVER ['HTTP_USER_AGENT']) ? $_SERVER ['HTTP_USER_AGENT']: null);
+        }
     }
 ?>
