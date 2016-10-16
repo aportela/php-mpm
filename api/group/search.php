@@ -6,7 +6,8 @@
     *   request method: POST
     *
     *   @param int page 
-    *   @param int resultsPage 
+    *   @param int resultsPage
+    *   @param string text 
     */
     namespace PHP_MPM;
 
@@ -23,8 +24,8 @@
     try {
         $result["data"] = Group::search(
             isset($_POST["page"]) ? $_POST["page"]: 1,
-            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16
-                
+            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16,
+            isset($_POST["text"]) ? $_POST["text"]: ""
         );
         $result["success"] = true;
         ob_clean();
@@ -51,6 +52,7 @@
             $result["exception"] = print_r($e, true);
         }        
     } catch (\PDOException $e) {
+        Error::save($e);
         ob_clean();
         header("HTTP/1.1 500 Internal Server Error", 500, true);        
         if (ENVIRONMENT_DEV && DEBUG) {
