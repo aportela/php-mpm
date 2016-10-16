@@ -29,11 +29,12 @@ $("a#signout").click(function(e) {
     xhr.send();
 });
 
-$('table tbody').on("click", ".modal-button", function() {
+$('body').on("click", ".modal-button", function() {
     var target = $(this).data('target');
     $('html').addClass('is-clipped');
     $(target).addClass('is-active');
     $(".modal_error").addClass("is-hidden");
+    $(target).find("input:visible:first").focus();
 });
 
 $('body').on("click", '.modal-background, .modal_close', function() {
