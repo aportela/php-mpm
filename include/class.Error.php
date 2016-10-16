@@ -28,7 +28,12 @@
             $param->str(":message", $e->getMessage());
             $params[] = $param;            
             $param = new \PHP_MPM\DatabaseParam();
-            $param->str(":trace", print_r($e->getTrace(), true));
+            $trace = print_r($e->getTrace(), true);
+            if ($trace != print_r(array(), true)) {
+                $param->str(":trace", $trace);
+            } else {
+                $param->null(":trace");
+            }
             $params[] = $param;
             $param = new \PHP_MPM\DatabaseParam();
             if (\PHP_MPM\User::isAuthenticated()) {
