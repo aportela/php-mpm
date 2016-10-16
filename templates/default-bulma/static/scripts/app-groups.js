@@ -76,6 +76,9 @@ $("form#frm_update_group").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
+            case 409:
+                mpm.form.putValidationError("ca_name", GROUP_UPDATE_NAME_EXISTS);
+                break;
             case 200:
                 if (!(response && response.success)) {
                     mpm.error.showModal();
