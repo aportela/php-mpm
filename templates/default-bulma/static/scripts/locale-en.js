@@ -16,3 +16,7 @@ const USER_ADD_EMAIL_EXISTS = "email already used";
 const USER_UPDATE_EMAIL_EXISTS = "email already used";
 
 const GROUP_ADD_NAME_EXISTS = "group name already used";
+const GROUP_UPDATE_NAME_EXISTS = "group name already used";
+
+const ATTRIBUTE_ADD_NAME_EXISTS = "attribute name already used";
+const ATTRIBUTE_UPDATE_NAME_EXISTS = "attribute name already used";
