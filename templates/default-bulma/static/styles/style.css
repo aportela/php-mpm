@@ -27,14 +27,18 @@ div#auth_container {
 
 
 /* 
-    fix icon vertical alingn
+    fix icon vertical alingn on table cells
 */
 
-table span.icon {
+table tbody td span.icon {
     line-height: 23px !important;
 }
 
 table#errors td div.card {
     margin-top: 1em;
     cursor: pointer;
+}
+
+select#add_group_user_list {
+    width: 100%;
 }
