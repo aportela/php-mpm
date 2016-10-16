@@ -88,13 +88,8 @@
             $g->add();                                
         }
 
+        // TODO
         public function testAddWithExistentName() {
-            $this->setExpectedException('PHP_MPM\MPMAlreadyExistsException');
-            $this->signInAsAdmin();
-            $g = new \PHP_MPM\Group();
-            $g->id = \PHP_MPM\Utils::uuid();
-            $g->name = GroupTest::EXISTENT_GROUP_NAME; 
-            $g->add();                                
         }
 
         public function testAddWithEmptyName() {
