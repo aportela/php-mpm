@@ -25,7 +25,7 @@
     $result = array("success" => false);
     try {
         $g = new \PHP_MPM\Group();         
-        $u->set(
+        $g->set(
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["name"]) ? $_POST["name"]: "", 
             isset($_POST["description"]) ? $_POST["description"]: "",
