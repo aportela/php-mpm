@@ -15,7 +15,7 @@
     $t = new \PHP_MPM\Template("layout.php");
 
     $t->render(array(
-        "session_user_is_logged" => User::isAuthenticated(), 
+        "session_user_is_logged" => \PHP_MPM\User::isAuthenticated(), 
         "session_user_id" => \PHP_MPM\User::getSessionUserId(),
         "session_user_name" => \PHP_MPM\User::getSessionUserName(),
         "session_user_is_admin" => \PHP_MPM\User::isAuthenticatedAsAdmin() ? 1 : 0

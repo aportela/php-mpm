@@ -21,7 +21,7 @@
 
     $result = array("success" => false, "data" => null);
     try {
-        $result["data"] = User::search(
+        $result["data"] = \PHP_MPM\User::search(
             isset($_POST["page"]) ? $_POST["page"]: 1,
             isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16
         );

@@ -83,7 +83,7 @@
                     $param->str(":name", $this->name);
                     $params[] = $param;                                
                     $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":creator", User::isAuthenticated() ? User::getSessionUserId(): $this->id);
+                    $param->str(":creator", \PHP_MPM\User::isAuthenticated() ? \PHP_MPM\User::getSessionUserId(): $this->id);
                     $params[] = $param;                                
                     \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
@@ -94,9 +94,9 @@
         *   add new user (admin privileges required)
         */
         public function add() {
-            if (! User::isAuthenticated()) {
+            if (! \PHP_MPM\User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException();
-            } else if (! User::isAuthenticatedAsAdmin()) {
+            } else if (! \PHP_MPM\User::isAuthenticatedAsAdmin()) {
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException();
             }
             if ($this->exists()) {
@@ -125,7 +125,7 @@
                     $param->str(":name", $this->name);
                     $params[] = $param;                                                                                    
                     $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":creator", User::getSessionUserId());
+                    $param->str(":creator", \PHP_MPM\User::getSessionUserId());
                     $params[] = $param;                                
                     \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
@@ -279,7 +279,7 @@
         *   search (list) users
         */
         public static function search($page, $resultsPage) {
-            if (! User::isAuthenticated()) {
+            if (! \PHP_MPM\User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException();
             } else {
                 $data = new \PHP_MPM\SearchResults();
@@ -306,13 +306,13 @@
         *   delete user
         */
         public function delete() {
-            if (! User::isAuthenticated()) {
+            if (! \PHP_MPM\User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
-            } else if (! User::isAuthenticatedAsAdmin()) {
+            } else if (! \PHP_MPM\User::isAuthenticatedAsAdmin()) {
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else if (empty($this->id)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
-            } else if ($this->id == User::getSessionUserId()) {
+            } else if ($this->id == \PHP_MPM\User::getSessionUserId()) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));                
             } else {
                 $params = array();
@@ -330,11 +330,11 @@
         *   update user
         */
         public function update() {
-            if (! User::isAuthenticated()) {
+            if (! \PHP_MPM\User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (empty($this->id) || empty($this->email) || empty($this->name)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
-            } else if ($this->id != User::getSessionUserId() && ! User::isAuthenticatedAsAdmin()) {
+            } else if ($this->id != User::getSessionUserId() && ! \PHP_MPM\User::isAuthenticatedAsAdmin()) {
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();

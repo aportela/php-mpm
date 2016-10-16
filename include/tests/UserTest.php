@@ -196,17 +196,17 @@
 
         public function testIsAuthenticatedWithAuthSession() {
             $this->signInAsAdmin();
-            $this->assertTrue(User::isAuthenticated());
+            $this->assertTrue(\PHP_MPM\User::isAuthenticated());
         }
 
         public function testIsAuthenticatedWithoutAuthSession() {
             $this->signOut();
-            $this->assertFalse(User::isAuthenticated());
+            $this->assertFalse(\PHP_MPM\User::isAuthenticated());
         }
 
         public function testIsAuthenticatedAsAdminWithAdminSession() {
             $this->signInAsAdmin();
-            $this->assertTrue(User::isAuthenticatedAsAdmin());
+            $this->assertTrue(\PHP_MPM\User::isAuthenticatedAsAdmin());
         }
 
         // TODO
@@ -215,32 +215,32 @@
 
         public function testGetSessionUserIdWithSessionStarted() {
             $this->signInAsAdmin();
-            $this->assertEquals(UserTest::ADMIN_USER_ID, User::getSessionUserId());
+            $this->assertEquals(UserTest::ADMIN_USER_ID, \PHP_MPM\User::getSessionUserId());
         }
 
         public function testGetSessionUserIdWithoutSessionStarted() {
             $this->signOut();
-            $this->assertNull(User::getSessionUserId());            
+            $this->assertNull(\PHP_MPM\User::getSessionUserId());            
         }
 
         public function testGetSessionUserNameWithSessionStarted() {
             $this->signInAsAdmin();
-            $this->assertEquals(UserTest::ADMIN_USER_NAME, User::getSessionUserName());
+            $this->assertEquals(UserTest::ADMIN_USER_NAME, \PHP_MPM\User::getSessionUserName());
         }
 
         public function testGetSessionUserNameWithoutSessionStarted() {
             $this->signOut();
-            $this->assertNull(User::getSessionUserName());            
+            $this->assertNull(\PHP_MPM\User::getSessionUserName());            
         }
 
         public function testGetSessionUserEmailWithSessionStarted() {
             $this->signInAsAdmin();
-            $this->assertEquals(UserTest::ADMIN_EMAIL, User::getSessionUserEmail());
+            $this->assertEquals(UserTest::ADMIN_EMAIL, \PHP_MPM\User::getSessionUserEmail());
         }
 
         public function testGetSessionUserEmailWithoutSessionStarted() {
             $this->signOut();
-            $this->assertNull(User::getSessionUserEmail());            
+            $this->assertNull(\PHP_MPM\User::getSessionUserEmail());            
         }
 
         public function testgenerateRecoverAccountTokenWithExistentEmail() {
@@ -266,14 +266,14 @@
             $u = new \PHP_MPM\User();
             $u->email = UserTest::EXISTENT_EMAIL;
             $token = $u->generateRecoverAccountToken();                        
-            $tmpUser = User::getUserFromRecoverAccountToken($token);
+            $tmpUser = \PHP_MPM\User::getUserFromRecoverAccountToken($token);
             $this->assertEquals($u->email, $tmpUser["email"]);         
         }
 
         public function testSearchWithoutAuthSession() {
             $this->setExpectedException('PHP_MPM\MPMAuthSessionRequiredException');
             $this->signOut();
-            User::search(1, 16);
+            \PHP_MPM\User::search(1, 16);
         }
 
         public function testSearchWithAuthSession() {
