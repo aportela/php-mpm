@@ -336,6 +336,8 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else if ($this->id != User::getSessionUserId() && ! \PHP_MPM\User::isAuthenticatedAsAdmin()) {
                 throw new \PHP_MPM\MPMAdminPrivilegesRequiredException(print_r(get_object_vars($this), true));
+            } else if (! $this->exists()) {    
+                throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));                    
             } else {
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
