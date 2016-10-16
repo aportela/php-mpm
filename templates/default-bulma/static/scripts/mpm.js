@@ -71,6 +71,27 @@ mpm.form.submit = function(form, callback) {
     xhr.send(new FormData($(form)[0]), null, 2);
 };
 
+mpm.xhr = function(method, action, formData, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, action, true);
+    xhr.onreadystatechange = function(e) {
+        if (this.readyState == 4) {
+            var response = null;
+            try {
+                response = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.groupCollapsed("Error parsing JSON response");
+                console.log(e);
+                console.log(xhr.responseText);
+                console.groupEnd();
+            } finally {
+                callback(this.status, response);
+            }
+        }
+    }
+    xhr.send(formData, null, 2);
+}
+
 mpm.pagination = mpm.pagination || {};
 
 mpm.pagination.setControls = function(actualPage, totalPages) {
