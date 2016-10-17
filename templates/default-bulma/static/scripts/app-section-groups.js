@@ -10,7 +10,7 @@ function fillTable(actualPage, totalPages, groups) {
             html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_group" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_group" data-target="#modal_delete">Delete</a></td>';
             html += '<td>' + groups[i].name + '</td>';
             html += '<td>' + (groups[i].description ? groups[i].description : "") + '</td>';
-            html += '<td>0</td>';
+            html += '<td>' + (groups[i].totalUsers ? groups[i].totalUsers : 0) + '</td>';
             html += '<td data-id="' + groups[i].creatorId + '">' + (groups[i].creatorId != groups[i].id ? groups[i].creatorName : "auto-register") + '</td>';
             html += '<td data-date="' + groups[i].creationDate + '">' + new moment(groups[i].creationDate).fromNow() + '</td>';
             html += '</tr>';
@@ -24,6 +24,13 @@ function fillTable(actualPage, totalPages, groups) {
  */
 $("form#frm_add_group").submit(function(e) {
     e.preventDefault();
+    $("form#frm_add_group").find("input.tmp_user_id").remove();
+    var userIds = getUsers($("table#add_group_userlist"));
+    if (userIds != null && userIds.length > 0) {
+        for (var i = 0; i < userIds.length; i++) {
+            $(this).append('<input class="tmp_user_id" type="hidden" name="users[' + i + ']" value="' + userIds[i] + '" />')
+        }
+    }
     mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
@@ -35,6 +42,7 @@ $("form#frm_add_group").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
+                    clearUsersTable($("table#add_group_userlist"));
                     $("form#frm_admin_search").submit();
                 }
                 break;
@@ -99,24 +107,26 @@ $("form#frm_delete_group").submit(function(e) {
  */
 $('table thead').on("click", ".btn_add_group", function(e) {
     mpm.form.reset($("form#frm_add_group"));
-    // reload available users combo
-    var formData = new FormData();
-    formData.append("page", 1);
-    formData.append("resultsPage", 0);
-    mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
-        switch (httpStatusCode) {
-            case 200:
-                if (!(response && response.success)) {
+    // load available users combo if empty
+    if ($("select#add_group_user_list option").length == 1) {
+        var formData = new FormData();
+        formData.append("page", 1);
+        formData.append("resultsPage", 0);
+        mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
+            switch (httpStatusCode) {
+                case 200:
+                    if (!(response && response.success)) {
+                        mpm.error.showModal();
+                    } else {
+                        fillUsersCombo(response.data.results);
+                    }
+                    break;
+                default:
                     mpm.error.showModal();
-                } else {
-                    fillUsersCombo(response.data.results);
-                }
-                break;
-            default:
-                mpm.error.showModal();
-                break;
-        }
-    });
+                    break;
+            }
+        });
+    }
 });
 
 /**
@@ -141,13 +151,20 @@ $('table tbody').on("click", ".btn_delete_group", function(e) {
 });
 
 /**
+ * clear previous users table
+ */
+function clearUsersTable(table) {
+    $(table).find("tbody").html("");
+}
+
+/**
  * fill users combo form control
  */
 function fillUsersCombo(users) {
     var html = '<option value="">select user</option>';
     if (users && users.length > 0) {
-        for (var i = 0; i < response.data.results.length; i++) {
-            html += '<option value="' + response.data.results[i].id + '" data-id="' + response.data.results[i].id + '" data-name="' + response.data.results[i].name + '" data-email="' + response.data.results[i].email + '">' + response.data.results[i].name + ' (' + response.data.results[i].email + ')</option>'
+        for (var i = 0; i < users.length; i++) {
+            html += '<option value="' + users[i].id + '" data-id="' + users[i].id + '" data-name="' + users[i].name + '" data-email="' + users[i].email + '">' + users[i].name + ' (' + users[i].email + ')</option>'
         }
     }
     $("select#add_group_user_list").html(html);
@@ -170,6 +187,17 @@ $("select#add_group_user_list").change(function(e) {
         $("#btn_add_group_user").addClass("is-disabled");
     }
 });
+
+/**
+ * get users contained in specified table
+ */
+function getUsers(table) {
+    var userIds = [];
+    $(table).find("tbody tr").each(function(i) {
+        userIds.push(String($(this).data("id")));
+    });
+    return (userIds);
+}
 
 /**
  * add new user to group user list table
