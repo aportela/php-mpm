@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * check for console presence
+ * 
+ * (Andy Earnshaw) http://stackoverflow.com/a/3767958
+ */
 if (typeof console == "undefined") {
     window.console = {
         log: function() {},
