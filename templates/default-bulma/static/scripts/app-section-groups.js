@@ -104,22 +104,22 @@ $('table thead').on("click", ".btn_add_group", function(e) {
 /**
  * reset & assign form values before show modal
  */
-$('table tbody').on("click", ".btn_delete_group", function(e) {
-    mpm.form.reset($("form#frm_update_group"));
-    var tr = $(this).closest("tr");
-    $("input#delete_group_id").val($(tr).data("id"));
-    $("strong#delete_group_name").text($(tr).find("td:nth-child(2)").text());
-});
-
-/**
- * reset & assign form values before show modal
- */
 $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
     var tr = $(this).closest("tr");
     $("input#update_group_id").val($(tr).data("id"));
     $("input#update_group_name").val($(tr).find("td:nth-child(2)").text());
     $("input#update_group_description").val($(tr).find("td:nth-child(3)").text());
+});
+
+/**
+ * reset & assign form values before show modal
+ */
+$('table tbody').on("click", ".btn_delete_group", function(e) {
+    mpm.form.reset($("form#frm_update_group"));
+    var tr = $(this).closest("tr");
+    $("input#delete_group_id").val($(tr).data("id"));
+    $("strong#delete_group_name").text($(tr).find("td:nth-child(2)").text());
 });
 
 var formData = new FormData();

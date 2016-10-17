@@ -98,21 +98,21 @@ $('table thead').on("click", ".btn_add_template", function(e) {
 /**
  * reset & assign form values before show modal
  */
-$('table tbody').on("click", ".btn_delete_template", function(e) {
-    mpm.form.reset($("form#frm_update_template"));
-    var tr = $(this).closest("tr");
-    $("input#delete_template_id").val($(tr).data("id"));
-    $("strong#delete_template_name").text($(tr).find("td:nth-child(2)").text());
-});
-
-/**
- * reset & assign form values before show modal
- */
 $('table tbody').on("click", ".btn_update_template", function(e) {
     mpm.form.reset($("form#frm_delete_template"));
     var tr = $(this).closest("tr");
     $("input#update_template_id").val($(tr).data("id"));
     $("input#update_template_name").val($(tr).find("td:nth-child(2)").text());
+});
+
+/**
+ * reset & assign form values before show modal
+ */
+$('table tbody').on("click", ".btn_delete_template", function(e) {
+    mpm.form.reset($("form#frm_update_template"));
+    var tr = $(this).closest("tr");
+    $("input#delete_template_id").val($(tr).data("id"));
+    $("strong#delete_template_name").text($(tr).find("td:nth-child(2)").text());
 });
 
 /**

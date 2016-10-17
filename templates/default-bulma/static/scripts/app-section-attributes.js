@@ -123,22 +123,22 @@ $('table thead').on("click", ".btn_add_attribute", function(e) {
 /**
  * reset & assign form values before show modal
  */
-$('table tbody').on("click", ".btn_delete_attribute", function(e) {
-    mpm.form.reset($("form#frm_update_attribute"));
-    var tr = $(this).closest("tr");
-    $("input#delete_attribute_id").val($(tr).data("id"));
-    $("strong#delete_attribute_name").text($(tr).find("td:nth-child(2)").text());
-});
-
-/**
- * reset & assign form values before show modal
- */
 $('table tbody').on("click", ".btn_update_attribute", function(e) {
     mpm.form.reset($("form#frm_delete_attribute"));
     var tr = $(this).closest("tr");
     $("input#update_attribute_id").val($(tr).data("id"));
     $("input#update_attribute_name").val($(tr).find("td:nth-child(2)").text());
     $("input#update_attribute_description").val($(tr).find("td:nth-child(3)").text());
+});
+
+/**
+ * reset & assign form values before show modal
+ */
+$('table tbody').on("click", ".btn_delete_attribute", function(e) {
+    mpm.form.reset($("form#frm_update_attribute"));
+    var tr = $(this).closest("tr");
+    $("input#delete_attribute_id").val($(tr).data("id"));
+    $("strong#delete_attribute_name").text($(tr).find("td:nth-child(2)").text());
 });
 
 /**
