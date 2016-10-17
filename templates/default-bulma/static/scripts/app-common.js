@@ -10,7 +10,7 @@ var $loading = $('i#ajax_icon').hide();
 
 (function() {
     var origOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.sopen = function() {
+    XMLHttpRequest.prototype.open = function() {
         $loading.show();
         this.addEventListener('load', function() {
             $loading.hide();
