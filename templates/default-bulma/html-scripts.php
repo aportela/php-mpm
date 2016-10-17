@@ -12,7 +12,7 @@
     }
 ?>
 <?php
-    if (isset($_GET["page"])) {
+    if ($_TEMPLATE["session_user_is_logged"] && isset($_GET["page"])) {
         switch($_GET["page"]) {
             case "users":
                 ?>
@@ -47,5 +47,4 @@
         }
     }
 ?>
-<script src="/templates/default-bulma/static/scripts/script.js"></script>
 <script src="/templates/default-bulma/static/scripts/locale-en.js"></script>
