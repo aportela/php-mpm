@@ -222,18 +222,18 @@
                         $param->int(":results_page", $resultsPage);
                         $params[] = $param;
                         if (! empty($searchByText)) {
-                            $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator WHERE (G.name LIKE :text OR G.description LIKE :text) ORDER BY G.name LIMIT :start, :results_page ";                            
+                            $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id WHERE (G.name LIKE :text OR G.description LIKE :text) ORDER BY G.name LIMIT :start, :results_page ";                            
                         } else {
-                            $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name LIMIT :start, :results_page ";
+                            $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id ORDER BY G.name LIMIT :start, :results_page ";
                         }                 
                         $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                     }
                 } else {
                     $data->setPager(0, 1, 0);
                     if (! empty($searchByText)) {
-                        $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator WHERE (G.name LIKE :text OR G.description LIKE :text) ORDER BY G.name ";
+                        $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id WHERE (G.name LIKE :text OR G.description LIKE :text) ORDER BY G.name ";
                     } else {
-                        $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator ORDER BY G.name ";
+                        $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id ORDER BY G.name ";
                     }
                     $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                 }                                
