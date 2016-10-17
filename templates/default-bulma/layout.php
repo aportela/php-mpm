@@ -11,7 +11,6 @@
             <a class="nav-item" href="https://github.com/aportela/php-mpm" title="github project page">
                 <span class="icon"><i class="fa fa-github"></i></span>
             </a>
-            </div>
         </div>
         <div class="nav-right">
             <?php
