@@ -5,22 +5,10 @@
       <input type="hidden" name="page" class="i_page" value="1">
       <th colspan="6">
         <div class="columns">
-          <div class="column is-2">
-            <p class="control has-addons has-addons-right">
-              <span class="select">
-                <select id="export_table_data_format">
-                  <option value="">select format</option>
-                  <option value="json">json</option>
-                  <option value="xml">xml</option>
-                </select>
-              </span>
-              <a id="btn_export_table_data" class="button is-primary is-disabled">Export data</a>
-            </p>          
-          </div>
-          <div class="column is-1">
-            <a class="button is-primary modal-button btn_add_group" data-target="#modal_add">add group</a>              
+          <div class="column">
+            <a class="button is-primary modal-button btn_add_group" data-target="#modal_add"><span class="icon"><i class="fa fa-plus" aria-hidden="true"></i></span><span>add group</span></a>              
           </div>          
-          <div class="column is-5">
+          <div class="column">
             <p class="control has-addons">
               <span class="select">
                 <select id="s_results_page" name="resultsPage">
@@ -34,9 +22,9 @@
               <input class="input is-expanded" id="fast_search_filter" type="text" name="text" placeholder="text filter">
             </p>                          
           </div>
-          <div class="column is-4">
+          <div class="column">
             <nav class="pagination">
-              <a class="button is-info btn_previous_page is-disabled">Previous</a>
+              <a class="button is-info btn_previous_page is-disabled">Previous page</a>
               <a class="button is-info btn_next_page is-disabled">Next page</a>
               <ul>
                 <li>
@@ -50,6 +38,18 @@
                 </li>
               </ul>
             </nav>                  
+          </div>
+          <div class="column">
+            <p class="control has-addons has-addons-right">
+              <span class="select">
+                <select id="export_table_data_format">
+                  <option value="">select format</option>
+                  <option value="json">json</option>
+                  <option value="xml">xml</option>
+                </select>
+              </span>
+              <a id="btn_export_table_data" class="button is-primary is-disabled"><span class="icon"><i class="fa fa-table" aria-hidden="true"></i></span><span>Export data</span></a>
+            </p>          
           </div>
         </div>      
       </th>
