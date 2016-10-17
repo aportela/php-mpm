@@ -1,7 +1,7 @@
 <table id="attributes" class="table is-bordered is-narrow">
   <thead>
     <tr>
-      <form class="frm_search_attributes" method="post" action="/api/attribute/search.php">
+      <form id="frm_admin_search" method="post" action="/api/attribute/search.php">
       <input type="hidden" name="page" class="i_page" value="1">
       <th colspan="6">
         <div class="columns">
