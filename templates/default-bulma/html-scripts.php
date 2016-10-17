@@ -10,7 +10,6 @@
         <?php
     }
 ?>
-<script src="/templates/default-bulma/static/scripts/non_auth.js"></script>
 <?php
     if (isset($_GET["page"])) {
         switch($_GET["page"]) {
