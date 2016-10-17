@@ -1,31 +1,21 @@
-$("form.frm_search_templates").submit(function(e) {
-    e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
-        switch (httpStatusCode) {
-            case 200:
-                if (!(response && response.success)) {
-                    mpm.error.showModal();
-                } else {
-                    mpm.pagination.setControls(response.data.pager.actualPage, response.data.pager.totalPages);
-                    var html = null;
-                    if (response.data && response.data.results.length > 0) {
-                        for (var i = 0; i < response.data.results.length; i++) {
-                            html += '<tr data-id="' + response.data.results[i].id + '">';
-                            html += '<td colspan="5">TODO</td>';
-                            // TODO
-                            html += '</tr>';
-                        }
-                    }
-                    $("table#templates tbody").html(html);
-                }
-                break;
-            default:
-                mpm.error.showModal();
-                break;
+/**
+ * fill templates table data
+ */
+function fillTable(actualPage, totalPages, templates) {
+    mpm.pagination.setControls(actualPage, totalPages);
+    var html = null;
+    if (templates && templates.length > 0) {
+        for (var i = 0; i < templates.length; i++) {
+            html += '<tr data-id="' + response.data.results[i].id + '">';
+            html += '<td colspan="5">TODO</td>';
         }
-    });
-});
+    }
+    $("table#templates tbody").html(html);
+}
 
+/**
+ * add template modal form submit event
+ */
 $("form#frm_add_template").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -39,26 +29,7 @@ $("form#frm_add_template").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
-                    $("form.frm_search_templates").submit();
-                }
-                break;
-            default:
-                mpm.error.showModal();
-                break;
-        }
-    });
-});
-$("form#frm_delete_template").submit(function(e) {
-    e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
-        switch (httpStatusCode) {
-            case 200:
-                if (!(response && response.success)) {
-                    mpm.error.showModal();
-                } else {
-                    $('html').removeClass('is-clipped');
-                    $('div.modal').removeClass('is-active');
-                    $("form.frm_search_templates").submit();
+                    $("form#frm_admin_search").submit();
                 }
                 break;
             default:
@@ -68,6 +39,9 @@ $("form#frm_delete_template").submit(function(e) {
     });
 });
 
+/**
+ * update template modal form submit event
+ */
 $("form#frm_update_template").submit(function(e) {
     e.preventDefault();
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -81,7 +55,7 @@ $("form#frm_update_template").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
-                    $("form.frm_search_templates").submit();
+                    $("form#frm_admin_search").submit();
                 }
                 break;
             default:
@@ -91,48 +65,57 @@ $("form#frm_update_template").submit(function(e) {
     });
 });
 
-$('table thead').on("click", ".btn_add_template", function(e) {});
-
-$('table tbody').on("click", ".btn_delete_group", function(e) {
-    $("input#delete_template_id").val($(this).closest("tr").data("id"));
-    $("strong#delete_template_name").text($(this).closest("tr").find("td:nth-child(2)").text());
+/**
+ * delete template modal form submit event
+ */
+$("form#frm_delete_template").submit(function(e) {
+    e.preventDefault();
+    mpm.form.submit(this, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 200:
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    $('html').removeClass('is-clipped');
+                    $('div.modal').removeClass('is-active');
+                    $("form#frm_admin_search").submit();
+                }
+                break;
+            default:
+                mpm.error.showModal();
+                break;
+        }
+    });
 });
 
+/**
+ * reset add form before show modal
+ */
+$('table thead').on("click", ".btn_add_template", function(e) {
+    mpm.form.reset($("form#frm_add_template"));
+});
+
+/**
+ * reset & assign form values before show modal
+ */
+$('table tbody').on("click", ".btn_delete_template", function(e) {
+    mpm.form.reset($("form#frm_update_template"));
+    var tr = $(this).closest("tr");
+    $("input#delete_template_id").val($(tr).data("id"));
+    $("strong#delete_template_name").text($(tr).find("td:nth-child(2)").text());
+});
+
+/**
+ * reset & assign form values before show modal
+ */
 $('table tbody').on("click", ".btn_update_template", function(e) {
-    $("input#update_template_id").val($(this).closest("tr").data("id"));
-    $("input#update_template_name").val($(this).closest("tr").find("td:nth-child(2)").text());
+    mpm.form.reset($("form#frm_delete_template"));
+    var tr = $(this).closest("tr");
+    $("input#update_template_id").val($(tr).data("id"));
+    $("input#update_template_name").val($(tr).find("td:nth-child(2)").text());
 });
 
-$(".btn_previous_page").click(function(e) {
-    var v = parseInt($(".i_page").val());
-    v--;
-    if (v < 1) {
-        v = 1;
-        $(this).addClass("is-disabled");
-    } else {
-        $(this).removeClass("is-disabled");
-    }
-    $(".i_page").val(v);
-    $("form.frm_search_templates").submit();
-});
-
-$(".btn_next_page").click(function(e) {
-    var v = parseInt($(".i_page").val());
-    var totalPages = parseInt($(".pager_total_pages").text());
-    v++;
-    if (v > totalPages) {
-        b = totalPages;
-        $(this).addClass("is-disabled");
-    } else {
-        $(this).removeClass("is-disabled");
-    }
-    $(".i_page").val(v);
-    $("form.frm_search_templates").submit();
-});
-
-$("select#s_results_page").change(function(e) {
-    $(".i_page").val(1);
-    $("form.frm_search_groups").submit();
-});
-
-$("form.frm_search_templates").submit();
+/**
+ * launch search on start
+ */
+$("form#frm_admin_search").submit();

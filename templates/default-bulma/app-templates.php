@@ -1,7 +1,7 @@
 <table id="templates" class="table is-bordered is-narrow">
   <thead>   
     <tr>
-      <form class="frm_search_templates" method="post" action="/api/template/search.php">
+      <form id="frm_admin_search" method="post" action="/api/template/search.php">
       <input type="hidden" name="page" class="i_page" value="1">
       <th colspan="5">
         <div class="columns">
