@@ -116,6 +116,7 @@ $("form#frm_delete_group").submit(function(e) {
 $('table thead').on("click", ".btn_add_group", function(e) {
     mpm.form.reset($("form#frm_add_group"));
     selectFirstTab($("form#frm_add_group"));
+    $("select.group_user_list").val("");
     fillUserLists();
 });
 
@@ -125,6 +126,7 @@ $('table thead').on("click", ".btn_add_group", function(e) {
 $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
     selectFirstTab($("form#frm_update_group"));
+    $("select.group_user_list").val("");
     fillUserLists();
     var id = $(this).closest("tr").data("id");
     getGroup(id, function(data) {
