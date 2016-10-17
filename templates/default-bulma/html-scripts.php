@@ -16,31 +16,31 @@
         switch($_GET["page"]) {
             case "users":
                 ?>
-<script src="/templates/default-bulma/static/scripts/app-users.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-section-users.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
             case "groups":
                 ?>
-<script src="/templates/default-bulma/static/scripts/app-groups.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-section-groups.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
             case "attributes":
                 ?>
-<script src="/templates/default-bulma/static/scripts/app-attributes.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-section-attributes.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
             case "templates":
                 ?>
-<script src="/templates/default-bulma/static/scripts/app-templates.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-section-templates.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
             case "errors":
                 ?>
-<script src="/templates/default-bulma/static/scripts/app-errors.js"></script>
+<script src="/templates/default-bulma/static/scripts/app-section-errors.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
