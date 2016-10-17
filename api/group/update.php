@@ -22,12 +22,20 @@
 
     $result = array("success" => false);
     try {
+        $users = array();
+        if (isset($_POST["users"]) && is_array($_POST["users"])) {
+            foreach($_POST["users"] as $userId) {
+                $u = new User();
+                $u->id = $userId;
+                $users[] = $u;
+            }
+        }        
         $g = new \PHP_MPM\Group();         
         $g->set(
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["name"]) ? $_POST["name"]: "", 
             isset($_POST["description"]) ? $_POST["description"]: "",
-            array()
+            $users
         );
         $g->update();
         $result["success"] = true;
