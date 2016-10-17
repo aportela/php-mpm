@@ -1,57 +1,95 @@
+/**
+    background operations (ajax/xhr) indicator
+*/
+
 i#ajax_icon {
     display: block;
     position: fixed;
     left: 10px;
     top: 10px;
     z-index: 10000;
-    display: block;
 }
+
+
+/**
+    top navigation bar
+*/
 
 nav#top_bar {
     border-bottom: 1px solid #ccc;
     box-shadow: 0 2px 3px hsla(0, 0%, 7%, .1), 0 0 0 1px hsla(0, 0%, 7%, .1);
 }
 
-table tbody tr td a.button {
-    opacity: 0.1;
-    transition: opacity 0.1s linear;
-}
 
-table tbody tr:hover td a.button {
-    opacity: 1;
-}
+/**
+    align signin / signout / recover account container vertical position
+*/
 
 div#auth_container {
     margin-top: 64px;
 }
 
 
-/* 
-    fix icon vertical alingn on table cells
+/**
+    set opacity on table button by default
+*/
+
+table tbody tr td a.button {
+    opacity: 0.1;
+    transition: opacity 0.1s linear;
+}
+
+
+/**
+    disable opacity table button hover mouse event
+*/
+
+table tbody tr:hover td a.button {
+    opacity: 1;
+}
+
+
+/**
+    fix vertical-align on icons inside table cells
 */
 
 table tbody td span.icon {
     line-height: 23px !important;
 }
 
+
+/**
+    "collapsible" containers on error details table cell
+*/
+
 table#errors td div.card {
     margin-top: 1em;
     cursor: pointer;
 }
 
+
+/**
+    fix control width (add group modal / users tab)
+*/
+
 select#add_group_user_list {
     width: 100%;
 }
 
-.full_width {
-    width: 100%;
-}
 
-.full_width select {
-    width: 100%;
-}
+/**
+    change default padding on select items
+*/
 
 select option {
     padding: 4px 8px;
+}
+
+
+/**
+    add border to select items
+*/
+
+select option:not(:last-child) {
     border-bottom: 1px solid #f4f4f4;
 }
