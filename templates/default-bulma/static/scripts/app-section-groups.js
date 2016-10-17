@@ -107,26 +107,7 @@ $("form#frm_delete_group").submit(function(e) {
  */
 $('table thead').on("click", ".btn_add_group", function(e) {
     mpm.form.reset($("form#frm_add_group"));
-    // load available users combo if empty
-    if ($("select#add_group_user_list option").length == 1) {
-        var formData = new FormData();
-        formData.append("page", 1);
-        formData.append("resultsPage", 0);
-        mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
-            switch (httpStatusCode) {
-                case 200:
-                    if (!(response && response.success)) {
-                        mpm.error.showModal();
-                    } else {
-                        fillUsersCombo(response.data.results);
-                    }
-                    break;
-                default:
-                    mpm.error.showModal();
-                    break;
-            }
-        });
-    }
+    fillUserLists();
 });
 
 /**
@@ -134,6 +115,7 @@ $('table thead').on("click", ".btn_add_group", function(e) {
  */
 $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
+    fillUserLists();
     var tr = $(this).closest("tr");
     $("input#update_group_id").val($(tr).data("id"));
     $("input#update_group_name").val($(tr).find("td:nth-child(2)").text());
@@ -158,7 +140,7 @@ function clearUsersTable(table) {
 }
 
 /**
- * fill users combo form control
+ * fill users combo form controls
  */
 function fillUsersCombo(users) {
     var html = '<option value="">select user</option>';
@@ -167,24 +149,51 @@ function fillUsersCombo(users) {
             html += '<option value="' + users[i].id + '" data-id="' + users[i].id + '" data-name="' + users[i].name + '" data-email="' + users[i].email + '">' + users[i].name + ' (' + users[i].email + ')</option>'
         }
     }
-    $("select#add_group_user_list").html(html);
+    $("select.group_user_list").html(html);
 }
 
+/**
+ * get user list & fill into controls
+ */
+function fillUserLists() {
+    // load available users combo if empty
+    if ($("select.group_user_list:first option").length == 1) {
+        var formData = new FormData();
+        formData.append("page", 1);
+        formData.append("resultsPage", 0);
+        mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
+            switch (httpStatusCode) {
+                case 200:
+                    if (!(response && response.success)) {
+                        mpm.error.showModal();
+                    } else {
+                        fillUsersCombo(response.data.results);
+                    }
+                    break;
+                default:
+                    mpm.error.showModal();
+                    break;
+            }
+        });
+    }
+}
 /**
  * selected user changed event
  * description: toggle add user button state (enabled if user is selected && not exists in table)
  */
-$("select#add_group_user_list").change(function(e) {
+$("select.group_user_list").change(function(e) {
     e.preventDefault();
-    var v = $(this).val()
+    var btn = $(this).closest("p").find("a.btn_add_group_user");
+    var v = $(this).val();
     if (v) {
-        if ($('table#add_group_userlist tbody tr[data-id="' + $("select#add_group_user_list option:selected").data("id") + '"]').length > 0) {
-            $("#btn_add_group_user").addClass("is-disabled");
+        var selectedId = $(this).find("option:selected").data("id");
+        if ($('table#add_group_userlist tbody tr[data-id="' + selectedId + '"]').length > 0) {
+            $(btn).addClass("is-disabled");
         } else {
-            $("#btn_add_group_user").removeClass("is-disabled");
+            $(btn).removeClass("is-disabled");
         }
     } else {
-        $("#btn_add_group_user").addClass("is-disabled");
+        $(btn).addClass("is-disabled");
     }
 });
 
@@ -216,10 +225,10 @@ function appendUser(id, name, email) {
  * add user button click event
  * description: add selected user on table, reset user select combo & disable this button again
  */
-$("#btn_add_group_user").click(function(e) {
-    var o = $("select#add_group_user_list option:selected");
+$("a.btn_add_group_user").click(function(e) {
+    var o = $(this).closest("p").find("select.group_user_list option:selected");
     appendUser($(o).data("id"), $(o).data("name"), $(o).data("email"));
-    $("select#add_group_user_list").val("");
+    $("select.group_user_list").val("");
     $(this).addClass("is-disabled");
 });
 
