@@ -266,7 +266,7 @@
         private function getUsers() {
             $param = new \PHP_MPM\DatabaseParam();
             $param->str(":group_id", $this->id);                
-            return(\PHP_MPM\Database::execWithResult(" SELECT GU.user_id AS id, U.email FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
+            return(\PHP_MPM\Database::execWithResult(" SELECT GU.user_id AS id, U.email, U.name FROM [GROUP_USER] GU LEFT JOIN USER U ON U.id = GU.user_id WHERE GU.group_id = :group_id ", array($param)));
         }
 
         /**
