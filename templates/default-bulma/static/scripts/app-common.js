@@ -104,3 +104,91 @@ $("body").on("click", ".btn_delete_row", function(e) {
     e.preventDefault();
     $(this).closest("tr").remove();
 });
+
+
+
+/**
+ * user / group / attribute  / template / error administration tables common search submit form event
+ * description: launch search
+ * WARNING: needs a existent fillTable function (individually declared on every section script)
+ */
+$("form#frm_admin_search").submit(function(e) {
+    e.preventDefault();
+    mpm.form.submit(this, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 200:
+                if (!(response && response.success)) {
+                    mpm.error.showModal();
+                } else {
+                    if (typeof fillTable === "function") {
+                        fillTable(response.data.pager.actualPage, response.data.pager.totalPages, response.data.results);
+                    } else {
+                        mpm.error.showModal();
+                    }
+                }
+                break;
+            default:
+                mpm.error.showModal();
+                break;
+        }
+    });
+});
+
+/**
+ * user / group / attribute  / template / error administration tables common previous page button click event
+ * description: launch previous page search 
+ */
+$("a.btn_previous_page").click(function(e) {
+    var v = parseInt($(".i_page").val());
+    v--;
+    if (v < 1) {
+        v = 1;
+        $(this).addClass("is-disabled");
+    } else {
+        $(this).removeClass("is-disabled");
+    }
+    $(".i_page").val(v);
+    $("form#frm_admin_search").submit();
+});
+
+/**
+ * user / group / attribute  / template / error administration tables common next page button click event
+ * description: launch next page search 
+ */
+$("a.btn_next_page").click(function(e) {
+    var v = parseInt($(".i_page").val());
+    var totalPages = parseInt($(".pager_total_pages").text());
+    v++;
+    if (v > totalPages) {
+        b = totalPages;
+        $(this).addClass("is-disabled");
+    } else {
+        $(this).removeClass("is-disabled");
+    }
+    $(".i_page").val(v);
+    $("form#frm_admin_search").submit();
+});
+
+/**
+ * user / group / attribute  / template / error administration tables common pagination settings change event
+ * description: re-launch search with new results / page
+ */
+$("select#s_results_page").change(function(e) {
+    $(".i_page").val(1);
+    $("form#frm_admin_search").submit();
+});
+
+var textSearchTimer = null;
+/**
+ * user / group / attribute  / template / error administration tables common text filter change event
+ * description: re-launch search with selected text filter
+ */
+$("input#fast_search_filter").keyup(function(e) {
+    e.preventDefault();
+    if (textSearchTimer) {
+        clearTimeout(textSearchTimer);
+    }
+    textSearchTimer = setTimeout(function() {
+        $("form#frm_admin_search").submit();
+    }, 500);
+});
