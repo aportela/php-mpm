@@ -76,6 +76,7 @@ $("form#frm_update_group").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
+                    clearUsersTable($("table#update_group_userlist"));
                     $("form#frm_admin_search").submit();
                 }
                 break;
