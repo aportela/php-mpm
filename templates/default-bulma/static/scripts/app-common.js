@@ -45,7 +45,7 @@ $('body').on("click", ".modal-button", function() {
 /**
  * hide modal click event
  */
-$('body').on("click", '.modal-background, .modal_close', function() {
+$('body').on("click", '.modal_close', function() {
     $('html').removeClass('is-clipped');
     $('div.modal').removeClass('is-active');
 });
