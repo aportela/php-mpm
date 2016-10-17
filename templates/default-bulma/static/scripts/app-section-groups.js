@@ -24,7 +24,7 @@ function fillTable(actualPage, totalPages, groups) {
  */
 $("form#frm_add_group").submit(function(e) {
     e.preventDefault();
-    $("form#frm_add_group").find("input.tmp_user_id").remove();
+    $(this).find("input.tmp_user_id").remove();
     var userIds = getUsers($("table#add_group_userlist"));
     if (userIds != null && userIds.length > 0) {
         for (var i = 0; i < userIds.length; i++) {
@@ -58,6 +58,13 @@ $("form#frm_add_group").submit(function(e) {
  */
 $("form#frm_update_group").submit(function(e) {
     e.preventDefault();
+    $(this).find("input.tmp_user_id").remove();
+    var userIds = getUsers($("table#update_group_userlist"));
+    if (userIds != null && userIds.length > 0) {
+        for (var i = 0; i < userIds.length; i++) {
+            $(this).append('<input class="tmp_user_id" type="hidden" name="users[' + i + ']" value="' + userIds[i] + '" />')
+        }
+    }
     mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
@@ -118,10 +125,21 @@ $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
     selectFirstTab($("form#frm_update_group"));
     fillUserLists();
-    var tr = $(this).closest("tr");
-    $("input#update_group_id").val($(tr).data("id"));
-    $("input#update_group_name").val($(tr).find("td:nth-child(2)").text());
-    $("input#update_group_description").val($(tr).find("td:nth-child(3)").text());
+    var id = $(this).closest("tr").data("id");
+    getGroup(id, function(data) {
+        if (data === null) {
+            mpm.error.showModal();
+        } else {
+            $("input#update_group_id").val(id);
+            $("input#update_group_name").val(data.name);
+            $("input#update_group_description").val(data.description);
+            if (data.users && data.users.length > 0) {
+                for (var i = 0; i < data.users.length; i++) {
+                    appendUser("table#update_group_userlist", data.users[i].id, data.users[i].name, data.users[i].email);
+                }
+            }
+        }
+    });
 });
 
 /**
@@ -189,6 +207,29 @@ function fillUserLists() {
         });
     }
 }
+
+/**
+ * get group info from server
+ */
+function getGroup(id, callback) {
+    var formData = new FormData();
+    formData.append("id", id);
+    mpm.xhr("POST", "/api/group/get.php", formData, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 200:
+                if (!(response && response.success)) {
+                    callback(null);
+                } else {
+                    callback(response.data);
+                }
+                break;
+            default:
+                callback(null);
+                break;
+        }
+    });
+}
+
 /**
  * selected user changed event
  * description: toggle add user button state (enabled if user is selected && not exists in table)
@@ -223,14 +264,14 @@ function getUsers(table) {
 /**
  * add new user to group user list table
  */
-function appendUser(id, name, email) {
+function appendUser(table, id, name, email) {
     var html = "";
     html += '<tr data-id="' + id + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + name + "</td>";
     html += "<td>" + email + "</td>";
     html += "</tr>";
-    $("table#add_group_userlist tbody").append(html);
+    $("table").find("tbody").append(html);
 }
 
 /**
@@ -239,7 +280,7 @@ function appendUser(id, name, email) {
  */
 $("a.btn_add_group_user").click(function(e) {
     var o = $(this).closest("p").find("select.group_user_list option:selected");
-    appendUser($(o).data("id"), $(o).data("name"), $(o).data("email"));
+    appendUser("table#add_group_userlist", $(o).data("id"), $(o).data("name"), $(o).data("email"));
     $("select.group_user_list").val("");
     $(this).addClass("is-disabled");
 });
