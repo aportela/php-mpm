@@ -1,24 +1,8 @@
 "use strict";
 
-
 /**
- * show top right static loading icon while xhr (ajax) events
- * (John Culviner) http://stackoverflow.com/a/27363569
+ * (Hermann Ingjaldsson) http://stackoverflow.com/a/16938481
  */
-
-var $loading = $('i#ajax_icon').hide();
-
-(function() {
-    var origOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.sopen = function() {
-        $loading.show();
-        this.addEventListener('load', function() {
-            $loading.hide();
-        });
-        origOpen.apply(this, arguments);
-    };
-})();
-
 function getBrowserFromUserAgent(ua) {
     if (ua) {
         var tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
