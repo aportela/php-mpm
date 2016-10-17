@@ -34,7 +34,8 @@
                   <option value="0">no pagination</option>
                 </select>
               </span>
-              <input class="input is-expanded is-disabled" type="text" placeholder="text filter (TODO)">
+              <input class="input is-expanded is-disabled" id="fast_search_filter" type="text" name="text" placeholder="text filter">
+              <a id="btn_clear_text" class="button is-primary modal-button is-disabled"><span class="icon"><i class="fa fa-times" aria-hidden="true"></i></span><span>clear</span></a>
             </p>                          
           </div>
           <div class="column">

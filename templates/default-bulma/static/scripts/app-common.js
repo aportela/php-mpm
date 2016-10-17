@@ -106,7 +106,6 @@ $("body").on("click", ".btn_delete_row", function(e) {
 });
 
 
-
 /**
  * user / group / attribute  / template / error administration tables common search submit form event
  * description: launch search
@@ -179,16 +178,33 @@ $("select#s_results_page").change(function(e) {
 });
 
 var textSearchTimer = null;
+
 /**
  * user / group / attribute  / template / error administration tables common text filter change event
  * description: re-launch search with selected text filter
  */
 $("input#fast_search_filter").keyup(function(e) {
     e.preventDefault();
+    if ($(this).val()) {
+        $("a#btn_clear_text").removeClass("is-disabled");
+    } else {
+        $("a#btn_clear_text").addClass("is-disabled");
+    }
     if (textSearchTimer) {
         clearTimeout(textSearchTimer);
     }
     textSearchTimer = setTimeout(function() {
         $("form#frm_admin_search").submit();
     }, 500);
+});
+
+/**
+ * user / group / attribute  / template / error administration tables common text filter clear button click event
+ * description: clears text filter and re-launch search
+ */
+$("a#btn_clear_text").click(function(e) {
+    e.preventDefault();
+    $(this).addClass("is-disabled");
+    $("input#fast_search_filter").val("");
+    $("form#frm_admin_search").submit();
 });
