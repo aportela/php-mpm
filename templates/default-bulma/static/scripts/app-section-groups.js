@@ -107,6 +107,7 @@ $("form#frm_delete_group").submit(function(e) {
  */
 $('table thead').on("click", ".btn_add_group", function(e) {
     mpm.form.reset($("form#frm_add_group"));
+    selectFirstTab($("form#frm_add_group"));
     fillUserLists();
 });
 
@@ -115,6 +116,7 @@ $('table thead').on("click", ".btn_add_group", function(e) {
  */
 $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
+    selectFirstTab($("form#frm_update_group"));
     fillUserLists();
     var tr = $(this).closest("tr");
     $("input#update_group_id").val($(tr).data("id"));
@@ -131,6 +133,16 @@ $('table tbody').on("click", ".btn_delete_group", function(e) {
     $("input#delete_group_id").val($(tr).data("id"));
     $("strong#delete_group_name").text($(tr).find("td:nth-child(2)").text());
 });
+
+/**
+ * select first tab contained on form
+ */
+function selectFirstTab(form) {
+    $(form).find("div.tabs ul li").removeClass("is-active");
+    $(form).find("div.tabs ul li:first").addClass("is-active");
+    $(form).find("div.tab-content").addClass("is-hidden");
+    $(form).find("div.tab-content:first").removeClass("is-hidden");
+}
 
 /**
  * clear previous users table
