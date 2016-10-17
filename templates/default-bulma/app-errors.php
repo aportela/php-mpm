@@ -9,14 +9,14 @@
             <div class="control is-grouped">
               <p class="control">
                 <span class="select">
-                  <select id="s_filter_by_date" name="date">
+                  <select id="s_filter_by_date" name="date" class="is-disabled">
                     <option value="">select date range</option>
                   </select>
                 </span>            
               </p>
               <p class="control">
                 <span class="select">
-                  <select id="s_filter_by_user_id" name="userId">
+                  <select id="s_filter_by_user_id" name="userId" class="is-disabled">
                     <option value="">select user</option>
                   </select>                
                 </span>
