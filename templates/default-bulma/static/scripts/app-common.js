@@ -1,5 +1,12 @@
 "use strict";
 
+if (typeof console == "undefined") {
+    window.console = {
+        log: function() {},
+        groupCollapsed: function() {},
+        groupEnd: function() {}
+    };
+}
 
 /**
  * show top right static loading icon while xhr (ajax) events
@@ -49,7 +56,6 @@ $('body').on("click", '.modal_close', function() {
     $('html').removeClass('is-clipped');
     $('div.modal').removeClass('is-active');
 });
-
 
 /**
  * signout click event
@@ -104,7 +110,6 @@ $("body").on("click", ".btn_delete_row", function(e) {
     e.preventDefault();
     $(this).closest("tr").remove();
 });
-
 
 /**
  * user / group / attribute  / template / error administration tables common search submit form event
