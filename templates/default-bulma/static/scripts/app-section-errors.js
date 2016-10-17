@@ -14,9 +14,9 @@ $("form.frm_search_errors").submit(function(e) {
                             html += '<td data-date="' + result.data.results[i].creationDate + '">' + new moment(result.data.results[i].creationDate).fromNow() + '</td>';
                             html += '<td>' + result.data.results[i].userName + '</td>';
                             html += '<td>' + result.data.results[i].remoteAddress + '</td>';
-                            var os = getOSFromUserAgent(result.data.results[i].userAgent);
+                            var os = mpm.utils.getOSFromUserAgent(result.data.results[i].userAgent);
                             html += '<td>' + (os ? os : "unknown") + '</td>';
-                            var browser = getBrowserFromUserAgent(result.data.results[i].userAgent);
+                            var browser = mpm.utils.getBrowserFromUserAgent(result.data.results[i].userAgent);
                             html += '<td>' + (browser ? (browser.name + ' (version ' + browser.version + ')') : "unknown") + '</td>';
                             html += '<td>';
                             html += '<p><strong>File:</strong> ' + result.data.results[i].filename + ':' + result.data.results[i].line + '</p>';
