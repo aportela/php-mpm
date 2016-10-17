@@ -42,3 +42,16 @@ table#errors td div.card {
 select#add_group_user_list {
     width: 100%;
 }
+
+.full_width {
+    width: 100%;
+}
+
+.full_width select {
+    width: 100%;
+}
+
+select option {
+    padding: 4px 8px;
+    border-bottom: 1px solid #f4f4f4;
+}
