@@ -21,11 +21,7 @@
     $result = array("success" => false, "data" => null);
     try {
         $g = new \PHP_MPM\Group();
-        $g->set(
-            isset($_POST["id"]) ? $_POST["id"]: "",
-            "",
-            "" 
-        );        
+        $g->id = isset($_POST["id"]) ? $_POST["id"]: ""; 
         $result["data"] = $g->get();
         $result["success"] = true;
         ob_clean();
