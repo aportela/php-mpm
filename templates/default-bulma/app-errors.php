@@ -1,7 +1,7 @@
 <table id="errors" class="table is-bordered is-narrow">
   <thead>   
     <tr>
-      <form class="frm_search_errors" method="post" action="/api/error/search.php">
+      <form id="frm_admin_search" method="post" action="/api/error/search.php">
       <input type="hidden" name="page" class="i_page" value="1">
       <th colspan="6">
         <div class="columns">
