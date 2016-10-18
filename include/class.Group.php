@@ -282,7 +282,7 @@
             } else {
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id OR name = :name ", array($param));
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description FROM [GROUP] WHERE id = :id ", array($param));
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
