@@ -94,9 +94,18 @@ select option:not(:last-child) {
     border-bottom: 1px solid #f4f4f4;
 }
 
+
 /**
     fix control width to 100%
 */
+
 .full_width {
     width: 100%;
+}
+
+/**
+    fix checkboxes vertical align inside table cell
+*/
+td input[type=checkbox] {
+    margin-top: 8px;
 }

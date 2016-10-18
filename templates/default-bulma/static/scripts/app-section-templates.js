@@ -271,10 +271,10 @@ function appendPermission(table, id, name) {
     html += '<tr data-id="' + id + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + name + "</td>";
-    html += '<td><input type="checkbox" checked/></td>';
-    html += '<td><input type="checkbox" checked/></td>';
-    html += '<td><input type="checkbox" checked/></td>';
-    html += '<td><input type="checkbox" checked/></td>';
+    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
+    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
+    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
+    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
     html += "</tr>";
     $(table).find("tbody").append(html);
 }
