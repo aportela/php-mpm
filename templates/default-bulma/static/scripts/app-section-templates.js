@@ -6,8 +6,13 @@ function fillTable(actualPage, totalPages, templates) {
     var html = null;
     if (templates && templates.length > 0) {
         for (var i = 0; i < templates.length; i++) {
-            html += '<tr data-id="' + response.data.results[i].id + '">';
-            html += '<td colspan="5">TODO</td>';
+            html += '<tr data-id="' + templates[i].id + '">';
+            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_template" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_template" data-target="#modal_delete">Delete</a></td>';
+            html += '<td>' + templates[i].name + '</td>';
+            html += '<td>' + (templates[i].description ? templates[i].description : "") + '</td>';
+            html += '<td data-id="' + templates[i].creatorId + '">' + (templates[i].creatorId != templates[i].id ? templates[i].creatorName : "auto-register") + '</td>';
+            html += '<td data-date="' + templates[i].creationDate + '">' + new moment(templates[i].creationDate).fromNow() + '</td>';
+            html += '</tr>';
         }
     }
     $("table#templates tbody").html(html);
@@ -18,6 +23,13 @@ function fillTable(actualPage, totalPages, templates) {
  */
 $("form#frm_add_template").submit(function(e) {
     e.preventDefault();
+    $(this).find("input.tmp_group_id").remove();
+    var groupIds = getGroups($("table#add_template_permissions"));
+    if (groupIds != null && groupIds.length > 0) {
+        for (var i = 0; i < groupIds.length; i++) {
+            $(this).append('<input class="tmp_group_id" type="hidden" name="permissions[' + i + ']" value="' + groupIds[i] + '" />')
+        }
+    }
     mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
@@ -44,6 +56,13 @@ $("form#frm_add_template").submit(function(e) {
  */
 $("form#frm_update_template").submit(function(e) {
     e.preventDefault();
+    $(this).find("input.tmp_group_id").remove();
+    var groupIds = getGroups($("table#update_template_permissions"));
+    if (groupIds != null && groupIds.length > 0) {
+        for (var i = 0; i < groupIds.length; i++) {
+            $(this).append('<input class="tmp_group_id" type="hidden" name="permissions[' + i + ']" value="' + groupIds[i] + '" />')
+        }
+    }
     mpm.form.submit(this, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
@@ -93,6 +112,10 @@ $("form#frm_delete_template").submit(function(e) {
  */
 $('table thead').on("click", ".btn_add_template", function(e) {
     mpm.form.reset($("form#frm_add_template"));
+    selectFirstTab($("form#frm_add_template"));
+    clearPermissionsTable($("table#add_template_permissions"));
+    $("select.template_group_list").val("");
+    fillGroupsLists();
 });
 
 /**
@@ -100,9 +123,25 @@ $('table thead').on("click", ".btn_add_template", function(e) {
  */
 $('table tbody').on("click", ".btn_update_template", function(e) {
     mpm.form.reset($("form#frm_delete_template"));
-    var tr = $(this).closest("tr");
-    $("input#update_template_id").val($(tr).data("id"));
-    $("input#update_template_name").val($(tr).find("td:nth-child(2)").text());
+    selectFirstTab($("form#frm_update_template"));
+    $("select.template_group_list").val("");
+    clearPermissionsTable($("table#update_template_permissions"));
+    fillGroupsLists();
+    var id = $(this).closest("tr").data("id");
+    getTemplate(id, function(data) {
+        if (data === null) {
+            mpm.error.showModal();
+        } else {
+            $("input#update_template_id").val(id);
+            $("input#update_template_name").val(data.name);
+            $("input#update_template_description").val(data.description);
+            if (data.permissions && data.permissions.length > 0) {
+                for (var i = 0; i < data.permissions.length; i++) {
+                    appendPermission("table#update_template_permissions", data.permissions[i].group.id, data.permissions[i].group.name);
+                }
+            }
+        }
+    });
 });
 
 /**
@@ -114,6 +153,143 @@ $('table tbody').on("click", ".btn_delete_template", function(e) {
     $("input#delete_template_id").val($(tr).data("id"));
     $("strong#delete_template_name").text($(tr).find("td:nth-child(2)").text());
 });
+
+/**
+ * select first tab contained on form
+ */
+function selectFirstTab(form) {
+    $(form).find("div.tabs ul li").removeClass("is-active");
+    $(form).find("div.tabs ul li:first").addClass("is-active");
+    $(form).find("div.tab-content").addClass("is-hidden");
+    $(form).find("div.tab-content:first").removeClass("is-hidden");
+}
+
+/**
+ * clear previous permissions table
+ */
+function clearPermissionsTable(table) {
+    $(table).find("tbody").html("");
+}
+
+/**
+ * fill groups combo form controls
+ */
+function fillGroupsCombo(groups) {
+    var html = '<option value="">select group</option>';
+    if (groups && groups.length > 0) {
+        for (var i = 0; i < groups.length; i++) {
+            html += '<option value="' + groups[i].id + '" data-id="' + groups[i].id + '" data-name="' + groups[i].name + '">' + groups[i].name + '</option>';
+        }
+    }
+    $("select.template_group_list").html(html);
+}
+
+/**
+ * get groups list & fill into controls
+ */
+function fillGroupsLists() {
+    // load available groups combo if empty
+    if ($("select.template_group_list:first option").length == 1) {
+        var formData = new FormData();
+        formData.append("page", 1);
+        formData.append("resultsPage", 0);
+        mpm.xhr("POST", "/api/group/search.php", formData, function(httpStatusCode, response) {
+            switch (httpStatusCode) {
+                case 200:
+                    if (!(response && response.success)) {
+                        mpm.error.showModal();
+                    } else {
+                        fillGroupsCombo(response.data.results);
+                    }
+                    break;
+                default:
+                    mpm.error.showModal();
+                    break;
+            }
+        });
+    }
+}
+
+/**
+ * get group info from server
+ */
+function getTemplate(id, callback) {
+    var formData = new FormData();
+    formData.append("id", id);
+    mpm.xhr("POST", "/api/template/get.php", formData, function(httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 200:
+                if (!(response && response.success)) {
+                    callback(null);
+                } else {
+                    callback(response.data);
+                }
+                break;
+            default:
+                callback(null);
+                break;
+        }
+    });
+}
+
+/**
+ * selected group changed event
+ * description: toggle add permission button state (enabled if group is selected && not exists in table)
+ */
+$("select.template_group_list").change(function(e) {
+    e.preventDefault();
+    var btn = $(this).closest("p").find("a.btn_add_template_permission");
+    var v = $(this).val();
+    if (v) {
+        var selectedId = $(this).find("option:selected").data("id");
+        if ($(this).closest("div.tab-content").find('table tbody tr[data-id="' + selectedId + '"]').length > 0) {
+            $(btn).addClass("is-disabled");
+        } else {
+            $(btn).removeClass("is-disabled");
+        }
+    } else {
+        $(btn).addClass("is-disabled");
+    }
+});
+
+/**
+ * get groups contained in specified table
+ */
+function getGroups(table) {
+    var groupIds = [];
+    $(table).find("tbody tr").each(function(i) {
+        groupIds.push(String($(this).data("id")));
+    });
+    return (groupIds);
+}
+
+/**
+ * add new permission to template permission list table
+ */
+function appendPermission(table, id, name) {
+    var html = "";
+    html += '<tr data-id="' + id + '">';
+    html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
+    html += "<td>" + name + "</td>";
+    html += '<td><input type="checkbox" checked/></td>';
+    html += '<td><input type="checkbox" checked/></td>';
+    html += '<td><input type="checkbox" checked/></td>';
+    html += '<td><input type="checkbox" checked/></td>';
+    html += "</tr>";
+    $(table).find("tbody").append(html);
+}
+
+/**
+ * add permission button click event
+ * description: add selected group on table, reset group select combo & disable this button again
+ */
+$("a.btn_add_template_permission").click(function(e) {
+    var o = $(this).closest("p").find("select.template_group_list option:selected");
+    appendPermission($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"));
+    $("select.template_group_list").val("");
+    $(this).addClass("is-disabled");
+});
+
 
 /**
  * launch search on start

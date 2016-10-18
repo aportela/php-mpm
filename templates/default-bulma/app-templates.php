@@ -76,6 +76,46 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a data-target="add_template_tab_metadata" href="#">Metadata</a></li>
+            <li><a data-target="add_template_tab_permissions" href="#">Permissions</a></li>
+          </ul>
+        </div>
+        <div class="tab-content" id="add_template_tab_metadata">            
+          <p class="control has-icon" id="ca_name">
+              <input class="input" type="text" name="name" id="add_group_name" placeholder="Name" maxlength="32" required>
+              <i class="fa fa-users"></i>
+          </p>
+          <p class="control has-icon" id="ca_description">
+              <input class="input" type="text" name="description" id="add_group_description" placeholder="Description" maxlength="128">
+              <i class="fa fa-comments-o" aria-hidden="true"></i>
+          </p>
+        </div>
+        <div class="tab-content is-hidden" id="add_template_tab_permissions">
+          <p class="control has-addons">
+            <span class="select full_width">
+              <select class="template_group_list full_width">
+                <option value="">select group</option>
+              </select>
+            </span>
+            <a class="button is-primary is-disabled btn_add_template_permission">Add</a>
+          </p>
+           <table id="add_template_permissions" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Group</th>
+                <th>Create</th>
+                <th>View</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>                  
+        </div>        
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
             Error
@@ -102,13 +142,53 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
-        <article class="message is-danger is-hidden modal_error">
-          <div class="message-header">
-            Error
-          </div>
-          <div class="message-body">
-          </div>
-        </article>          
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a data-target="update_template_tab_metadata" href="#">Metadata</a></li>
+            <li><a data-target="update_template_tab_permissions" href="#">Permissions</a></li>
+          </ul>
+        </div>      
+        <div class="tab-content" id="update_template_tab_metadata">
+          <p class="control has-icon" id="c_name">
+              <input class="input" type="text" name="name" id="update_template_name" placeholder="Name" maxlength="32" required>
+              <i class="fa fa-users"></i>
+          </p>
+          <p class="control has-icon" id="c_description">
+              <input class="input" type="text" name="description" id="update_template_description" placeholder="Description" maxlength="128">
+              <i class="fa fa-comments-o" aria-hidden="true"></i>
+          </p>
+          <article class="message is-danger is-hidden modal_error">
+            <div class="message-header">
+              Error
+            </div>
+            <div class="message-body">
+            </div>
+          </article>
+        </div>
+        <div class="tab-content is-hidden" id="update_template_tab_permissions">
+          <p class="control has-addons">
+            <span class="select full_width">
+              <select class="template_group_list full_width">
+                <option value="">select group</option>
+              </select>
+            </span>
+            <a class="button is-primary is-disabled btn_add_template_permission">Add</a>
+          </p>
+           <table id="update_template_permissions" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Group</th>
+                <th>Create</th>
+                <th>View</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>                  
+        </div>                          
       </section>
       <footer class="modal-card-foot">
         <button type="submit" class="button is-primary">Update</button>
