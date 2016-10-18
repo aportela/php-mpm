@@ -11,7 +11,7 @@ function fillTable(actualPage, totalPages, groups) {
             html += '<td>' + groups[i].name + '</td>';
             html += '<td>' + (groups[i].description ? groups[i].description : "") + '</td>';
             html += '<td>' + (groups[i].totalUsers ? groups[i].totalUsers : 0) + '</td>';
-            html += '<td data-id="' + groups[i].creatorId + '">' + (groups[i].creatorId != groups[i].id ? groups[i].creatorName : "auto-register") + '</td>';
+            html += '<td data-id="' + groups[i].creatorId + '">' + groups[i].creatorName + '</td>';
             html += '<td data-date="' + groups[i].creationDate + '">' + new moment(groups[i].creationDate).fromNow() + '</td>';
             html += '</tr>';
         }
