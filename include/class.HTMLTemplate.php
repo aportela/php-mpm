@@ -6,7 +6,7 @@
     /**
     *   simple (temporal ?) templating class
     */
-    class Template {
+    class HTMLTemplate {
         private $path;
         public $name;
 

@@ -12,7 +12,7 @@
 
     session_start();
 
-    $t = new \PHP_MPM\Template("layout.php");
+    $t = new \PHP_MPM\HTMLTemplate("layout.php");
 
     $t->render(array(
         "session_user_is_logged" => \PHP_MPM\User::isAuthenticated(), 
