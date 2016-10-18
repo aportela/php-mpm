@@ -123,7 +123,7 @@
         </article>          
       </section>
       <footer class="modal-card-foot">
-        <button type="submit" class="button is-primary">Update</button>
+        <button type="submit" class="button is-primary">Add</button>
         <a class="button modal_close">Cancel</a>
       </footer>
     </form>
