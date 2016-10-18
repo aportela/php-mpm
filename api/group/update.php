@@ -8,6 +8,7 @@
     *   @param string id 
     *   @param string name
     *   @param string description
+    *   @param array users
     */
     namespace PHP_MPM;
 
