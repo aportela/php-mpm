@@ -42,7 +42,6 @@ $("form#frm_add_group").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
-                    clearUsersTable($("table#add_group_userlist"));
                     $("form#frm_admin_search").submit();
                 }
                 break;
@@ -76,7 +75,6 @@ $("form#frm_update_group").submit(function(e) {
                 } else {
                     $('html').removeClass('is-clipped');
                     $('div.modal').removeClass('is-active');
-                    clearUsersTable($("table#update_group_userlist"));
                     $("form#frm_admin_search").submit();
                 }
                 break;
@@ -117,6 +115,7 @@ $('table thead').on("click", ".btn_add_group", function(e) {
     mpm.form.reset($("form#frm_add_group"));
     selectFirstTab($("form#frm_add_group"));
     $("select.group_user_list").val("");
+    clearUsersTable($("table#add_group_userlist"));
     fillUserLists();
 });
 
@@ -127,6 +126,7 @@ $('table tbody').on("click", ".btn_update_group", function(e) {
     mpm.form.reset($("form#frm_delete_group"));
     selectFirstTab($("form#frm_update_group"));
     $("select.group_user_list").val("");
+    clearUsersTable($("table#update_group_userlist"));
     fillUserLists();
     var id = $(this).closest("tr").data("id");
     getGroup(id, function(data) {
@@ -179,7 +179,7 @@ function fillUsersCombo(users) {
     var html = '<option value="">select user</option>';
     if (users && users.length > 0) {
         for (var i = 0; i < users.length; i++) {
-            html += '<option value="' + users[i].id + '" data-id="' + users[i].id + '" data-name="' + users[i].name + '" data-email="' + users[i].email + '">' + users[i].name + ' (' + users[i].email + ')</option>'
+            html += '<option value="' + users[i].id + '" data-id="' + users[i].id + '" data-name="' + users[i].name + '" data-email="' + users[i].email + '">' + users[i].name + ' (' + users[i].email + ')</option>';
         }
     }
     $("select.group_user_list").html(html);
@@ -243,7 +243,7 @@ $("select.group_user_list").change(function(e) {
     var v = $(this).val();
     if (v) {
         var selectedId = $(this).find("option:selected").data("id");
-        if ($('table#add_group_userlist tbody tr[data-id="' + selectedId + '"]').length > 0) {
+        if ($(this).closest("div.tab-content").find('table tbody tr[data-id="' + selectedId + '"]').length > 0) {
             $(btn).addClass("is-disabled");
         } else {
             $(btn).removeClass("is-disabled");
@@ -283,7 +283,7 @@ function appendUser(table, id, name, email) {
  */
 $("a.btn_add_group_user").click(function(e) {
     var o = $(this).closest("p").find("select.group_user_list option:selected");
-    appendUser("table#add_group_userlist", $(o).data("id"), $(o).data("name"), $(o).data("email"));
+    appendUser($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"), $(o).data("email"));
     $("select.group_user_list").val("");
     $(this).addClass("is-disabled");
 });
