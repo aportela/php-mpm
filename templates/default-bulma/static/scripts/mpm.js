@@ -184,8 +184,8 @@ mpm.data.tableExport = function(table, format) {
         var data = '<xml><' + collectionName + '>';
         $(table).find("tbody tr").each(function(i) {
             var row = '<element>';
-            if ($(this).data("id)")) {
-                row += '<col name="id">' + $(this).data("id)") + '</col>';
+            if ($(this).data("id")) {
+                row += '<col name="id">' + $(this).data("id") + '</col>';
             }
             var fieldIdx = 0;
             $(this).find("td").each(function(j) {
@@ -211,7 +211,7 @@ mpm.data.tableExport = function(table, format) {
             return (value);
         };
         var data = "";
-        var fields = [];
+        var fields = ["id"];
         $(table).find("thead tr:last th").each(function(i) {
             if (!$(this).hasClass("ignore_on_export")) {
                 fields.push(escapeValue(getCellText($(this))));
@@ -221,8 +221,8 @@ mpm.data.tableExport = function(table, format) {
         $(table).find("tbody tr").each(function(i) {
             var rowValues = [];
             var row = "";
-            if ($(this).data("id)")) {
-                rowValues.push(escapeValue($(this).data("id)")));
+            if ($(this).data("id")) {
+                rowValues.push(escapeValue($(this).data("id")));
             }
             var fieldIdx = 0;
             $(this).find("td").each(function(j) {
