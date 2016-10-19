@@ -103,9 +103,29 @@ select option:not(:last-child) {
     width: 100%;
 }
 
+
 /**
     fix checkboxes vertical align inside table cell
 */
+
 td input[type=checkbox] {
     margin-top: 8px;
+}
+
+
+/**
+    extra large with modal
+*/
+
+.modal-card_xl {
+    width: 720px;
+}
+
+
+/**
+    extra (extra) large with modal
+*/
+
+.modal-card_xxl {
+    width: 960px;
 }
