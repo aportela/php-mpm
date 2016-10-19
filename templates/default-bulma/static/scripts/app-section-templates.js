@@ -124,6 +124,7 @@ $('table thead').on("click", ".btn_add_template", function(e) {
     clearPermissionsTable($("table#add_template_permissions"));
     $("select.template_group_list").val("");
     fillGroupsLists();
+    fillAttributesLists();
 });
 
 /**
@@ -135,6 +136,7 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
     $("select.template_group_list").val("");
     clearPermissionsTable($("table#update_template_permissions"));
     fillGroupsLists();
+    fillAttributesLists();
     var id = $(this).closest("tr").data("id");
     getTemplate(id, function(data) {
         if (data === null) {
@@ -215,6 +217,45 @@ function fillGroupsLists() {
                         mpm.error.showModal();
                     } else {
                         fillGroupsCombo(response.data.results);
+                    }
+                    break;
+                default:
+                    mpm.error.showModal();
+                    break;
+            }
+        });
+    }
+}
+
+/**
+ * fill attributes combo form controls
+ */
+function fillAttributesCombo(attributes) {
+    var html = '<option value="">select attribute</option>';
+    if (attributes && attributes.length > 0) {
+        for (var i = 0; i < attributes.length; i++) {
+            html += '<option value="' + attributes[i].id + '" data-id="' + attributes[i].id + '" data-name="' + attributes[i].name + '">' + attributes[i].name + '</option>';
+        }
+    }
+    $("select.template_attribute_list").html(html);
+}
+
+/**
+ * get attributes list & fill into controls
+ */
+function fillAttributesLists() {
+    // load available groups combo if empty
+    if ($("select.template_attribute_list:first option").length == 1) {
+        var formData = new FormData();
+        formData.append("page", 1);
+        formData.append("resultsPage", 0);
+        mpm.xhr("POST", "/api/attribute/search.php", formData, function(httpStatusCode, response) {
+            switch (httpStatusCode) {
+                case 200:
+                    if (!(response && response.success)) {
+                        mpm.error.showModal();
+                    } else {
+                        fillAttributesCombo(response.data.results);
                     }
                     break;
                 default:
@@ -311,6 +352,50 @@ $("a.btn_add_template_permission").click(function(e) {
     $(this).addClass("is-disabled");
 });
 
+/**
+ * selected attribute changed event
+ * description: toggle add attribute button state (enabled if attribute is selected)
+ */
+$("select.template_attribute_list").change(function(e) {
+    e.preventDefault();
+    var btn = $(this).closest("p").find("a.btn_add_template_attribute");
+    var v = $(this).val();
+    if (v) {
+        $(btn).removeClass("is-disabled");
+    } else {
+        $(btn).addClass("is-disabled");
+    }
+});
+
+function getAttributes(table) {
+
+}
+
+/**
+ * add new attribute to template permission list table
+ */
+function appendAttribute(table, id, name, label, required, defaultValue) {
+    var html = "";
+    html += '<tr data-id="' + id + '">';
+    html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
+    html += "<td>" + name + "</td>";
+    html += '<td><input class="input" type="text" value="' + label + '"></td>';
+    html += '<td class="has-text-centered"><input class="required" type="checkbox" ' + (required ? "checked" : "") + '/></td>';
+    html += '<td></td>';
+    html += "</tr>";
+    $(table).find("tbody").append(html);
+}
+
+/**
+ * add attribute button click event
+ * description: add selected attribute on table, reset attribute select combo & disable this button again
+ */
+$("a.btn_add_template_attribute").click(function(e) {
+    var o = $(this).closest("p").find("select.template_attribute_list option:selected");
+    appendAttribute($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"), $(o).data("name"), true, null);
+    $("select.template_attribute_list").val("");
+    $(this).addClass("is-disabled");
+});
 
 /**
  * launch search on start

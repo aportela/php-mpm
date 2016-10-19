@@ -70,7 +70,7 @@
 
 <div class="modal" id="modal_add">
   <div class="modal-background"></div>
-  <div class="modal-card">
+  <div class="modal-card modal-card_xl">
     <form id="frm_add_template" method="post" action="/api/template/add.php">
       <header class="modal-card-head">
         <p class="modal-card-title">Add template</p>
@@ -81,8 +81,8 @@
           <ul>
             <li class="is-active"><a data-target="add_template_tab_metadata" href="#">Metadata</a></li>
             <li><a data-target="add_template_tab_permissions" href="#">Permissions</a></li>
-            <!--
             <li><a data-target="add_template_tab_attributes" href="#">Attributes</a></li>
+            <!--
             <li><a data-target="add_template_tab_form" href="#">Form</a></li>
             -->
           </ul>
@@ -136,7 +136,7 @@
                 <th>Operation</th>
                 <th>Attribute</th>
                 <th>Name</th>
-                <th>Required</th>
+                <th>Label</th>
                 <th>Default value</th>
               </tr>
             </thead>
@@ -190,7 +190,7 @@
 
 <div class="modal" id="modal_update">
   <div class="modal-background"></div>
-  <div class="modal-card">
+  <div class="modal-card modal-card_xl">
     <form id="frm_update_template" method="post" action="/api/template/update.php">
       <input type="hidden" name="id" id="update_template_id" value="" />
       <header class="modal-card-head">
@@ -202,8 +202,8 @@
           <ul>
             <li class="is-active"><a data-target="update_template_tab_metadata" href="#">Metadata</a></li>
             <li><a data-target="update_template_tab_permissions" href="#">Permissions</a></li>
-            <!--
             <li><a data-target="update_template_tab_attributes" href="#">Attributes</a></li>
+            <!--
             <li><a data-target="update_template_tab_form" href="#">Form</a></li>
             -->
           </ul>
@@ -263,7 +263,7 @@
               <tr>
                 <th>Operation</th>
                 <th>Attribute</th>
-                <th>Name</th>
+                <th>Label</th>
                 <th>Required</th>
                 <th>Default value</th>
               </tr>
