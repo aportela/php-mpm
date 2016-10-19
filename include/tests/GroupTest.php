@@ -372,7 +372,7 @@
             $g = new \PHP_MPM\Group();
             $g->id = GroupTest::EXISTENT_GROUP_ID;
             $g->get();                        
-            $this->assertEquals($g->name, "Public");                                    
+            $this->assertEquals($g->name, GroupTest::EXISTENT_GROUP_NAME);                                    
         }        
     }
 ?>
