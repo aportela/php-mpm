@@ -95,7 +95,9 @@
                         " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-444444444444\", \"Amount\", \"Decimal values\", 4, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
                         " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-555555555555\", \"Start date\", \"Date values\", 5, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
                         " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-666666666666\", \"Hour\", \"Time values\", 6, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
-                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-777777777777\", \"Registered on\", \"Date & Time\", 7, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); "                        
+                        " INSERT INTO ATTRIBUTE (id, name, description, type, created, creator) VALUES(\"1111111-1111-1111-0000-777777777777\", \"Registered on\", \"Date & Time\", 7, CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\" ); ",
+                        " INSERT INTO [TEMPLATE] (id, name, description, created, creator) VALUES (\"2222222-1111-2222-1111-222222222222\", \"Bills\", \"Public (default) common template for storing bills\", CURRENT_TIMESTAMP, \"00000000-0000-0000-0000-000000000000\"); ",
+                        " INSERT INTO [TEMPLATE_PERMISSION] (template_id, group_id, allow_create, allow_view, allow_update, allow_delete) VALUES (\"2222222-1111-2222-1111-222222222222\", \"1111111-1111-1111-1111-111111111111\", '1', '1', '1', '1'); ",                        
                     );
                     $exception = null;                
                     try {
