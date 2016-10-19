@@ -231,6 +231,9 @@
                 } else {
                     $data->setPager(0, 1, 0);
                     if (! empty($searchByText)) {
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":text", "%" . $searchByText . "%");
+                        $params[] = $param;                        
                         $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id WHERE (G.name LIKE :text OR G.description LIKE :text) ORDER BY G.name COLLATE NOCASE ASC ";
                     } else {
                         $sql = " SELECT G.id, G.name, G.description, U.id AS creatorId, U.name AS creatorName, datetime(G.created, 'localtime') AS creationDate, GU.totalUsers FROM [GROUP] G LEFT JOIN [USER] U ON U.id = G.creator LEFT JOIN (SELECT COUNT(user_id) AS totalUsers, group_id FROM GROUP_USER GROUP BY group_id) GU ON GU.group_id = G.id ORDER BY G.name COLLATE NOCASE ASC ";

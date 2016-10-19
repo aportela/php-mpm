@@ -241,6 +241,9 @@
                 } else {
                     $data->setPager(0, 1, 0);
                     if (! empty($searchByText)) {
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":text", "%" . $searchByText . "%");
+                        $params[] = $param;                        
                         $sql = " SELECT T.id, T.name, T.description, U.id AS creatorId, U.name AS creatorName, datetime(T.created, 'localtime') AS creationDate FROM [TEMPLATE] T LEFT JOIN [USER] U ON U.id = T.creator WHERE (T.name LIKE :text OR T.description LIKE :text) ORDER BY T.name COLLATE NOCASE ASC ";
                     } else {
                         $sql = " SELECT T.id, T.name, T.description, U.id AS creatorId, U.name AS creatorName, datetime(T.created, 'localtime') AS creationDate FROM [TEMPLATE] T LEFT JOIN [USER] U ON U.id = T.creator ORDER BY T.name COLLATE NOCASE ASC ";
