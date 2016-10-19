@@ -47,6 +47,7 @@
                     <option value="">select format</option>
                     <option value="json">json</option>
                     <option value="xml">xml</option>
+                    <option value="csv">csv</option>
                   </select>
                 </span>
                 <a id="btn_export_table_data" class="button is-primary is-disabled"><span class="icon"><i class="fa fa-table" aria-hidden="true"></i></span><span>Export data</span></a>

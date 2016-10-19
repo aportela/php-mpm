@@ -47,6 +47,7 @@
                   <option value="">select format</option>
                   <option value="json">json</option>
                   <option value="xml">xml</option>
+                  <option value="csv">csv</option>
                 </select>
               </span>
               <a id="btn_export_table_data" class="button is-primary is-disabled"><span class="icon"><i class="fa fa-table" aria-hidden="true"></i></span><span>Export data</span></a>
@@ -80,6 +81,10 @@
           <ul>
             <li class="is-active"><a data-target="add_template_tab_metadata" href="#">Metadata</a></li>
             <li><a data-target="add_template_tab_permissions" href="#">Permissions</a></li>
+            <!--
+            <li><a data-target="add_template_tab_attributes" href="#">Attributes</a></li>
+            <li><a data-target="add_template_tab_form" href="#">Form</a></li>
+            -->
           </ul>
         </div>
         <div class="tab-content" id="add_template_tab_metadata">            
@@ -116,6 +121,57 @@
             </tbody>
           </table>                  
         </div>        
+        <div class="tab-content is-hidden" id="add_template_tab_attributes">
+          <p class="control has-addons">
+            <span class="select full_width">
+              <select class="template_attribute_list full_width">
+                <option value="">select attribute</option>
+              </select>
+            </span>
+            <a class="button is-primary is-disabled btn_add_template_attribute">Add</a>
+          </p>
+           <table id="add_template_attributes" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Attribute</th>
+                <th>Name</th>
+                <th>Required</th>
+                <th>Default value</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>                  
+        </div>
+        <div class="tab-content is-hidden" id="add_template_tab_form">
+          <div class="columns">
+            <div class="column is-half">
+            <p class="control">Customize HTML 
+              <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Refresh</span></a>
+              </p>
+              <textarea class="form_html" rows="16">
+&#x3C;form&#x3E;
+  &#x3C;label class=&#x22;label&#x22;&#x3E;Name&#x3C;/label&#x3E;
+  &#x3C;p class=&#x22;control&#x22;&#x3E;
+    &#x3C;input class=&#x22;input&#x22; type=&#x22;text&#x22; placeholder=&#x22;Text input&#x22;&#x3E;
+  &#x3C;/p&#x3E;    
+  &#x3C;label class=&#x22;label&#x22;&#x3E;Subject&#x3C;/label&#x3E;
+  &#x3C;p class=&#x22;control&#x22;&#x3E;
+    &#x3C;span class=&#x22;select&#x22;&#x3E;
+      &#x3C;select&#x3E;
+        &#x3C;option&#x3E;Select dropdown&#x3C;/option&#x3E;
+        &#x3C;option&#x3E;With options&#x3C;/option&#x3E;
+      &#x3C;/select&#x3E;
+    &#x3C;/span&#x3E;
+  &#x3C;/p&#x3E;                          
+&#x3C;/form&#x3E;
+              </textarea>
+            </div>
+            <div class="column is-half form_preview">
+            </div>
+          </div>
+        </div>        
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
             Error
@@ -146,6 +202,10 @@
           <ul>
             <li class="is-active"><a data-target="update_template_tab_metadata" href="#">Metadata</a></li>
             <li><a data-target="update_template_tab_permissions" href="#">Permissions</a></li>
+            <!--
+            <li><a data-target="update_template_tab_attributes" href="#">Attributes</a></li>
+            <li><a data-target="update_template_tab_form" href="#">Form</a></li>
+            -->
           </ul>
         </div>      
         <div class="tab-content" id="update_template_tab_metadata">
@@ -189,6 +249,31 @@
             </tbody>
           </table>                  
         </div>                          
+        <div class="tab-content is-hidden" id="update_template_tab_attributes">
+          <p class="control has-addons">
+            <span class="select full_width">
+              <select class="template_attribute_list full_width">
+                <option value="">select attribute</option>
+              </select>
+            </span>
+            <a class="button is-primary is-disabled btn_add_template_attribute">Add</a>
+          </p>
+           <table id="update_template_tab_attributes" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Attribute</th>
+                <th>Name</th>
+                <th>Required</th>
+                <th>Default value</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>                  
+        </div>        
+        <div class="tab-content is-hidden" id="update_template_tab_form">
+        </div>        
       </section>
       <footer class="modal-card-foot">
         <button type="submit" class="button is-primary">Update</button>
