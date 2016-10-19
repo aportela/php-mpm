@@ -27,13 +27,16 @@
         if (isset($_POST["group_permissions"]) && is_array($_POST["group_permissions"])) {
             $t = count($_POST["group_permissions"]);
             for ($i = 0; $i < $t; $i++) {
-                $permission = new \stdClass;
-                $permission->group = new Group(); 
-                $permission->group->id = $_POST["group_permissions"][$i];
-                $permission->allowCreate = $_POST["create_flag_permissions"][$i] == "1";
-                $permission->allowView = $_POST["view_flag_permissions"][$i] == "1";
-                $permission->allowUpdate = $_POST["update_flag_permissions"][$i] == "1";
-                $permission->allowDelete = $_POST["delete_flag_permissions"][$i] == "1";
+                $permission = new \PHP_MPM\Permission();
+                $g = new Group(); 
+                $g->id = $_POST["group_permissions"][$i];
+                $permission->set(
+                    $g, 
+                    $_POST["create_flag_permissions"][$i] == "1",
+                    $_POST["view_flag_permissions"][$i] == "1",
+                    $_POST["update_flag_permissions"][$i] == "1",
+                    $_POST["delete_flag_permissions"][$i] == "1"
+                );
                 $permissions[] = $permission;
             }
         }
