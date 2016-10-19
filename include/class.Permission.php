@@ -14,7 +14,13 @@
         public $allowUpdate;
         public $allowDelete;
 
-		public function __construct () { }
+		public function __construct () {
+            $this->group = new \PHP_MPM\Group(); 
+            $this->allowCreate = false;
+            $this->allowView = false;
+            $this->allowUpdate = false;
+            $this->allowDelete = false;
+        }
 
         public function __destruct() { }
 
