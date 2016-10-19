@@ -102,18 +102,18 @@
                         $param->int(":results_page", $resultsPage);
                         $params[] = $param;
                         if (! empty($searchByText)) {
-                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name LIMIT :start, :results_page ";
+                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         } else {
-                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name LIMIT :start, :results_page ";
+                            $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         }                    
                         $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                     }
                 } else {
                     $data->setPager(0, 1, 0);
                     if (! empty($searchByText)) {
-                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name ";
+                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator WHERE (A.name LIKE :text OR A.description LIKE :text) ORDER BY A.name COLLATE NOCASE ASC ";
                     } else {
-                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name ";
+                        $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name COLLATE NOCASE ASC ";
                     }
                     $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                 }                                

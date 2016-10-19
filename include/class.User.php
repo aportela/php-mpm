@@ -316,9 +316,9 @@
                         $param->int(":results_page", $resultsPage);
                         $params[] = $param;
                         if (! empty($searchByText)) {
-                            $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL AND (U.name LIKE :text OR U.email LIKE :text) ORDER BY U.name ASC, U.email ASC LIMIT :start, :results_page ";
+                            $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL AND (U.name LIKE :text OR U.email LIKE :text) ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         } else {
-                            $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name ASC, U.email ASC LIMIT :start, :results_page ";
+                            $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         }
                         $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                     }
@@ -328,9 +328,9 @@
                         $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":text", "%" . $searchByText . "%");
                         $params[] = $param;                                                
-                        $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL AND (U.name LIKE :text OR U.email LIKE :text) ORDER BY U.name ASC, U.email ASC ";
+                        $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL AND (U.name LIKE :text OR U.email LIKE :text) ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC ";
                     } else {
-                        $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name ASC, U.email ASC ";
+                        $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC ";
                     }
                     $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
                 }                                
