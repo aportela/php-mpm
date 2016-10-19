@@ -23,11 +23,15 @@ function fillTable(actualPage, totalPages, templates) {
  */
 $("form#frm_add_template").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_group_id").remove();
-    var groupIds = getGroups($("table#add_template_permissions"));
-    if (groupIds != null && groupIds.length > 0) {
-        for (var i = 0; i < groupIds.length; i++) {
-            $(this).append('<input class="tmp_group_id" type="hidden" name="permissions[' + i + ']" value="' + groupIds[i] + '" />')
+    $(this).find("input.tmp_permission").remove();
+    var permissions = getPermissions($("table#add_template_permissions"));
+    if (permissions != null && permissions.length > 0) {
+        for (var i = 0; i < permissions.length; i++) {
+            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />')
         }
     }
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -56,11 +60,15 @@ $("form#frm_add_template").submit(function(e) {
  */
 $("form#frm_update_template").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_group_id").remove();
-    var groupIds = getGroups($("table#update_template_permissions"));
-    if (groupIds != null && groupIds.length > 0) {
-        for (var i = 0; i < groupIds.length; i++) {
-            $(this).append('<input class="tmp_group_id" type="hidden" name="permissions[' + i + ']" value="' + groupIds[i] + '" />')
+    $(this).find("input.tmp_permission").remove();
+    var permissions = getPermissions($("table#update_template_permissions"));
+    if (permissions != null && permissions.length > 0) {
+        for (var i = 0; i < permissions.length; i++) {
+            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />')
         }
     }
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -137,7 +145,14 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
             $("input#update_template_description").val(data.description);
             if (data.permissions && data.permissions.length > 0) {
                 for (var i = 0; i < data.permissions.length; i++) {
-                    appendPermission("table#update_template_permissions", data.permissions[i].group.id, data.permissions[i].group.name);
+                    appendPermission("table#update_template_permissions",
+                        data.permissions[i].group.id,
+                        data.permissions[i].group.name,
+                        data.permissions[i].allowCreate,
+                        data.permissions[i].allowView,
+                        data.permissions[i].allowUpdate,
+                        data.permissions[i].allowDelete
+                    );
                 }
             }
         }
@@ -255,26 +270,32 @@ $("select.template_group_list").change(function(e) {
 /**
  * get groups contained in specified table
  */
-function getGroups(table) {
-    var groupIds = [];
+function getPermissions(table) {
+    var permissions = [];
     $(table).find("tbody tr").each(function(i) {
-        groupIds.push(String($(this).data("id")));
+        permissions.push({
+            groupId: String($(this).data("id")),
+            allowCreate: $(this).find("input.allow_add").prop("checked"),
+            allowView: $(this).find("input.allow_view").prop("checked"),
+            allowUpdate: $(this).find("input.allow_update").prop("checked"),
+            allowDelete: $(this).find("input.allow_delete").prop("checked")
+        });
     });
-    return (groupIds);
+    return (permissions);
 }
 
 /**
  * add new permission to template permission list table
  */
-function appendPermission(table, id, name) {
+function appendPermission(table, id, name, allowCreate, allowView, allowUpdate, allowDelete) {
     var html = "";
     html += '<tr data-id="' + id + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + name + "</td>";
-    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
-    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
-    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
-    html += '<td class="has-text-centered"><input type="checkbox" checked/></td>';
+    html += '<td class="has-text-centered"><input class="allow_add" type="checkbox" ' + (allowCreate ? "checked" : "") + '/></td>';
+    html += '<td class="has-text-centered"><input class="allow_view" type="checkbox" ' + (allowView ? "checked" : "") + '/></td>';
+    html += '<td class="has-text-centered"><input class="allow_update" type="checkbox" ' + (allowUpdate ? "checked" : "") + '/></td>';
+    html += '<td class="has-text-centered"><input class="allow_delete" type="checkbox" ' + (allowDelete ? "checked" : "") + '/></td>';
     html += "</tr>";
     $(table).find("tbody").append(html);
 }
@@ -285,7 +306,7 @@ function appendPermission(table, id, name) {
  */
 $("a.btn_add_template_permission").click(function(e) {
     var o = $(this).closest("p").find("select.template_group_list option:selected");
-    appendPermission($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"));
+    appendPermission($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"), true, true, true, true);
     $("select.template_group_list").val("");
     $(this).addClass("is-disabled");
 });
