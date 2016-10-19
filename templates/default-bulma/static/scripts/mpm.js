@@ -199,6 +199,41 @@ mpm.data.tableExport = function(table, format) {
         });
         data += '</' + collectionName + '></xml>';
         saveAs(new Blob([data], { type: "text/xml; charset=utf-8" }), tableName + ".xml");
+    } else if (format === "csv") {
+        // get real cell value (removing icons)
+        var escapeValue = function(value) {
+            // borrowed some ideas from
+            // (Xavier John) http://stackoverflow.com/a/24922761
+            value = value.replace(/"/g, '""');
+            if (value.search(/("|,|\n)/g) >= 0) {
+                value = '"' + value + '"';
+            }
+            return (value);
+        };
+        var data = "";
+        var fields = [];
+        $(table).find("thead tr:last th").each(function(i) {
+            if (!$(this).hasClass("ignore_on_export")) {
+                fields.push(escapeValue(getCellText($(this))));
+            }
+        });
+        data += fields.join(", ") + "\n";
+        $(table).find("tbody tr").each(function(i) {
+            var rowValues = [];
+            var row = "";
+            if ($(this).data("id)")) {
+                rowValues.push(escapeValue($(this).data("id)")));
+            }
+            var fieldIdx = 0;
+            $(this).find("td").each(function(j) {
+                if (!$(this).hasClass("ignore_on_export")) {
+                    var v = ($(this).data("date") ? $(this).data("date") : getCellText($(this)));
+                    rowValues.push(escapeValue(v));
+                }
+            });
+            data += rowValues.join(",") + "\n";
+        });
+        saveAs(new Blob([data], { type: "text/csv; charset=utf-8" }), tableName + ".csv");
     } else {
         mpm.error.showModal();
     }
