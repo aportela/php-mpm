@@ -97,7 +97,7 @@
                 \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
                 if ($this->permissions && count($this->permissions) > 0) {
                     foreach($this->permissions as $permission) {
-                        $this->addPermission($permission->group->id);
+                        $this->addPermission($permission->group->id, $permission->allowCreate, $permission->allowView, $permission->allowUpdate, $permission->allowDelete);
                     }
                 }
             }
@@ -137,7 +137,7 @@
                 // TODO: better check user diffs ¿?
                 $this->removeAllPermissions();
                 foreach($this->permissions as $permission) {
-                    $this->addPermission($permission->group->id);
+                    $this->addPermission($permission->group->id, $permission->allowCreate, $permission->allowView, $permission->allowUpdate, $permission->allowDelete);
                 }
             }
         }
@@ -145,7 +145,7 @@
         /**
         *   add group to template
         */
-        private function addPermission($groupId) {
+        private function addPermission($groupId, $allowCreate = true, $allowView = true, $allowUpdate = true, $allowDelete = true) {
             if (empty($groupId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
@@ -161,7 +161,19 @@
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":group_id", $groupId);
                     $params[] = $param;                                
-                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE_PERMISSION] (template_id, group_id, allow_create, allow_view, allow_update, allow_delete) VALUES (:template_id, :group_id, 0, 0, 0, 0) ", $params);
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->bool(":allow_create", $allowCreate);
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->bool(":allow_view", $allowView);
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->bool(":allow_update", $allowUpdate);
+                    $params[] = $param;
+                    $param = new \PHP_MPM\DatabaseParam();
+                    $param->bool(":allow_delete", $allowDelete);
+                    $params[] = $param;
+                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE_PERMISSION] (template_id, group_id, allow_create, allow_view, allow_update, allow_delete) VALUES (:template_id, :group_id, :allow_create, :allow_view, :allow_update, :allow_delete) ", $params);
                 }
             }            
         }
@@ -264,11 +276,19 @@
         private function getPermissions() {
             $param = new \PHP_MPM\DatabaseParam();
             $param->str(":template_id", $this->id);
-            $groups = \PHP_MPM\Database::execWithResult(" SELECT TP.group_id AS id, G.name, G.description FROM [TEMPLATE_PERMISSION] TP LEFT JOIN [GROUP] G ON G.id = TP.group_id WHERE TP.template_id = :template_id ", array($param));
+            $results = \PHP_MPM\Database::execWithResult(" SELECT TP.group_id AS id, G.name, G.description, TP.allow_create AS allowCreate, TP.allow_update AS allowUpdate, TP.allow_view AS allowView, TP.allow_delete AS allowDelete FROM [TEMPLATE_PERMISSION] TP LEFT JOIN [GROUP] G ON G.id = TP.group_id WHERE TP.template_id = :template_id ", array($param));
             $this->permissions = array();
-            foreach($groups as $group) {
+            foreach($results as $result) {
+
                 $permission = new \stdClass;
-                $permission->group = $group;
+                $permission->group = new \stdClass;
+                $permission->group->id = $result->id;
+                $permission->group->name = $result->name;
+                $permission->group->description = $result->description;
+                $permission->allowCreate = $result->allowCreate == 1;
+                $permission->allowView = $result->allowView == 1;
+                $permission->allowUpdate = $result->allowUpdate == 1;
+                $permission->allowDelete = $result->allowDelete == 1;
                 $this->permissions[] = $permission; 
             }                 
         }
