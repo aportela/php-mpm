@@ -258,7 +258,7 @@
             </span>
             <a class="button is-primary is-disabled btn_add_template_attribute">Add</a>
           </p>
-           <table id="update_template_tab_attributes" class="table is-bordered is-narrow">
+           <table id="update_template_attributes" class="table is-bordered is-narrow">
             <thead>
               <tr>
                 <th>Operation</th>
