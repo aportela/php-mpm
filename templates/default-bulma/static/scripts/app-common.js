@@ -123,7 +123,12 @@ $("body").on("click", ".btn_delete_row", function(e) {
  */
 $("form#frm_admin_search").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        page: $(this).find('input[name="page"]').val(),
+        resultsPage: $(this).find('select[name="resultsPage"]').val(),
+        text: $(this).find('input[name="text"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {

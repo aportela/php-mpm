@@ -4,6 +4,7 @@
     *   description: search (list) templates
     *
     *   request method: POST
+    *   format: json
     *
     *   @param int page 
     *   @param int resultsPage
@@ -22,10 +23,11 @@
 
     $result = array("success" => false, "data" => null);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $result["data"] = \PHP_MPM\Template::search(
-            isset($_POST["page"]) ? $_POST["page"]: 1,
-            isset($_POST["resultsPage"]) ? $_POST["resultsPage"]: 16,
-            isset($_POST["text"]) ? $_POST["text"]: ""
+            isset($params["page"]) ? $params["page"]: 1,
+            isset($params["resultsPage"]) ? $params["resultsPage"]: 16,
+            isset($params["text"]) ? $params["text"]: ""
         );
         $result["success"] = true;
         ob_clean();
