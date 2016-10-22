@@ -82,7 +82,8 @@
             isset($params["name"]) ? $params["name"]: "", 
             isset($params["description"]) ? $params["description"]: "",
             $permissions,
-            $attributes
+            $attributes,
+            isset($params["htmlForm"]) ? $params["htmlForm"]: ""
         );
         $t->add();
         $result["success"] = true;

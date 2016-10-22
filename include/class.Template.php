@@ -13,17 +13,19 @@
         public $description;
         public $permissions;
         public $attributes;
+        public $htmlForm;
 
 		public function __construct () { }
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $name = "", string $description = "", $permissions = array(), $attributes = array()) {
+        public function set(string $id = "", string $name = "", string $description = "", $permissions = array(), $attributes = array(), $htmlForm = "") {
             $this->id = $id;
             $this->name = $name;
             $this->description = $description;
             $this->permissions = $permissions;
             $this->attributes = $attributes;
+            $this->htmlForm = $htmlForm;
         }
 
         /**
@@ -95,8 +97,11 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":creator", \PHP_MPM\User::getSessionUserId());
                 $params[] = $param;
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":html_form", $this->htmlForm);
+                $params[] = $param;
                 // TODO: transaction support
-                \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE] (id, name, description, created, creator) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator) ", $params);
+                \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE] (id, name, description, created, creator, html_form) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator, :html_form) ", $params);
                 foreach($this->permissions as $permission) {
                     $permission->add($this->id);
                 }
@@ -140,8 +145,11 @@
                     $param->null(":description");
                 }
                 $params[] = $param;
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":html_form", $this->htmlForm);
+                $params[] = $param;                
                 // TODO: transaction support
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [TEMPLATE] SET name = :name, description = :description WHERE id = :id ", $params);
+                \PHP_MPM\Database::execWithoutResult(" UPDATE [TEMPLATE] SET name = :name, description = :description, html_form = :html_form WHERE id = :id ", $params);
                 // TODO: better check user diffs ¿?
                 \PHP_MPM\TemplatePermission::deleteAll($this->id);
                 foreach($this->permissions as $permission) {
@@ -242,12 +250,13 @@
             } else {
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description FROM [TEMPLATE] WHERE id = :id ", array($param));
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description, html_form AS htmlForm FROM [TEMPLATE] WHERE id = :id ", array($param));
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
                     $this->name = $rows[0]->name;
                     $this->description = $rows[0]->description;
+                    $this->htmlForm = $rows[0]->htmlForm;
                     $this->attributes = \PHP_MPM\TemplateAttribute::getTemplateAttributes($this->id);
                     $this->permissions = \PHP_MPM\TemplatePermission::getPermissions($this->id);
                     return(get_object_vars($this));
