@@ -169,8 +169,8 @@
                 $p->group = $g;                
                 $t->set(
                     $uuid,
-                    sprintf("Group name: %s", $uuid),
-                    sprintf("Group description: %s", $uuid),
+                    sprintf("Template name: %s", $uuid),
+                    sprintf("Template description: %s", $uuid),
                     array(
                         $p
                     )
@@ -336,8 +336,8 @@
                 $p->group = $g;                                
                 $t->set(
                     $uuid,
-                    sprintf("Group name: %s", $uuid),
-                    sprintf("Group description: %s", $uuid),
+                    sprintf("Template name: %s", $uuid),
+                    sprintf("Template description: %s", $uuid),
                     array(
                         $p
                     )
