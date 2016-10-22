@@ -146,10 +146,10 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
                     appendPermission("table#update_template_permissions",
                         data.permissions[i].group.id,
                         data.permissions[i].group.name,
-                        data.permissions[i].allowCreate,
-                        data.permissions[i].allowView,
-                        data.permissions[i].allowUpdate,
-                        data.permissions[i].allowDelete
+                        data.permissions[i].flags.allowCreate,
+                        data.permissions[i].flags.allowView,
+                        data.permissions[i].flags.allowUpdate,
+                        data.permissions[i].flags.allowDelete
                     );
                 }
             }
