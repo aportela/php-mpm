@@ -12,16 +12,18 @@
         public $name;
         public $description;
         public $permissions;
+        public $attributes;
 
 		public function __construct () { }
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $name = "", string $description = "", $permissions = array()) {
+        public function set(string $id = "", string $name = "", string $description = "", $permissions = array(), $attributes = array()) {
             $this->id = $id;
             $this->name = $name;
             $this->description = $description;
             $this->permissions = $permissions;
+            $this->attributes = $attributes;
         }
 
         /**
