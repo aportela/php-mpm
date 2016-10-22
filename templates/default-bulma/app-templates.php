@@ -135,8 +135,8 @@
               <tr>
                 <th>Operation</th>
                 <th>Attribute</th>
-                <th>Name</th>
                 <th>Label</th>
+                <th>Required</th>
                 <th>Default value</th>
               </tr>
             </thead>
