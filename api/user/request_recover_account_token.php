@@ -4,6 +4,7 @@
     *   description: request a recover account token
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string email 
     */
@@ -20,14 +21,9 @@
 
     $result = array("success" => false, "token" => null);
     try {
-        $u = new \PHP_MPM\User();         
-        $u->set(
-            "",
-            isset($_POST["email"]) ? $_POST["email"]: "", 
-            "",
-            "",
-            0
-        );
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
+        $u = new \PHP_MPM\User();
+        $u->email = isset($params["email"]) ? $params["email"]: "";
         // TODO: WARNING => TEMPORAL while email notification not done!!! 
         $result["token"] = $u->generateRecoverAccountToken();
         $result["success"] = true;

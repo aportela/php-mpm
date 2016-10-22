@@ -1,6 +1,9 @@
-$("form#frm_recover_account").submit(function (e) {
+$("form#frm_recover_account").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    var json = {
+        email: $(this).find('input[name="email"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 404:
                 mpm.form.putValidationWarning("c_recover_account_email", RECOVER_ACCOUNT_EMAIL_NOT_FOUND_ON_SERVER);
