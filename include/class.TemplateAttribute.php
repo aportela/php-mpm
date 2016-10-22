@@ -119,6 +119,7 @@
                     $a->description = $result->attributeDescription;
                     $a->type = $result->attributeType;
                     $templateAttribute->set($result->id, $a, $result->label, $result->required, "");
+                    $attributes[] = $templateAttribute;
                 }                 
                 return($attributes);
             }
@@ -128,7 +129,7 @@
         *   remove all template attribute definitions
         */
         public static function deleteAllTemplateAttributes($templateId) {
-            if (empty($this->id)) {
+            if (empty($templateId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $params = array();
