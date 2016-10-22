@@ -115,7 +115,8 @@ $("form#frm_delete_template").submit(function(e) {
 $('table thead').on("click", ".btn_add_template", function(e) {
     mpm.form.reset($("form#frm_add_template"));
     selectFirstTab($("form#frm_add_template"));
-    clearPermissionsTable($("table#add_template_permissions"));
+    clearTable($("table#add_template_permissions"));
+    clearTable($("table#add_template_attributes"));
     $("select.template_group_list").val("");
     fillGroupsLists();
     fillAttributesLists();
@@ -128,7 +129,8 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
     mpm.form.reset($("form#frm_delete_template"));
     selectFirstTab($("form#frm_update_template"));
     $("select.template_group_list").val("");
-    clearPermissionsTable($("table#update_template_permissions"));
+    clearTable($("table#update_template_permissions"));
+    clearTable($("table#update_template_attributes"));
     fillGroupsLists();
     fillAttributesLists();
     var id = $(this).closest("tr").data("id");
@@ -148,6 +150,19 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
                         data.permissions[i].allowView,
                         data.permissions[i].allowUpdate,
                         data.permissions[i].allowDelete
+                    );
+                }
+            }
+            if (data.attributes && data.attributes.length > 0) {
+                for (var i = 0; i < data.attributes.length; i++) {
+                    // table, id, attributeId, attributeName, label, required, defaultValue
+                    appendAttribute("table#update_template_attributes",
+                        data.attributes[i].id,
+                        data.attributes[i].attribute.id,
+                        data.attributes[i].attribute.name,
+                        data.attributes[i].label,
+                        data.attributes[i].required,
+                        ""
                     );
                 }
             }
@@ -178,7 +193,7 @@ function selectFirstTab(form) {
 /**
  * clear previous permissions table
  */
-function clearPermissionsTable(table) {
+function clearTable(table) {
     $(table).find("tbody").html("");
 }
 
@@ -375,11 +390,11 @@ function getAttributes(table) {
 /**
  * add new attribute to template permission list table
  */
-function appendAttribute(table, id, attributeId, name, label, required, defaultValue) {
+function appendAttribute(table, id, attributeId, attributeName, label, required, defaultValue) {
     var html = "";
     html += '<tr data-id="' + (id ? id : "") + '" data-attribute_id="' + attributeId + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
-    html += "<td>" + name + "</td>";
+    html += "<td>" + attributeName + "</td>";
     html += '<td><input class="input attribute_label" type="text" value="' + label + '"></td>';
     html += '<td class="has-text-centered"><input class="required" type="checkbox" ' + (required ? "checked" : "") + '/></td>';
     html += '<td></td>';
