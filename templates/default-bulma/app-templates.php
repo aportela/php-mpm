@@ -147,8 +147,9 @@
             <div class="column is-4">
             <p class="control">Customize HTML 
               <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
+              <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
               </p>
-              <textarea class="form_html" rows="16"></textarea>
+              <textarea name="htmlForm" id="add_template_form" class="form_html" rows="16"></textarea>
             </div>
             <div class="column form_preview">
             </div>

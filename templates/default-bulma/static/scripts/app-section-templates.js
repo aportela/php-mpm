@@ -28,7 +28,8 @@ $("form#frm_add_template").submit(function(e) {
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         permissions: getPermissions($("table#add_template_permissions")),
-        attributes: getAttributes($("table#add_template_attributes"))
+        attributes: getAttributes($("table#add_template_attributes")),
+        htmlForm: $("textarea#add_template_form").val()
     };
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
@@ -441,6 +442,14 @@ $("a.refresh_form").click(function(e) {
     e.preventDefault();
     updateFormHTML();
     updateFormPreview();
+});
+
+$("a.preview_form").click(function(e) {
+    e.preventDefault();
+    var html = $("html").clone();
+    $(html).find("body").html('<div class="container"><div class="card">' + $("textarea.form_html").val() + '</div></div>');
+    var base64 = btoa('<html>' + $(html).html() + '</html>');
+    window.open("data:text/html;base64," + base64);
 });
 
 $("textarea.form_html").keyup(function(e) {
