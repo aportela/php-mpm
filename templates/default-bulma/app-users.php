@@ -91,6 +91,15 @@
             <input class="input" type="password" name="password" id="add_user_password" placeholder="Password" value="">
             <i class="fa fa-lock"></i>
         </p>    
+        <p class="control has-addons" id="ca_type">
+          <a class="button is-disabled">User type</a>          
+          <span class="select full_width">
+            <select name="type" id="add_user_type">
+              <option value="0" selected>normal</option>
+              <option value="1">administrator</option>
+            </select>
+          </span>
+        </p>    
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
             Error
@@ -126,9 +135,18 @@
             <i class="fa fa-user"></i>
         </p>
         <p class="control has-icon" id="cu_password">
-            <input class="input" type="password" name="password" placeholder="Password" value="">
+            <input class="input" type="password" name="password" id="update_user_type" placeholder="Password" value="">
             <i class="fa fa-lock"></i>
-        </p>    
+        </p>
+        <p class="control has-addons" id="ca_type">
+          <a class="button is-disabled">User type</a>          
+          <span class="select full_width">
+            <select name="type" id="update_user_type">
+              <option value="0" selected>normal</option>
+              <option value="1">administrator</option>
+            </select>
+          </span>
+        </p>                
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
             Error

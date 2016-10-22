@@ -32,7 +32,7 @@ $("form#frm_add_user").submit(function(e) {
         email: $(this).find('input[name="email"]').val(),
         password: $(this).find('input[name="password"]').val(),
         name: $(this).find('input[name="name"]').val(),
-        type: 0,
+        type: $(this).find('select[name="type"]').val()
     };
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
@@ -65,7 +65,7 @@ $("form#frm_update_user").submit(function(e) {
         email: $(this).find('input[name="email"]').val(),
         password: $(this).find('input[name="password"]').val(),
         name: $(this).find('input[name="name"]').val(),
-        type: 0,
+        type: $(this).find('select[name="type"]').val()
     };
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
@@ -127,6 +127,7 @@ $('table tbody').on("click", ".btn_update_user", function(e) {
     $("input#update_user_id").val($(tr).data("id"));
     $("input#update_user_email").val($(tr).find("td:nth-child(4)").text());
     $("input#update_user_name").val($(tr).find("td:nth-child(3)").text());
+    $("select#update_user_type").val(($(tr).find("td:nth-child(2)").text().trim() == "super" ? "1" : "0"));
 });
 
 /**
