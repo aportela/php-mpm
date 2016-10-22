@@ -4,10 +4,11 @@
     *   description: register new user
     *
     *   request method: POST
+    *   format: json
     *
-    *   @param string id 
     *   @param string email
     *   @param string password
+    *   @param string name
     */
     namespace PHP_MPM;
 
@@ -22,14 +23,11 @@
 
     $result = array("success" => false);
     try {
-        $u = new \PHP_MPM\User();         
-        $u->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["email"]) ? $_POST["email"]: "", 
-            isset($_POST["password"]) ? $_POST["password"]: "",
-            isset($_POST["name"]) ? $_POST["name"]: "",
-            \PHP_MPM\UserType::DEFAULT
-        );
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
+        $u = new \PHP_MPM\User();
+        $u->email = isset($params["email"]) ? $params["email"]: "";         
+        $u->password = isset($params["password"]) ? $params["password"]: "";                 
+        $u->name = isset($params["name"]) ? $params["name"]: "";
         $u->signup();
         $result["success"] = true;
         ob_clean();

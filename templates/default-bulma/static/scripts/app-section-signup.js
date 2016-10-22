@@ -1,6 +1,11 @@
-$("form#frm_signup").submit(function (e) {
+$("form#frm_signup").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    var json = {
+        email: $(this).find('input[name="email"]').val(),
+        password: $(this).find('input[name="password"]').val(),
+        name: $(this).find('input[name="name"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 400:
                 mpm.form.putValidationError("c_signup_submit", SIGN_UP_GENERAL_ERROR_MESSAGE);
