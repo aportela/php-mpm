@@ -31,7 +31,7 @@
                 $t = count($params["permissions"]);
                 for ($i = 0; $i < $t; $i++) {
                     if (isset($params["permissions"][$i]["group"]) && isset($params["permissions"][$i]["flags"])) {
-                        $permission = new \PHP_MPM\Permission();
+                        $permission = new \PHP_MPM\TemplatePermission();
                         $g = new \PHP_MPM\Group(); 
                         $g->id = isset($params["permissions"][$i]["group"]["id"]) ? $params["permissions"][$i]["group"]["id"]: "";
                         $permission->set(
