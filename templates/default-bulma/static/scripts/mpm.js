@@ -377,3 +377,27 @@ mpm.group.get = function(id, callback) {
         callback(httpStatusCode, response);
     });
 }
+
+mpm.group.search = function(page, resultsPage, text, callback) {
+    var json = {
+        page: page,
+        resultsPage: resultsPage,
+        text: text
+    };
+    mpm.xhrJSON("POST", "/api/group/search.php", json, function(httpStatusCode, response) {
+        callback(httpStatusCode, response);
+    });
+}
+
+mpm.attribute = mpm.attribute || {};
+
+mpm.attribute.search = function(page, resultsPage, text, callback) {
+    var json = {
+        page: page,
+        resultsPage: resultsPage,
+        text: text
+    };
+    mpm.xhrJSON("POST", "/api/attribute/search.php", json, function(httpStatusCode, response) {
+        callback(httpStatusCode, response);
+    });
+}
