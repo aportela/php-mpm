@@ -131,7 +131,7 @@
                 sprintf("Template name: %s", $uuid),
                 sprintf("Template description: %s", $uuid),
                 array(
-                    new \PHP_MPM\Permission()
+                    new \PHP_MPM\TemplatePermission()
                 )
             );
             $t->add();
@@ -144,7 +144,7 @@
             $uuid = \PHP_MPM\Utils::uuid();
             $g = new \PHP_MPM\Group();            
             $g->id = \PHP_MPM\Utils::uuid();
-            $p = new \PHP_MPM\Permission();
+            $p = new \PHP_MPM\TemplatePermission();
             $p->group = $g;
             $t->set(
                 $uuid,
@@ -165,7 +165,7 @@
                 $uuid = \PHP_MPM\Utils::uuid();
                 $g = new \PHP_MPM\Group();
                 $g->id = TemplateTest::EXISTENT_GROUP_ID;
-                $p = new \PHP_MPM\Permission();
+                $p = new \PHP_MPM\TemplatePermission();
                 $p->group = $g;                
                 $t->set(
                     $uuid,
@@ -250,7 +250,7 @@
                 TemplateTest::EXISTENT_TEMPLATE_NAME,
                 "optional template description",
                 array(
-                    new \PHP_MPM\Permission()
+                    new \PHP_MPM\TemplatePermission()
                 )
             );
             $t->update();                                
@@ -261,7 +261,7 @@
             $this->signInAsAdmin();
             $g = new \PHP_MPM\Group();
             $g->id = \PHP_MPM\Utils::uuid();
-            $p = new \PHP_MPM\Permission();
+            $p = new \PHP_MPM\TemplatePermission();
             $p->group = $g;                                        
             $t = new \PHP_MPM\Template();
             $t->set(
@@ -281,7 +281,7 @@
                 $this->signInAsAdmin();                        
                 $g = new \PHP_MPM\Group();
                 $g->id = TemplateTest::EXISTENT_GROUP_ID;
-                $p = new \PHP_MPM\Permission();
+                $p = new \PHP_MPM\TemplatePermission();
                 $p->group = $g;                                            
                 $t = new \PHP_MPM\Template();
                 $t->set(
@@ -332,7 +332,7 @@
                 $uuid = \PHP_MPM\Utils::uuid();
                 $g = new \PHP_MPM\Group();
                 $g->id = TemplateTest::EXISTENT_GROUP_ID;
-                $p = new \PHP_MPM\Permission();
+                $p = new \PHP_MPM\TemplatePermission();
                 $p->group = $g;                                
                 $t->set(
                     $uuid,
