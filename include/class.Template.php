@@ -89,7 +89,7 @@
                 if (! empty($this->description)) {
                     $param->str(":description", $this->description);
                 } else {
-                    $param->null(":description");
+                    $param->nulsl(":description");
                 }
                 $params[] = $param;
                 $param = new \PHP_MPM\DatabaseParam();
@@ -100,6 +100,14 @@
                 if ($this->permissions && count($this->permissions) > 0) {
                     foreach($this->permissions as $permission) {
                         $this->addPermission($permission->group->id, $permission->allowCreate, $permission->allowView, $permission->allowUpdate, $permission->allowDelete);
+                    }
+                }
+                if ($this->attributes && count($this->attributes) > 0) {
+                    foreach($this->attributes as $templateAttribute) {
+                        if (empty($templateAttribute->id)) {
+                            $templateAttribute->id = \PHP_MPM\Utils::uuid();
+                        }
+                        $templateAttribute->add($this->id);
                     }
                 }
             }
@@ -140,6 +148,13 @@
                 $this->removeAllPermissions();
                 foreach($this->permissions as $permission) {
                     $this->addPermission($permission->group->id, $permission->allowCreate, $permission->allowView, $permission->allowUpdate, $permission->allowDelete);
+                }
+                \PHP_MPM\TemplateAttribute::deleteAllTemplateAttributes($this->id);
+                foreach($this->attributes as $templateAttribute) {
+                    if (empty($templateAttribute->id)) {
+                        $templateAttribute->id = \PHP_MPM\Utils::uuid();
+                    }
+                    $templateAttribute->add($this->id);
                 }
             }
         }
@@ -300,7 +315,7 @@
         }
 
         /**
-        *   get template (metadata & groups)
+        *   get template (metadata / permissions / attributes)
         */
         public function get() {
             if (! \PHP_MPM\User::isAuthenticated()) {
