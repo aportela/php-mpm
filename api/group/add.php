@@ -4,8 +4,8 @@
     *   description: add new group
     *
     *   request method: POST
+    *   format: json
     *
-    *   @param string id 
     *   @param string name
     *   @param string description
     *   @param array users
@@ -24,19 +24,24 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $users = array();
-        if (isset($_POST["users"]) && is_array($_POST["users"])) {
-            foreach($_POST["users"] as $userId) {
-                $u = new User();
-                $u->id = $userId;
-                $users[] = $u;
+        if (isset($params["users"])) {
+            if (is_array($params["users"])) {
+                foreach($params["users"] as $user) {
+                    $u = new \PHP_MPM\User();
+                    $u->id = isset($user["id"]) ? $user["id"]: "";
+                    $users[] = $u;
+                }
+            } else {
+                throw new \PHP_MPM\MPMInvalidParamsException("users");
             }
         }
         $g = new \PHP_MPM\Group();
         $g->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["name"]) ? $_POST["name"]: "", 
-            isset($_POST["description"]) ? $_POST["description"]: "",
+            "", 
+            isset($params["name"]) ? $params["name"]: "", 
+            isset($params["description"]) ? $params["description"]: "",
             $users
         );
         $g->add();

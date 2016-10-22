@@ -4,6 +4,7 @@
     *   description: get (metadata & users) group
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     */
@@ -20,8 +21,9 @@
 
     $result = array("success" => false, "data" => null);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $g = new \PHP_MPM\Group();
-        $g->id = isset($_POST["id"]) ? $_POST["id"]: ""; 
+        $g->id = isset($params["id"]) ? $params["id"]: ""; 
         $result["data"] = $g->get();
         $result["success"] = true;
         ob_clean();

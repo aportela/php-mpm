@@ -4,6 +4,7 @@
     *   description: update group
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     *   @param string name
@@ -23,19 +24,20 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $users = array();
-        if (isset($_POST["users"]) && is_array($_POST["users"])) {
-            foreach($_POST["users"] as $userId) {
-                $u = new User();
-                $u->id = $userId;
+        if (isset($params["users"]) && is_array($params["users"])) {
+            foreach($params["users"] as $user) {
+                $u = new \PHP_MPM\User();
+                $u->id = isset($user["id"]) ? $user["id"]: "";
                 $users[] = $u;
             }
-        }        
-        $g = new \PHP_MPM\Group();         
+        }
+        $g = new \PHP_MPM\Group();
         $g->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["name"]) ? $_POST["name"]: "", 
-            isset($_POST["description"]) ? $_POST["description"]: "",
+            isset($params["id"]) ? $params["id"]: "", 
+            isset($params["name"]) ? $params["name"]: "", 
+            isset($params["description"]) ? $params["description"]: "",
             $users
         );
         $g->update();

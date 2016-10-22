@@ -24,14 +24,19 @@ function fillTable(actualPage, totalPages, groups) {
  */
 $("form#frm_add_group").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_user_id").remove();
+    var users = [];
     var userIds = getUsers($("table#add_group_userlist"));
     if (userIds != null && userIds.length > 0) {
         for (var i = 0; i < userIds.length; i++) {
-            $(this).append('<input class="tmp_user_id" type="hidden" name="users[' + i + ']" value="' + userIds[i] + '" />')
+            users.push({ id: userIds[i] });
         }
     }
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        users: users
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", GROUP_ADD_NAME_EXISTS);
@@ -57,14 +62,20 @@ $("form#frm_add_group").submit(function(e) {
  */
 $("form#frm_update_group").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_user_id").remove();
+    var users = [];
     var userIds = getUsers($("table#update_group_userlist"));
     if (userIds != null && userIds.length > 0) {
         for (var i = 0; i < userIds.length; i++) {
-            $(this).append('<input class="tmp_user_id" type="hidden" name="users[' + i + ']" value="' + userIds[i] + '" />')
+            users.push({ id: userIds[i] });
         }
     }
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        users: users
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", GROUP_UPDATE_NAME_EXISTS);
@@ -90,7 +101,10 @@ $("form#frm_update_group").submit(function(e) {
  */
 $("form#frm_delete_group").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
@@ -149,7 +163,6 @@ $('table tbody').on("click", ".btn_update_group", function(e) {
  * reset & assign form values before show modal
  */
 $('table tbody').on("click", ".btn_delete_group", function(e) {
-    mpm.form.reset($("form#frm_update_group"));
     var tr = $(this).closest("tr");
     $("input#delete_group_id").val($(tr).data("id"));
     $("strong#delete_group_name").text($(tr).find("td:nth-child(2)").text());
@@ -191,10 +204,7 @@ function fillUsersCombo(users) {
 function fillUserLists() {
     // load available users combo if empty
     if ($("select.group_user_list:first option").length == 1) {
-        var formData = new FormData();
-        formData.append("page", 1);
-        formData.append("resultsPage", 0);
-        mpm.xhr("POST", "/api/user/search.php", formData, function(httpStatusCode, response) {
+        mpm.user.search(1, 0, "", function(httpStatusCode, response) {
             switch (httpStatusCode) {
                 case 200:
                     if (!(response && response.success)) {
@@ -215,9 +225,7 @@ function fillUserLists() {
  * get group info from server
  */
 function getGroup(id, callback) {
-    var formData = new FormData();
-    formData.append("id", id);
-    mpm.xhr("POST", "/api/group/get.php", formData, function(httpStatusCode, response) {
+    mpm.group.get(id, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
