@@ -6,6 +6,7 @@
     *   request method: POST
     *   format: json
     *
+    *   @param string id
     *   @param string email
     *   @param string password
     *   @param string name
@@ -27,7 +28,7 @@
         $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $u = new \PHP_MPM\User();         
         $u->set(
-            "", 
+            isset($params["id"]) ? $params["id"]: "", 
             isset($params["email"]) ? $params["email"]: "", 
             isset($params["password"]) ? $params["password"]: "",
             isset($params["name"]) ? $params["name"]: "",

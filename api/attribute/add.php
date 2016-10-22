@@ -6,6 +6,7 @@
     *   request method: POST
     *   format: json
     *
+    *   @param string id
     *   @param string name
     *   @param string description
     *   @param int type
@@ -27,7 +28,7 @@
         $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $a = new \PHP_MPM\Attribute();         
         $a->set(
-            "", 
+            isset($params["id"]) ? $params["id"]: "", 
             isset($params["name"]) ? $params["name"]: "", 
             isset($params["description"]) ? $params["description"]: "",
             isset($params["type"]) ? $params["type"]: \PHP_MPM\AttributeType::NONE

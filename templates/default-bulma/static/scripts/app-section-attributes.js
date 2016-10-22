@@ -52,6 +52,7 @@ function fillTable(actualPage, totalPages, attributes) {
 $("form#frm_add_attribute").submit(function(e) {
     e.preventDefault();
     var json = {
+        id: mpm.util.uuid(),
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         type: $(this).find('select[name="type"]').val()

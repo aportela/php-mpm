@@ -24,6 +24,7 @@ function fillTable(actualPage, totalPages, templates) {
 $("form#frm_add_template").submit(function(e) {
     e.preventDefault();
     var json = {
+        id: mpm.util.uuid(),
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         permissions: getPermissions($("table#add_template_permissions")),

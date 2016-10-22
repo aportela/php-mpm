@@ -6,6 +6,7 @@
     *   request method: POST
     *   format: json
     *
+    *   @param string id
     *   @param string name
     *   @param string description
     *   @param array permissions
@@ -77,7 +78,7 @@
         }        
         $t = new \PHP_MPM\Template();
         $t->set(
-            "", 
+            isset($params["id"]) ? $params["id"]: "", 
             isset($params["name"]) ? $params["name"]: "", 
             isset($params["description"]) ? $params["description"]: "",
             $permissions,

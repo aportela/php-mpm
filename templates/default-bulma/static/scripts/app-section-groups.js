@@ -32,6 +32,7 @@ $("form#frm_add_group").submit(function(e) {
         }
     }
     var json = {
+        id: mpm.util.uuid(),
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         users: users
