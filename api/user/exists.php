@@ -4,6 +4,7 @@
     *   description: check user (email) existence
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string email 
     */
@@ -20,8 +21,9 @@
 
     $result = array("success" => false, "exists" => false);
     try {
-        $u = new \PHP_MPM\User();         
-        $u->set("", isset($_POST["email"]) ? $_POST["email"]: "", "", 0);
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
+        $u = new \PHP_MPM\User();
+        $u->email = isset($params["email"]) ? $params["email"]: "";         
         $result["exists"] = $u->exists();
         ob_clean();
         if ($result["exists"]) {
