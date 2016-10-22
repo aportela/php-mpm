@@ -2,7 +2,7 @@
 
 var mpm = mpm || {};
 
-mpm.utils = mpm.utils || {};
+mpm.util = mpm.util || {};
 
 /**
  * uuid generator
