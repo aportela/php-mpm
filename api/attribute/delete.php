@@ -4,6 +4,7 @@
     *   description: delete attribute
     *
     *   request method: POST
+    *   format: json    
     *
     *   @param string id 
     */
@@ -21,8 +22,9 @@
     
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $a = new \PHP_MPM\Attribute();
-        $a->id = isset($_POST["id"]) ? $_POST["id"]: "";          
+        $a->id = isset($params["id"]) ? $params["id"]: "";          
         $a->delete();
         $result["success"] = true;
         ob_clean();

@@ -51,7 +51,12 @@ function fillTable(actualPage, totalPages, attributes) {
  */
 $("form#frm_add_attribute").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        type: $(this).find('select[name="type"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", ATTRIBUTE_ADD_NAME_EXISTS);
@@ -77,7 +82,13 @@ $("form#frm_add_attribute").submit(function(e) {
  */
 $("form#frm_update_attribute").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, result) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        type: $(this).find('select[name="type"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 200:
                 $('html').removeClass('is-clipped');
@@ -96,7 +107,10 @@ $("form#frm_update_attribute").submit(function(e) {
  */
 $("form#frm_delete_attribute").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, result) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", ATTRIBUTE_UPDATE_NAME_EXISTS);

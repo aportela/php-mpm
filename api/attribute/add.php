@@ -4,8 +4,8 @@
     *   description: add new attribute
     *
     *   request method: POST
+    *   format: json
     *
-    *   @param string id 
     *   @param string name
     *   @param string description
     *   @param int type
@@ -24,12 +24,13 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $a = new \PHP_MPM\Attribute();         
         $a->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["name"]) ? $_POST["name"]: "", 
-            isset($_POST["description"]) ? $_POST["description"]: "",
-            isset($_POST["type"]) ? $_POST["type"]: ""
+            "", 
+            isset($params["name"]) ? $params["name"]: "", 
+            isset($params["description"]) ? $params["description"]: "",
+            isset($params["type"]) ? $params["type"]: \PHP_MPM\AttributeType::NONE
         );
         $a->add();
         $result["success"] = true;

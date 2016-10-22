@@ -4,6 +4,7 @@
     *   description: update attribute
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     *   @param string name
@@ -23,12 +24,13 @@
     
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $a = new \PHP_MPM\Attribute();         
         $a->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["name"]) ? $_POST["name"]: "", 
-            isset($_POST["description"]) ? $_POST["description"]: "",
-            AttributeType::NONE
+            isset($params["id"]) ? $params["id"]: "", 
+            isset($params["name"]) ? $params["name"]: "", 
+            isset($params["description"]) ? $params["description"]: "",
+            isset($params["type"]) ? $params["type"]: \PHP_MPM\AttributeType::NONE
         );
         $a->update();
         $result["success"] = true;
