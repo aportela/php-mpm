@@ -24,7 +24,7 @@
             $this->id = $id;
             $this->attribute = $attribute;
             $this->label = $label;
-            $this->required = $required;
+            $this->required = boolval($required);
             $this->defaultValue = $defaultValue;
         }
 
@@ -128,7 +128,7 @@
         /**
         *   remove all template attribute definitions
         */
-        public static function deleteAllTemplateAttributes($templateId) {
+        public static function deleteAll($templateId) {
             if (empty($templateId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
