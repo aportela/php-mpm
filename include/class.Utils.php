@@ -57,5 +57,17 @@
         public static function getBrowserUserAgent() {
             return(isset($_SERVER ['HTTP_USER_AGENT']) ? $_SERVER ['HTTP_USER_AGENT']: null);
         }
+
+        /**
+        *   transform/decode json request value into params array
+        */
+        public static function getRequestParamsFromJSON() {
+            $json = json_decode(file_get_contents('php://input'), true);
+            if (json_last_error() != JSON_ERROR_NONE) {
+                throw new \PHP_MPM\MPMInvalidParamsException();
+            } else {
+                return($json);
+            }            
+        }
     }
 ?>
