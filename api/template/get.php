@@ -4,6 +4,7 @@
     *   description: get (metadata & groups) template
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     */
@@ -20,8 +21,9 @@
 
     $result = array("success" => false, "data" => null);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $t = new \PHP_MPM\Template();
-        $t->id = isset($_POST["id"]) ? $_POST["id"]: ""; 
+        $t->id = isset($params["id"]) ? $params["id"]: ""; 
         $result["data"] = $t->get();
         $result["success"] = true;
         ob_clean();

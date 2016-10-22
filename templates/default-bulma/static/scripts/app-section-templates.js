@@ -23,28 +23,13 @@ function fillTable(actualPage, totalPages, templates) {
  */
 $("form#frm_add_template").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_permission").remove();
-    var permissions = getPermissions($("table#add_template_permissions"));
-    if (permissions != null && permissions.length > 0) {
-        for (var i = 0; i < permissions.length; i++) {
-            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />');
-            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />');
-            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />');
-            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />');
-            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />');
-        }
-    }
-    $(this).find("input.tmp_attribute").remove();
-    var templateAttributes = getAttributes($("table#add_template_attributes"));
-    if (templateAttributes != null && templateAttributes.length > 0) {
-        for (var i = 0; i < templateAttributes.length; i++) {
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_id[' + i + ']" value="' + templateAttributes[i].id + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_id[' + i + ']" value="' + templateAttributes[i].attributeId + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_label[' + i + ']" value="' + templateAttributes[i].label + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_required[' + i + ']" value="' + (templateAttributes[i].required ? "1" : "0") + '" />');
-        }
-    }
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        permissions: getPermissions($("table#add_template_permissions")),
+        attributes: getAttributes($("table#add_template_attributes"))
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 //mpm.form.putValidationError("ca_name", TEMPLATE_ADD_NAME_EXISTS);
@@ -70,28 +55,14 @@ $("form#frm_add_template").submit(function(e) {
  */
 $("form#frm_update_template").submit(function(e) {
     e.preventDefault();
-    $(this).find("input.tmp_permission").remove();
-    var permissions = getPermissions($("table#update_template_permissions"));
-    if (permissions != null && permissions.length > 0) {
-        for (var i = 0; i < permissions.length; i++) {
-            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />')
-        }
-    }
-    $(this).find("input.tmp_attribute").remove();
-    var templateAttributes = getAttributes($("table#update_template_attributes"));
-    if (templateAttributes != null && templateAttributes.length > 0) {
-        for (var i = 0; i < templateAttributes.length; i++) {
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_id[' + i + ']" value="' + templateAttributes[i].id + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_id[' + i + ']" value="' + templateAttributes[i].attributeId + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_label[' + i + ']" value="' + templateAttributes[i].label + '" />');
-            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_required[' + i + ']" value="' + (templateAttributes[i].required ? "1" : "0") + '" />');
-        }
-    }
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+        name: $(this).find('input[name="name"]').val(),
+        description: $(this).find('input[name="description"]').val(),
+        permissions: getPermissions($("table#update_template_permissions")),
+        attributes: getAttributes($("table#update_template_attributes"))
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", GROUP_UPDATE_TEMPLATE_EXISTS);
@@ -117,7 +88,10 @@ $("form#frm_update_template").submit(function(e) {
  */
 $("form#frm_delete_template").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
@@ -227,10 +201,7 @@ function fillGroupsCombo(groups) {
 function fillGroupsLists() {
     // load available groups combo if empty
     if ($("select.template_group_list:first option").length == 1) {
-        var formData = new FormData();
-        formData.append("page", 1);
-        formData.append("resultsPage", 0);
-        mpm.xhr("POST", "/api/group/search.php", formData, function(httpStatusCode, response) {
+        mpm.group.search(1, 0, "", function(httpStatusCode, response) {
             switch (httpStatusCode) {
                 case 200:
                     if (!(response && response.success)) {
@@ -266,10 +237,7 @@ function fillAttributesCombo(attributes) {
 function fillAttributesLists() {
     // load available groups combo if empty
     if ($("select.template_attribute_list:first option").length == 1) {
-        var formData = new FormData();
-        formData.append("page", 1);
-        formData.append("resultsPage", 0);
-        mpm.xhr("POST", "/api/attribute/search.php", formData, function(httpStatusCode, response) {
+        mpm.attribute.search(1, 0, "", function(httpStatusCode, response) {
             switch (httpStatusCode) {
                 case 200:
                     if (!(response && response.success)) {
@@ -290,9 +258,7 @@ function fillAttributesLists() {
  * get group info from server
  */
 function getTemplate(id, callback) {
-    var formData = new FormData();
-    formData.append("id", id);
-    mpm.xhr("POST", "/api/template/get.php", formData, function(httpStatusCode, response) {
+    mpm.template.get(id, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
@@ -335,11 +301,15 @@ function getPermissions(table) {
     var permissions = [];
     $(table).find("tbody tr").each(function(i) {
         permissions.push({
-            groupId: String($(this).data("id")),
-            allowCreate: $(this).find("input.allow_add").prop("checked"),
-            allowView: $(this).find("input.allow_view").prop("checked"),
-            allowUpdate: $(this).find("input.allow_update").prop("checked"),
-            allowDelete: $(this).find("input.allow_delete").prop("checked")
+            group: {
+                id: String($(this).data("id")),
+            },
+            flags: {
+                allowCreate: $(this).find("input.allow_add").prop("checked"),
+                allowView: $(this).find("input.allow_view").prop("checked"),
+                allowUpdate: $(this).find("input.allow_update").prop("checked"),
+                allowDelete: $(this).find("input.allow_delete").prop("checked")
+            }
         });
     });
     return (permissions);
@@ -388,16 +358,18 @@ $("select.template_attribute_list").change(function(e) {
 });
 
 function getAttributes(table) {
-    var templateAttributes = [];
+    var attributes = [];
     $(table).find("tbody tr").each(function(i) {
-        templateAttributes.push({
+        attributes.push({
             id: String($(this).data("id")),
-            attributeId: String($(this).data("attribute_id")),
+            attribute: {
+                id: String($(this).data("attribute_id"))
+            },
             label: $(this).find("input.attribute_label").val(),
             required: $(this).find("input.required").prop("checked")
         });
     });
-    return (templateAttributes);
+    return (attributes);
 }
 
 /**

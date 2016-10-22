@@ -4,6 +4,7 @@
     *   description: delete template
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     */
@@ -21,8 +22,9 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $t = new \PHP_MPM\Template();         
-        $t->id = isset($_POST["id"]) ? $_POST["id"]: ""; 
+        $t->id = isset($params["id"]) ? $params["id"]: ""; 
         $t->delete();
         $result["success"] = true;
         ob_clean();

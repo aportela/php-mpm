@@ -401,3 +401,14 @@ mpm.attribute.search = function(page, resultsPage, text, callback) {
         callback(httpStatusCode, response);
     });
 }
+
+mpm.template = mpm.template || {};
+
+mpm.template.get = function(id, callback) {
+    var json = {
+        id: id
+    };
+    mpm.xhrJSON("POST", "/api/template/get.php", json, function(httpStatusCode, response) {
+        callback(httpStatusCode, response);
+    });
+}
