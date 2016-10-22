@@ -129,3 +129,12 @@ td input[type=checkbox] {
 .modal-card_xxl {
     width: 960px;
 }
+
+
+/**
+    show scrollbars on modal debug data
+*/
+
+div#modal_debug pre {
+    overflow: scroll;
+}
