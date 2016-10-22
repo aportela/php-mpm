@@ -417,3 +417,32 @@ $("a.btn_add_template_attribute").click(function(e) {
  * launch search on start
  */
 $("form#frm_admin_search").submit();
+
+
+function updateFormHTML() {
+    var html = "";
+    html += '<form>' + "\n";
+    var attributes = getAttributes("table#add_template_attributes");
+    if (attributes && attributes.length > 0) {
+        for (var i = 0; i < attributes.length; i++) {
+            html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><input data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '></p>' + "\n";
+        }
+    }
+    html += '</form>';
+    $("textarea.form_html").val(html);
+}
+
+function updateFormPreview() {
+    $("div.form_preview").html($("textarea.form_html").val());
+}
+
+$("a.refresh_form").click(function(e) {
+    e.preventDefault();
+    updateFormHTML();
+    updateFormPreview();
+});
+
+$("textarea.form_html").keyup(function(e) {
+    e.preventDefault();
+    updateFormPreview();
+});

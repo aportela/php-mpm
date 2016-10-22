@@ -139,3 +139,13 @@ div#modal_debug pre {
     overflow: scroll;
     font-size: small;
 }
+
+
+/**
+    template form definition (html code)
+*/
+
+textarea.form_html {
+    font-size: small;
+    width: 100%;
+}
