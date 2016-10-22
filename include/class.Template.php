@@ -272,6 +272,7 @@
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
                 \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE] WHERE id = :id ", $params);
+                // TODO: delete template permissions & attributes (references)
             }
         }
 
@@ -318,6 +319,7 @@
                     $this->name = $rows[0]->name;
                     $this->description = $rows[0]->description;
                     $this->getPermissions();
+                    $this->attributes = \PHP_MPM\TemplateAttribute::getTemplateAttributes($this->id);
                     return(get_object_vars($this));
                 }
             }
