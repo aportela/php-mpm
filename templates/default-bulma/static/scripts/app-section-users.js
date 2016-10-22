@@ -93,7 +93,10 @@ $("form#frm_update_user").submit(function(e) {
  */
 $("form#frm_delete_user").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
