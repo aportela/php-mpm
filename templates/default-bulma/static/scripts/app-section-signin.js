@@ -1,6 +1,10 @@
-$("form#frm_signin").submit(function (e) {
+$("form#frm_signin").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function (httpStatusCode, result) {
+    var json = {
+        email: $(this).find('input[name="email"]').val(),
+        password: $(this).find('input[name="password"]').val()
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 404:
                 mpm.form.putValidationWarning("c_signin_email", SIGN_IN_EMAIL_NOT_FOUND);

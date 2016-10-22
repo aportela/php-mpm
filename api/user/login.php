@@ -4,6 +4,7 @@
     *   description: start authenticated session
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string email 
     *   @param string password 
@@ -21,14 +22,10 @@
 
     $result = array("success" => false);
     try {
-        $u = new \PHP_MPM\User();         
-        $u->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["email"]) ? $_POST["email"]: "", 
-            isset($_POST["password"]) ? $_POST["password"]: "",
-            isset($_POST["name"]) ? $_POST["name"]: "",
-            0
-        );
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
+        $u = new \PHP_MPM\User();
+        $u->email = isset($params["email"]) ? $params["email"]: "";         
+        $u->password = isset($params["password"]) ? $params["password"]: "";
         $result["success"] = $u->login();
         ob_clean();
         header("HTTP/1.1 200 OK", 200, true);
