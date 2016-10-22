@@ -4,10 +4,12 @@
     *   description: update user
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     *   @param string email
     *   @param string password
+    *   @param string name
     *   @param int type
     */
     namespace PHP_MPM;
@@ -23,13 +25,14 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $u = new \PHP_MPM\User();         
         $u->set(
-            isset($_POST["id"]) ? $_POST["id"]: "", 
-            isset($_POST["email"]) ? $_POST["email"]: "", 
-            isset($_POST["password"]) ? $_POST["password"]: "",
-            isset($_POST["name"]) ? $_POST["name"]: "",
-            isset($_POST["type"]) ? $_POST["type"]: 0
+            isset($params["id"]) ? $params["id"]: "", 
+            isset($params["email"]) ? $params["email"]: "", 
+            isset($params["password"]) ? $params["password"]: "",
+            isset($params["name"]) ? $params["name"]: "",
+            isset($params["type"]) ? $params["type"]: \PHP_MPM\UserType::DEFAULT
         );
         $u->update();
         $result["success"] = true;

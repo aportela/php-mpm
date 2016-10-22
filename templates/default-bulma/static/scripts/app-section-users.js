@@ -28,7 +28,13 @@ function fillTable(actualPage, totalPages, users) {
  */
 $("form#frm_add_user").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        email: $(this).find('input[name="email"]').val(),
+        password: $(this).find('input[name="password"]').val(),
+        name: $(this).find('input[name="name"]').val(),
+        type: 0,
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_email", USER_ADD_EMAIL_EXISTS);
@@ -54,7 +60,14 @@ $("form#frm_add_user").submit(function(e) {
  */
 $("form#frm_update_user").submit(function(e) {
     e.preventDefault();
-    mpm.form.submit(this, function(httpStatusCode, response) {
+    var json = {
+        id: $(this).find('input[name="id"]').val(),
+        email: $(this).find('input[name="email"]').val(),
+        password: $(this).find('input[name="password"]').val(),
+        name: $(this).find('input[name="name"]').val(),
+        type: 0,
+    };
+    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("cu_email", USER_UPDATE_EMAIL_EXISTS);
