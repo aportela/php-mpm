@@ -27,11 +27,21 @@ $("form#frm_add_template").submit(function(e) {
     var permissions = getPermissions($("table#add_template_permissions"));
     if (permissions != null && permissions.length > 0) {
         for (var i = 0; i < permissions.length; i++) {
-            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />')
-            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />')
+            $(this).append('<input class="tmp_permission" type="hidden" name="group_permissions[' + i + ']" value="' + permissions[i].groupId + '" />');
+            $(this).append('<input class="tmp_permission" type="hidden" name="create_flag_permissions[' + i + ']" value="' + (permissions[i].allowCreate ? "1" : "0") + '" />');
+            $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />');
+            $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />');
+            $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />');
+        }
+    }
+    $(this).find("input.tmp_attribute").remove();
+    var templateAttributes = getAttributes($("table#add_template_attributes"));
+    if (templateAttributes != null && templateAttributes.length > 0) {
+        for (var i = 0; i < templateAttributes.length; i++) {
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_id[' + i + ']" value="' + templateAttributes[i].id + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_id[' + i + ']" value="' + templateAttributes[i].attributeId + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_label[' + i + ']" value="' + templateAttributes[i].label + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_required[' + i + ']" value="' + (templateAttributes[i].required ? "1" : "0") + '" />');
         }
     }
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -69,6 +79,16 @@ $("form#frm_update_template").submit(function(e) {
             $(this).append('<input class="tmp_permission" type="hidden" name="view_flag_permissions[' + i + ']" value="' + (permissions[i].allowView ? "1" : "0") + '" />')
             $(this).append('<input class="tmp_permission" type="hidden" name="update_flag_permissions[' + i + ']" value="' + (permissions[i].allowUpdate ? "1" : "0") + '" />')
             $(this).append('<input class="tmp_permission" type="hidden" name="delete_flag_permissions[' + i + ']" value="' + (permissions[i].allowDelete ? "1" : "0") + '" />')
+        }
+    }
+    $(this).find("input.tmp_attribute").remove();
+    var templateAttributes = getAttributes($("table#update_template_attributes"));
+    if (templateAttributes != null && templateAttributes.length > 0) {
+        for (var i = 0; i < templateAttributes.length; i++) {
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_id[' + i + ']" value="' + templateAttributes[i].id + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_id[' + i + ']" value="' + templateAttributes[i].attributeId + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_label[' + i + ']" value="' + templateAttributes[i].label + '" />');
+            $(this).append('<input class="tmp_attribute" type="hidden" name="template_attributes_attribute_required[' + i + ']" value="' + (templateAttributes[i].required ? "1" : "0") + '" />');
         }
     }
     mpm.form.submit(this, function(httpStatusCode, response) {
@@ -368,18 +388,27 @@ $("select.template_attribute_list").change(function(e) {
 });
 
 function getAttributes(table) {
-
+    var templateAttributes = [];
+    $(table).find("tbody tr").each(function(i) {
+        templateAttributes.push({
+            id: String($(this).data("id")),
+            attributeId: String($(this).data("attribute_id")),
+            label: $(this).find("input.attribute_label").val(),
+            required: $(this).find("input.required").prop("checked")
+        });
+    });
+    return (templateAttributes);
 }
 
 /**
  * add new attribute to template permission list table
  */
-function appendAttribute(table, id, name, label, required, defaultValue) {
+function appendAttribute(table, id, attributeId, name, label, required, defaultValue) {
     var html = "";
-    html += '<tr data-id="' + id + '">';
+    html += '<tr data-id="' + (id ? id : "") + '" data-attribute_id="' + attributeId + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + name + "</td>";
-    html += '<td><input class="input" type="text" value="' + label + '"></td>';
+    html += '<td><input class="input attribute_label" type="text" value="' + label + '"></td>';
     html += '<td class="has-text-centered"><input class="required" type="checkbox" ' + (required ? "checked" : "") + '/></td>';
     html += '<td></td>';
     html += "</tr>";
@@ -392,7 +421,7 @@ function appendAttribute(table, id, name, label, required, defaultValue) {
  */
 $("a.btn_add_template_attribute").click(function(e) {
     var o = $(this).closest("p").find("select.template_attribute_list option:selected");
-    appendAttribute($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"), $(o).data("name"), true, null);
+    appendAttribute($(this).closest("div.tab-content").find("table"), null, $(o).data("id"), $(o).data("name"), $(o).data("name"), false, null);
     $("select.template_attribute_list").val("");
     $(this).addClass("is-disabled");
 });

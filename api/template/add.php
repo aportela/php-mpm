@@ -29,7 +29,7 @@
             $t = count($_POST["group_permissions"]);
             for ($i = 0; $i < $t; $i++) {
                 $permission = new \PHP_MPM\Permission();
-                $g = new Group(); 
+                $g = new \PHP_MPM\Group(); 
                 $g->id = $_POST["group_permissions"][$i];
                 $permission->set(
                     $g, 
@@ -41,12 +41,26 @@
                 $permissions[] = $permission;
             }
         }
+        $attributes = array();
+        if (isset($_POST["template_attributes_id"]) && is_array($_POST["template_attributes_id"])) {
+            $t = count($_POST["template_attributes_id"]);
+            for ($i = 0; $i < $t; $i++) {
+                $templateAttribute = new \PHP_MPM\TemplateAttribute();
+                $a = new \PHP_MPM\Attribute(); 
+                $a->id = $_POST["template_attributes_attribute_id"][$i];
+                $templateAttribute->attribute = $a;
+                $templateAttribute->label = $_POST["template_attributes_attribute_label"][$i]; 
+                $templateAttribute->required = $_POST["template_attributes_attribute_required"][$i] == "1"; 
+                $attributes[] = $templateAttribute;
+            }
+        }        
         $t = new \PHP_MPM\Template();
         $t->set(
             isset($_POST["id"]) ? $_POST["id"]: "", 
             isset($_POST["name"]) ? $_POST["name"]: "", 
             isset($_POST["description"]) ? $_POST["description"]: "",
-            $permissions
+            $permissions,
+            $attributes
         );
         $t->add();
         $result["success"] = true;
