@@ -388,13 +388,16 @@
                     $params[] = $param;                    
                 }
                 $param = new \PHP_MPM\DatabaseParam();
+                $param->int(":type", $this->type);
+                $params[] = $param;                
+                $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
                 $sql = null;
                 if (! empty($this->password)) {
-                    $sql = " UPDATE [USER] SET name = :name, email = :email, password = :password WHERE id = :id ";
+                    $sql = " UPDATE [USER] SET name = :name, email = :email, password = :password, type = :type WHERE id = :id ";
                 } else {
-                    $sql = " UPDATE [USER] SET name = :name, email = :email WHERE id = :id ";
+                    $sql = " UPDATE [USER] SET name = :name, email = :email, type = :type WHERE id = :id ";
                 }
                 \PHP_MPM\Database::execWithoutResult($sql, $params);
             }
