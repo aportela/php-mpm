@@ -4,6 +4,7 @@
     *   description: delete user
     *
     *   request method: POST
+    *   format: json
     *
     *   @param string id 
     *   @param int type
@@ -21,8 +22,9 @@
 
     $result = array("success" => false);
     try {
+        $params = \PHP_MPM\Utils::getRequestParamsFromJSON();
         $u = new \PHP_MPM\User();
-        $u->id = isset($_POST["id"]) ? $_POST["id"]: "";         
+        $u->id = isset($params["id"]) ? $params["id"]: "";         
         $u->delete();
         $result["success"] = true;
         ob_clean();
