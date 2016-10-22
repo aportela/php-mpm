@@ -13,7 +13,7 @@
                     </div>        
                 </div>            
                 <div class="card-content">
-                    <form class="tab-content" id="frm_signin" method="post" action="/api/user/login.php">
+                    <form class="tab-content" id="frm_signin" method="post" action="/api/user/signin.php">
                         <p class="control has-icon" id="c_signin_email">
                             <input class="input" type="email" name="email" placeholder="Email" value="admin@localhost" maxlength="254" required autofocus>
                             <i class="fa fa-envelope"></i>
