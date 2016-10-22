@@ -137,4 +137,5 @@ td input[type=checkbox] {
 
 div#modal_debug pre {
     overflow: scroll;
+    font-size: small;
 }
