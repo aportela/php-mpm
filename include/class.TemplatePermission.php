@@ -6,7 +6,7 @@
     /**
     *   permission class
     */
-    class TemplatePermission extends Permission {
+    class TemplatePermission extends \PHP_MPM\Permission {
 
         /**
         *   add template permission
@@ -138,3 +138,4 @@
         }
     }
 
+?>
