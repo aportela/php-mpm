@@ -61,7 +61,7 @@
                         $a = new \PHP_MPM\Attribute(); 
                         $a->id = isset($params["attributes"][$i]["attribute"]["id"]) ? $params["attributes"][$i]["attribute"]["id"]: "";
                         $templateAttribute->set(
-                            "",
+                            isset($params["attributes"][$i]["id"]) ? $params["attributes"][$i]["id"]: "",
                             $a,
                             isset($params["attributes"][$i]["label"]) ? $params["attributes"][$i]["label"]: "",
                             isset($params["attributes"][$i]["required"]) ? boolval($params["attributes"][$i]["required"]): false,
