@@ -6,7 +6,7 @@
     /**
     *   template attribute class
     */
-    class TemplateAttribute extends \PHP_MPM\AttributeDefinition {
+    class TemplateAttributeDefinition extends \PHP_MPM\AttributeDefinition {
 
         public $label;
         public $required;
@@ -110,7 +110,7 @@
                 $param->str(":template_id", $templateId);
                 $results = \PHP_MPM\Database::execWithResult(" SELECT TA.id AS id, A.id AS attributeId, A.name AS attributeName, A.description AS attributeDescription, A.type AS attributeType, TA.label, TA.required FROM [TEMPLATE_ATTRIBUTE] TA LEFT JOIN [ATTRIBUTE] A ON A.id = TA.attribute_id WHERE TA.template_id = :template_id ", array($param));
                 foreach($results as $result) {
-                    $templateAttribute = new \PHP_MPM\TemplateAttribute();
+                    $templateAttribute = new \PHP_MPM\TemplateAttributeDefinition();
                     $a = new \PHP_MPM\Attribute();
                     $a->id = $result->attributeId;
                     $a->name = $result->attributeName;

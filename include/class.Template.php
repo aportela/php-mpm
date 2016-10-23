@@ -155,7 +155,7 @@
                 foreach($this->permissions as $permission) {
                     $permission->add($this->id);
                 }
-                \PHP_MPM\TemplateAttribute::deleteAll($this->id);
+                \PHP_MPM\TemplateAttributeDefinition::deleteAll($this->id);
                 foreach($this->attributes as $templateAttribute) {
                     if (empty($templateAttribute->id)) {
                         $templateAttribute->id = \PHP_MPM\Utils::uuid();
@@ -232,7 +232,7 @@
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
                 \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE] WHERE id = :id ", $params);
-                \PHP_MPM\TemplateAttribute::deleteAll($this->id);
+                \PHP_MPM\TemplateAttributeDefinition::deleteAll($this->id);
                 \PHP_MPM\TemplatePermission::deleteAll($this->id);
             }
         }
@@ -257,7 +257,7 @@
                     $this->name = $rows[0]->name;
                     $this->description = $rows[0]->description;
                     $this->htmlForm = $rows[0]->htmlForm;
-                    $this->attributes = \PHP_MPM\TemplateAttribute::getTemplateAttributes($this->id);
+                    $this->attributes = \PHP_MPM\TemplateAttributeDefinition::getTemplateAttributes($this->id);
                     $this->permissions = \PHP_MPM\TemplatePermission::getPermissions($this->id);
                     return(get_object_vars($this));
                 }

@@ -57,7 +57,7 @@
                 $t = count($params["attributes"]);
                 for ($i = 0; $i < $t; $i++) {
                     if (isset($params["attributes"][$i]["attribute"])) {
-                        $templateAttribute = new \PHP_MPM\TemplateAttribute();
+                        $templateAttribute = new \PHP_MPM\TemplateAttributeDefinition();
                         $a = new \PHP_MPM\Attribute(); 
                         $a->id = isset($params["attributes"][$i]["attribute"]["id"]) ? $params["attributes"][$i]["attribute"]["id"]: "";
                         $templateAttribute->set(
