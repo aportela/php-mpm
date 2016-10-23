@@ -143,17 +143,11 @@
           </table>                  
         </div>
         <div class="tab-content is-hidden" id="add_template_tab_form">
-          <div class="columns">
-            <div class="column is-4">
-            <p class="control">Customize HTML 
-              <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
-              <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
-              </p>
-              <textarea name="htmlForm" id="add_template_form" class="form_html" rows="16"></textarea>
-            </div>
-            <div class="column form_preview">
-            </div>
-          </div>
+          <p class="control">Customize HTML 
+            <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
+            <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
+          </p>
+          <textarea name="htmlForm" id="add_template_form" class="form_html" rows="16"></textarea>
         </div>        
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">
@@ -254,6 +248,11 @@
           </table>                  
         </div>        
         <div class="tab-content is-hidden" id="update_template_tab_form">
+          <p class="control">Customize HTML 
+            <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
+            <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
+          </p>
+          <textarea name="htmlForm" id="update_template_form" class="form_html" rows="16"></textarea>
         </div>        
       </section>
       <footer class="modal-card-foot">

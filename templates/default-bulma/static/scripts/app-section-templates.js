@@ -29,7 +29,7 @@ $("form#frm_add_template").submit(function(e) {
         description: $(this).find('input[name="description"]').val(),
         permissions: getPermissions($("table#add_template_permissions")),
         attributes: getAttributes($("table#add_template_attributes")),
-        htmlForm: $("textarea#add_template_form").val()
+        htmlForm: $(this).find('textarea[name="htmlForm"]').val()
     };
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
@@ -62,7 +62,8 @@ $("form#frm_update_template").submit(function(e) {
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         permissions: getPermissions($("table#update_template_permissions")),
-        attributes: getAttributes($("table#update_template_attributes"))
+        attributes: getAttributes($("table#update_template_attributes")),
+        htmlForm: $(this).find('textarea[name="htmlForm"]').val()
     };
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
@@ -168,6 +169,7 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
                     );
                 }
             }
+            $("textarea#update_template_form").val(data.htmlForm);
         }
     });
 });
@@ -421,10 +423,10 @@ $("a.btn_add_template_attribute").click(function(e) {
 $("form#frm_admin_search").submit();
 
 
-function updateFormHTML() {
+function updateFormHTML(table) {
     var html = "";
     html += '<form>' + "\n";
-    var attributes = getAttributes("table#add_template_attributes");
+    var attributes = getAttributes(table);
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
             html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><input data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '></p>' + "\n";
@@ -434,25 +436,24 @@ function updateFormHTML() {
     $("textarea.form_html").val(html);
 }
 
-function updateFormPreview() {
-    $("div.form_preview").html($("textarea.form_html").val());
-}
-
 $("a.refresh_form").click(function(e) {
     e.preventDefault();
-    updateFormHTML();
-    updateFormPreview();
+    var div = $(this).closest("div.tab-content");
+    switch($(div).prop("id")) {
+        case "update_template_tab_form":
+            updateFormHTML($("table#update_template_attributes"));
+        break;
+        case "add_template_tab_form":
+            updateFormHTML($("table#add_template_attributes"));
+        break;
+    }
 });
 
 $("a.preview_form").click(function(e) {
     e.preventDefault();
     var html = $("html").clone();
-    $(html).find("body").html('<div class="container"><div class="card">' + $("textarea.form_html").val() + '</div></div>');
-    var base64 = btoa('<html>' + $(html).html() + '</html>');
+    var textarea = $(this).closest("p").next("textarea.form_html");
+    $(html).find("body").html('<div class="container"><div class="card">' + $(textarea).val() + '</div></div>');
+    var base64 = window.btoa(unescape(encodeURIComponent('<html>' + $(html).html() + '</html>')));
     window.open("data:text/html;base64," + base64);
-});
-
-$("textarea.form_html").keyup(function(e) {
-    e.preventDefault();
-    updateFormPreview();
 });
