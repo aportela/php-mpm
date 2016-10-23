@@ -6,16 +6,14 @@
     /**
     *   template attribute class
     */
-    class TemplateAttribute {
+    class TemplateAttribute extends \PHP_MPM\AttributeDefinition {
 
-        public $id;
-        public $attribute;
         public $label;
         public $required;
         public $defaultValue;
 
 		public function __construct () {
-            $this->attribute = new \PHP_MPM\Attribute(); 
+            parent::__construct();
         }
 
         public function __destruct() { }
@@ -141,3 +139,4 @@
         }
     }
 
+?>
