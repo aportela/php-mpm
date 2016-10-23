@@ -110,7 +110,7 @@
         /**
         *   get template permissions
         */
-        public static function getPermissions($templateId) {
+        public static function search($templateId) {
             if (empty($templateId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {

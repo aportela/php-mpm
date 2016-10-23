@@ -257,8 +257,8 @@
                     $this->name = $rows[0]->name;
                     $this->description = $rows[0]->description;
                     $this->htmlForm = $rows[0]->htmlForm;
-                    $this->attributes = \PHP_MPM\TemplateAttributeDefinition::getTemplateAttributes($this->id);
-                    $this->permissions = \PHP_MPM\TemplatePermission::getPermissions($this->id);
+                    $this->attributes = \PHP_MPM\TemplateAttributeDefinition::search($this->id);
+                    $this->permissions = \PHP_MPM\TemplatePermission::search($this->id);
                     return(get_object_vars($this));
                 }
             }
