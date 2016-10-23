@@ -149,3 +149,8 @@ textarea.form_html {
     font-size: small;
     width: 100%;
 }
+
+form#frm_template_form_preview
+{
+    margin-top: 32px;
+}

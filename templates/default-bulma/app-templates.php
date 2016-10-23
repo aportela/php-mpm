@@ -144,8 +144,11 @@
         </div>
         <div class="tab-content is-hidden" id="add_template_tab_form">
           <p class="control">Customize HTML 
-            <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
-            <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
+            <a class="refresh_form button is-warning is-small"><span class="icon is-small"><i class="fa fa-exclamation-triangle"></i></span><span>Reset</span></a>
+            <a class="preview_form button is-info is-small"><span class="icon is-small"><i class="fa fa-external-link"></i></span><span>Preview</span></a>
+            <label class="checkbox"><input type="checkbox">Has links</label>
+            <label class="checkbox"><input type="checkbox">Has files</label>
+            <label class="checkbox"><input type="checkbox">Has notes</label>            
           </p>
           <textarea name="htmlForm" id="add_template_form" class="form_html" rows="16"></textarea>
         </div>        
@@ -249,8 +252,11 @@
         </div>        
         <div class="tab-content is-hidden" id="update_template_tab_form">
           <p class="control">Customize HTML 
-            <a class="refresh_form button is-info is-small"><span class="icon"><i class="fa fa-refresh"></i></span><span>Reset</span></a>
-            <a class="preview_form button is-info is-small"><span class="icon"><i class="fa fa-search"></i></span><span>Preview</span></a>
+            <a class="refresh_form button is-warning is-small"><span class="icon is-small"><i class="fa fa-exclamation-triangle"></i></span><span>Reset</span></a>
+            <a class="preview_form button is-info is-small"><span class="icon is-small"><i class="fa fa-external-link"></i></span><span>Preview</span></a>
+            <label class="checkbox"><input type="checkbox">Has links</label>
+            <label class="checkbox"><input type="checkbox">Has files</label>
+            <label class="checkbox"><input type="checkbox">Has notes</label>
           </p>
           <textarea name="htmlForm" id="update_template_form" class="form_html" rows="16"></textarea>
         </div>        

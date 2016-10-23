@@ -21,7 +21,7 @@ function fillTable(actualPage, totalPages, templates) {
 /**
  * add template modal form submit event
  */
-$("form#frm_add_template").submit(function(e) {
+$("form#frm_add_template").submit(function (e) {
     e.preventDefault();
     var json = {
         id: mpm.util.uuid(),
@@ -31,7 +31,7 @@ $("form#frm_add_template").submit(function(e) {
         attributes: getAttributes($("table#add_template_attributes")),
         htmlForm: $(this).find('textarea[name="htmlForm"]').val()
     };
-    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
+    mpm.form.submitJSON(this, json, function (httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 //mpm.form.putValidationError("ca_name", TEMPLATE_ADD_NAME_EXISTS);
@@ -55,7 +55,7 @@ $("form#frm_add_template").submit(function(e) {
 /**
  * update template modal form submit event
  */
-$("form#frm_update_template").submit(function(e) {
+$("form#frm_update_template").submit(function (e) {
     e.preventDefault();
     var json = {
         id: $(this).find('input[name="id"]').val(),
@@ -65,7 +65,7 @@ $("form#frm_update_template").submit(function(e) {
         attributes: getAttributes($("table#update_template_attributes")),
         htmlForm: $(this).find('textarea[name="htmlForm"]').val()
     };
-    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
+    mpm.form.submitJSON(this, json, function (httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
                 mpm.form.putValidationError("ca_name", GROUP_UPDATE_TEMPLATE_EXISTS);
@@ -89,12 +89,12 @@ $("form#frm_update_template").submit(function(e) {
 /**
  * delete template modal form submit event
  */
-$("form#frm_delete_template").submit(function(e) {
+$("form#frm_delete_template").submit(function (e) {
     e.preventDefault();
     var json = {
         id: $(this).find('input[name="id"]').val()
     };
-    mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
+    mpm.form.submitJSON(this, json, function (httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
@@ -115,7 +115,7 @@ $("form#frm_delete_template").submit(function(e) {
 /**
  * reset add form before show modal
  */
-$('table thead').on("click", ".btn_add_template", function(e) {
+$('table thead').on("click", ".btn_add_template", function (e) {
     mpm.form.reset($("form#frm_add_template"));
     selectFirstTab($("form#frm_add_template"));
     clearTable($("table#add_template_permissions"));
@@ -123,12 +123,13 @@ $('table thead').on("click", ".btn_add_template", function(e) {
     $("select.template_group_list").val("");
     fillGroupsLists();
     fillAttributesLists();
+    updateFormHTML($("table#add_template_attributes"));
 });
 
 /**
  * reset & assign form values before show modal
  */
-$('table tbody').on("click", ".btn_update_template", function(e) {
+$('table tbody').on("click", ".btn_update_template", function (e) {
     mpm.form.reset($("form#frm_delete_template"));
     selectFirstTab($("form#frm_update_template"));
     $("select.template_group_list").val("");
@@ -137,7 +138,7 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
     fillGroupsLists();
     fillAttributesLists();
     var id = $(this).closest("tr").data("id");
-    getTemplate(id, function(data) {
+    getTemplate(id, function (data) {
         if (data === null) {
             mpm.error.showModal();
         } else {
@@ -177,7 +178,7 @@ $('table tbody').on("click", ".btn_update_template", function(e) {
 /**
  * reset & assign form values before show modal
  */
-$('table tbody').on("click", ".btn_delete_template", function(e) {
+$('table tbody').on("click", ".btn_delete_template", function (e) {
     mpm.form.reset($("form#frm_update_template"));
     var tr = $(this).closest("tr");
     $("input#delete_template_id").val($(tr).data("id"));
@@ -220,7 +221,7 @@ function fillGroupsCombo(groups) {
 function fillGroupsLists() {
     // load available groups combo if empty
     if ($("select.template_group_list:first option").length == 1) {
-        mpm.group.search(1, 0, "", function(httpStatusCode, response) {
+        mpm.group.search(1, 0, "", function (httpStatusCode, response) {
             switch (httpStatusCode) {
                 case 200:
                     if (!(response && response.success)) {
@@ -256,7 +257,7 @@ function fillAttributesCombo(attributes) {
 function fillAttributesLists() {
     // load available groups combo if empty
     if ($("select.template_attribute_list:first option").length == 1) {
-        mpm.attribute.search(1, 0, "", function(httpStatusCode, response) {
+        mpm.attribute.search(1, 0, "", function (httpStatusCode, response) {
             switch (httpStatusCode) {
                 case 200:
                     if (!(response && response.success)) {
@@ -277,7 +278,7 @@ function fillAttributesLists() {
  * get group info from server
  */
 function getTemplate(id, callback) {
-    mpm.template.get(id, function(httpStatusCode, response) {
+    mpm.template.get(id, function (httpStatusCode, response) {
         switch (httpStatusCode) {
             case 200:
                 if (!(response && response.success)) {
@@ -297,7 +298,7 @@ function getTemplate(id, callback) {
  * selected group changed event
  * description: toggle add permission button state (enabled if group is selected && not exists in table)
  */
-$("select.template_group_list").change(function(e) {
+$("select.template_group_list").change(function (e) {
     e.preventDefault();
     var btn = $(this).closest("p").find("a.btn_add_template_permission");
     var v = $(this).val();
@@ -318,7 +319,7 @@ $("select.template_group_list").change(function(e) {
  */
 function getPermissions(table) {
     var permissions = [];
-    $(table).find("tbody tr").each(function(i) {
+    $(table).find("tbody tr").each(function (i) {
         permissions.push({
             group: {
                 id: String($(this).data("id")),
@@ -354,7 +355,7 @@ function appendPermission(table, id, name, allowCreate, allowView, allowUpdate, 
  * add permission button click event
  * description: add selected group on table, reset group select combo & disable this button again
  */
-$("a.btn_add_template_permission").click(function(e) {
+$("a.btn_add_template_permission").click(function (e) {
     var o = $(this).closest("p").find("select.template_group_list option:selected");
     appendPermission($(this).closest("div.tab-content").find("table"), $(o).data("id"), $(o).data("name"), true, true, true, true);
     $("select.template_group_list").val("");
@@ -365,7 +366,7 @@ $("a.btn_add_template_permission").click(function(e) {
  * selected attribute changed event
  * description: toggle add attribute button state (enabled if attribute is selected)
  */
-$("select.template_attribute_list").change(function(e) {
+$("select.template_attribute_list").change(function (e) {
     e.preventDefault();
     var btn = $(this).closest("p").find("a.btn_add_template_attribute");
     var v = $(this).val();
@@ -378,7 +379,7 @@ $("select.template_attribute_list").change(function(e) {
 
 function getAttributes(table) {
     var attributes = [];
-    $(table).find("tbody tr").each(function(i) {
+    $(table).find("tbody tr").each(function (i) {
         attributes.push({
             id: String($(this).data("id")),
             attribute: {
@@ -410,7 +411,7 @@ function appendAttribute(table, id, attributeId, attributeName, label, required,
  * add attribute button click event
  * description: add selected attribute on table, reset attribute select combo & disable this button again
  */
-$("a.btn_add_template_attribute").click(function(e) {
+$("a.btn_add_template_attribute").click(function (e) {
     var o = $(this).closest("p").find("select.template_attribute_list option:selected");
     appendAttribute($(this).closest("div.tab-content").find("table"), null, $(o).data("id"), $(o).data("name"), $(o).data("name"), false, null);
     $("select.template_attribute_list").val("");
@@ -425,35 +426,49 @@ $("form#frm_admin_search").submit();
 
 function updateFormHTML(table) {
     var html = "";
-    html += '<form>' + "\n";
+
+    html += '<div class="tabs">' + "\n";
+    html += "\t" + '<ul>' + "\n";
+    html += "\t\t" + '<li class="is-active"><a data-target="add_template_tab_metadata" href="#">Metadata</a></li>' + "\n";
+    html += "\t\t" + '<li><a data-target="f_links" href="#">Links</a></li>' + "\n";
+    html += "\t\t" + '<li><a data-target="f_files" href="#">Files</a></li>' + "\n";
+    html += "\t\t" + '<li><a data-target="f_notes" href="#">Notes</a></li>' + "\n";
+    html += "\t" + '</ul>' + "\n";
+    html += '</div>' + "\n";
+
+    html += '<form id="frm_template_form_preview">' + "\n";
     var attributes = getAttributes(table);
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
             html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><input data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '></p>' + "\n";
         }
     }
+    html += '<p class="control">' + "\n";
+    html += "\t" + '<button class="button is-primary" disabled>Save</button>' + "\n";
+    html += "\t" + '<button class="button" disabled>Cancel</button>' + "\n";
+    html += '</p>' + "\n";
     html += '</form>';
     $("textarea.form_html").val(html);
 }
 
-$("a.refresh_form").click(function(e) {
+$("a.refresh_form").click(function (e) {
     e.preventDefault();
     var div = $(this).closest("div.tab-content");
-    switch($(div).prop("id")) {
+    switch ($(div).prop("id")) {
         case "update_template_tab_form":
             updateFormHTML($("table#update_template_attributes"));
-        break;
+            break;
         case "add_template_tab_form":
             updateFormHTML($("table#add_template_attributes"));
-        break;
+            break;
     }
 });
 
-$("a.preview_form").click(function(e) {
+$("a.preview_form").click(function (e) {
     e.preventDefault();
     var html = $("html").clone();
     var textarea = $(this).closest("p").next("textarea.form_html");
-    $(html).find("body").html('<div class="container"><div class="card">' + $(textarea).val() + '</div></div>');
+    $(html).find("body").html('<div class="columns"><div class="column"></div><div class="column is-4">' + $(textarea).val() + '</div><div class="column"></div></div>');
     var base64 = window.btoa(unescape(encodeURIComponent('<html>' + $(html).html() + '</html>')));
     window.open("data:text/html;base64," + base64);
 });
