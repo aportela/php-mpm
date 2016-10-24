@@ -424,19 +424,26 @@ $("a.btn_add_template_attribute").click(function (e) {
 $("form#frm_admin_search").submit();
 
 
-function updateFormHTML(table) {
+function updateFormHTML(table, hasLinks, hasFiles, hasNotes) {
     var html = "";
 
     html += '<div class="tabs">' + "\n";
     html += "\t" + '<ul>' + "\n";
-    html += "\t\t" + '<li class="is-active"><a data-target="add_template_tab_metadata" href="#">Metadata</a></li>' + "\n";
-    html += "\t\t" + '<li><a data-target="f_links" href="#">Links</a></li>' + "\n";
-    html += "\t\t" + '<li><a data-target="f_files" href="#">Files</a></li>' + "\n";
-    html += "\t\t" + '<li><a data-target="f_notes" href="#">Notes</a></li>' + "\n";
+    html += "\t\t" + '<li class="is-active"><a data-target="f_metadata" href="#">Metadata</a></li>' + "\n";
+    if (hasLinks) {
+        html += "\t\t" + '<li><a data-target="f_links" href="#">Links</a></li>' + "\n";
+    }
+    if (hasFiles) {
+        html += "\t\t" + '<li><a data-target="f_files" href="#">Files</a></li>' + "\n";
+    }
+    if (hasNotes) {
+        html += "\t\t" + '<li><a data-target="f_notes" href="#">Notes</a></li>' + "\n";
+    }
     html += "\t" + '</ul>' + "\n";
     html += '</div>' + "\n";
 
-    html += '<form id="frm_template_form_preview">' + "\n";
+    html += '<form id="f_metadata">' + "\n";
+    html += '<div class="tab-content" id="frm_signin">';
     var attributes = getAttributes(table);
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
@@ -444,9 +451,25 @@ function updateFormHTML(table) {
         }
     }
     html += '<p class="control">' + "\n";
-    html += "\t" + '<button class="button is-primary" disabled>Save</button>' + "\n";
-    html += "\t" + '<button class="button" disabled>Cancel</button>' + "\n";
+    html += "\t" + '<button type="submit" class="button is-primary">Save</button>' + "\n";
+    html += "\t" + '<button class="button">Cancel</button>' + "\n";
     html += '</p>' + "\n";
+    html += '</div>';
+    if (hasLinks) {
+        html += '<div class="tab-content is-hidden" id="f_links">';
+        html += '<table class="table is-bordered is-narrow"><thead><tr><th>linked on</th><th>linked by</th><th>element</th></tr></thead></table>';
+        html += '</div>';
+    }
+    if (hasFiles) {
+        html += '<div class="tab-content is-hidden" id="f_files">';
+        html += '<table class="table is-bordered is-narrow"><thead><tr><th>uploaded on</th><th>uploaded by</th><th>filename</th><th>filesize</th></tr></thead></table>';
+        html += '</div>';
+    }
+    if (hasNotes) {
+        html += '<div class="tab-content is-hidden" id="f_notes">';
+        html += '<table class="table is-bordered is-narrow"><thead><tr><th>commented on</th><th>commented by</th><th>text</th></tr></thead></table>';
+        html += '</div>';
+    }
     html += '</form>';
     $("textarea.form_html").val(html);
 }
@@ -456,10 +479,21 @@ $("a.refresh_form").click(function (e) {
     var div = $(this).closest("div.tab-content");
     switch ($(div).prop("id")) {
         case "update_template_tab_form":
-            updateFormHTML($("table#update_template_attributes"));
+            var p = $(this).closest("p");
+            updateFormHTML(
+                $("table#update_template_attributes"),
+                $(p).find("input.cb_form_has_links").prop("checked"),
+                $(p).find("input.cb_form_has_files").prop("checked"),
+                $(p).find("input.cb_form_has_notes").prop("checked")
+            );
             break;
         case "add_template_tab_form":
-            updateFormHTML($("table#add_template_attributes"));
+            updateFormHTML(
+                $("table#add_template_attributes"),
+                $(p).find("input.cb_form_has_links").prop("checked"),
+                $(p).find("input.cb_form_has_files").prop("checked"),
+                $(p).find("input.cb_form_has_notes").prop("checked")
+            );
             break;
     }
 });
@@ -467,8 +501,9 @@ $("a.refresh_form").click(function (e) {
 $("a.preview_form").click(function (e) {
     e.preventDefault();
     var html = $("html").clone();
+    $(html).find("body *").not("script").remove();
     var textarea = $(this).closest("p").next("textarea.form_html");
-    $(html).find("body").html('<div class="columns"><div class="column"></div><div class="column is-4">' + $(textarea).val() + '</div><div class="column"></div></div>');
+    $(html).find("body").prepend('<div class="columns"><div class="column"></div><div class="column is-4">' + $(textarea).val() + '</div><div class="column"></div></div>');
     var base64 = window.btoa(unescape(encodeURIComponent('<html>' + $(html).html() + '</html>')));
     window.open("data:text/html;base64," + base64);
 });

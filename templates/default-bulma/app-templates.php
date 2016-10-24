@@ -146,9 +146,9 @@
           <p class="control">Customize HTML 
             <a class="refresh_form button is-warning is-small"><span class="icon is-small"><i class="fa fa-exclamation-triangle"></i></span><span>Reset</span></a>
             <a class="preview_form button is-info is-small"><span class="icon is-small"><i class="fa fa-external-link"></i></span><span>Preview</span></a>
-            <label class="checkbox"><input type="checkbox">Has links</label>
-            <label class="checkbox"><input type="checkbox">Has files</label>
-            <label class="checkbox"><input type="checkbox">Has notes</label>            
+            <label class="checkbox"><input class="cb_form_has_links" type="checkbox" checked>Has links</label>
+            <label class="checkbox"><input class="cb_form_has_files"type="checkbox" checked>Has files</label>
+            <label class="checkbox"><input class="cb_form_has_notes"type="checkbox" checked>Has notes</label>            
           </p>
           <textarea name="htmlForm" id="add_template_form" class="form_html" rows="16"></textarea>
         </div>        
@@ -254,9 +254,9 @@
           <p class="control">Customize HTML 
             <a class="refresh_form button is-warning is-small"><span class="icon is-small"><i class="fa fa-exclamation-triangle"></i></span><span>Reset</span></a>
             <a class="preview_form button is-info is-small"><span class="icon is-small"><i class="fa fa-external-link"></i></span><span>Preview</span></a>
-            <label class="checkbox"><input type="checkbox">Has links</label>
-            <label class="checkbox"><input type="checkbox">Has files</label>
-            <label class="checkbox"><input type="checkbox">Has notes</label>
+            <label class="checkbox"><input class="cb_form_has_links" type="checkbox" checked>Has links</label>
+            <label class="checkbox"><input class="cb_form_has_files"type="checkbox" checked>Has files</label>
+            <label class="checkbox"><input class="cb_form_has_notes"type="checkbox" checked>Has notes</label>            
           </p>
           <textarea name="htmlForm" id="update_template_form" class="form_html" rows="16"></textarea>
         </div>        
