@@ -15,6 +15,9 @@
         const DATE = 5;             // date 
         const TIME = 6;             // time
         const DATETIME = 7;         // date & time
+        const BOOLEAN = 8;          // boolean (true/false)
+        const USER = 10;            // user
+        const GROUP = 11;           // group
     }
 
     /**
@@ -30,7 +33,7 @@
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $name = "", string $description = "", int $type = AttributeType::NONE) {
+        public function set(string $id = "", string $name = "", string $description = "", int $type = \PHP_MPM\AttributeType::NONE) {
             $this->id = $id;
             $this->name = $name;
             $this->description = $description;

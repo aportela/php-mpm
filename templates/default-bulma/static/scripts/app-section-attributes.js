@@ -33,6 +33,15 @@ function fillTable(actualPage, totalPages, attributes) {
                 case 7:
                     html += '<span class="icon is-small"><i class="fa fa-1x fa-calendar-check-o" aria-hidden="true"></i></span> datetime';
                     break;
+                case 8:
+                    html += '<span class="icon is-small"><i class="fa fa-1x fa-check" aria-hidden="true"></i></span> boolean';
+                    break;
+                case 10:
+                    html += '<span class="icon is-small"><i class="fa fa-1x fa-user" aria-hidden="true"></i></span> user';
+                    break;
+                case 11:
+                    html += '<span class="icon is-small"><i class="fa fa-1x fa-group" aria-hidden="true"></i></span> group';
+                    break;
                 default:
                     html += '<span class="icon is-small"><i class="fa fa-1x fa-user-md" aria-hidden="true"></i></span> none';
                     break;

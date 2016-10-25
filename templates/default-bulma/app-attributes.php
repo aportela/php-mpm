@@ -97,6 +97,9 @@
               <option value="5">date</option>
               <option value="6">time</option>
               <option value="7">datetime</option>
+              <option value="8">boolean</option>
+              <option value="10">user</option>
+              <option value="11">group</option>
             </select>
           </span>
                   
