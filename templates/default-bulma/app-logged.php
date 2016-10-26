@@ -12,6 +12,28 @@
                 <?php
                 if ($_TEMPLATE["session_user_is_admin"] == 1) {
                 ?>
+                <!--
+                <p class="menu-label">
+                    Search
+                </p>
+                <ul class="menu-list">
+                    <li><a href="#"><span class="icon"><i class="fa fa-search"></i></span> Global search</a></li>
+                    <li><a href="#"><span class="icon"><i class="fa fa-file-o"></i></span> Search Bills</a></li>
+                </ul>
+                <p class="menu-label">
+                    Add new element
+                </p>                
+                <ul class="menu-list" id="template_list">
+                <?php
+                    /*
+                    $data = \PHP_MPM\Template::search(1, 0, "");
+                    foreach($data->results as $template) {
+                        echo '<li><a href="index.php?createId=' . $template->id . '"><span class="icon"><i class="fa fa-file-o"></i></span> ' . $template->name . '</a></li>';
+                    }
+                    */
+                ?>                
+                </ul>
+                -->
                 <p class="menu-label">
                     Administration
                 </p>
@@ -51,6 +73,9 @@
                             break;
                             case "errors":
                                 include "app-errors.php";
+                            break;
+                            case "create_element":
+                                include "app-create_element.php";
                             break;
                             default:
                                 ?>
