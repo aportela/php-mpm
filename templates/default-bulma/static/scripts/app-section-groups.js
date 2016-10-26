@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * fill groups table data
  */

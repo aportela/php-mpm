@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * fill attributes table data
  */

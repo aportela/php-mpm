@@ -1,3 +1,5 @@
+"use strict";
+
 $("form#frm_recover_account").submit(function(e) {
     e.preventDefault();
     var json = {

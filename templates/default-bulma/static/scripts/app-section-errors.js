@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * fill errors table data
  */

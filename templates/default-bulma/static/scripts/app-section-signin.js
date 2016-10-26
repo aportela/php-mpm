@@ -1,3 +1,5 @@
+"use strict";
+
 $("form#frm_signin").submit(function(e) {
     e.preventDefault();
     var json = {
