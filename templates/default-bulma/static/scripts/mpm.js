@@ -6,10 +6,11 @@ mpm.util = mpm.util || {};
 
 /**
  * uuid generator
+ * 
  * (broofa) http://stackoverflow.com/a/2117523
  */
-mpm.util.uuid = function() {
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+mpm.util.uuid = function () {
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0,
             v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
@@ -17,20 +18,50 @@ mpm.util.uuid = function() {
     return (uuid);
 }
 
+mpm.url = mpm.url || {};
+
+/**
+ * get query string & parameters
+ * 
+ * (Quentin) http://stackoverflow.com/a/979995
+ */
+mpm.url.queryString = function () {
+    // This function is anonymous, is executed immediately and 
+    // the return value is assigned to QueryString!
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+            query_string[pair[0]] = decodeURIComponent(pair[1]);
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+            var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+            query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+            query_string[pair[0]].push(decodeURIComponent(pair[1]));
+        }
+    }
+    return query_string;
+}
+
 mpm.form = mpm.form || {};
 
-mpm.form.disableSubmit = function(form) {
+mpm.form.disableSubmit = function (form) {
     $(form).find('button[type="submit"]').prop("disabled", true);
 };
 
-mpm.form.enableSubmit = function(form) {
+mpm.form.enableSubmit = function (form) {
     $(form).find('button[type="submit"]').prop("disabled", false);
 };
 
 /**
  * clear all form (input fields) validation messages
  */
-mpm.form.clearValidationMessages = function(form) {
+mpm.form.clearValidationMessages = function (form) {
     $(form).find("input.input").removeClass("is-danger").removeClass("is-warning");
     $(form).find("span.help").remove();
 }
@@ -38,7 +69,7 @@ mpm.form.clearValidationMessages = function(form) {
 /**
  * put form (input field) validation warning message
  */
-mpm.form.putValidationWarning = function(elementId, message) {
+mpm.form.putValidationWarning = function (elementId, message) {
     var element = $("p#" + elementId);
     $(element).find("input.input").addClass("is-warning");
     $(element).append('<span class="help is-warning">' + message + '</span>');
@@ -47,7 +78,7 @@ mpm.form.putValidationWarning = function(elementId, message) {
 /**
  * put form (input field) validation error message
  */
-mpm.form.putValidationError = function(elementId, message) {
+mpm.form.putValidationError = function (elementId, message) {
     var element = $("p#" + elementId);
     $(element).find("input.input").addClass("is-danger");
     $(element).append('<span class="help is-danger">' + message + '</span>');
@@ -56,7 +87,7 @@ mpm.form.putValidationError = function(elementId, message) {
 /**
  * put form (input field) validation success message
  */
-mpm.form.putValidationSuccess = function(elementId, message) {
+mpm.form.putValidationSuccess = function (elementId, message) {
     var element = $("p#" + elementId);
     $(element).append('<span class="help is-success">' + message + '</span>');
 }
@@ -64,16 +95,16 @@ mpm.form.putValidationSuccess = function(elementId, message) {
 /**
  * reset form
  */
-mpm.form.reset = function(form) {
+mpm.form.reset = function (form) {
     $(form)[0].reset();
 }
 
-mpm.form.submit = function(form, callback) {
+mpm.form.submit = function (form, callback) {
     mpm.form.disableSubmit(form);
     mpm.form.clearValidationMessages(form);
     var xhr = new XMLHttpRequest();
     xhr.open($(form).attr("method"), $(form).attr("action"), true);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             mpm.form.enableSubmit(form);
             var response = null;
@@ -92,7 +123,7 @@ mpm.form.submit = function(form, callback) {
     xhr.send(new FormData($(form)[0]), null, 2);
 };
 
-mpm.form.submitJSON = function(form, json, callback) {
+mpm.form.submitJSON = function (form, json, callback) {
     mpm.form.disableSubmit(form);
     mpm.form.clearValidationMessages(form);
     var data = JSON.stringify(json);
@@ -100,7 +131,7 @@ mpm.form.submitJSON = function(form, json, callback) {
     xhr.open($(form).attr("method"), $(form).attr("action"), true);
     xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     xhr.setRequestHeader("Content-length", data.length);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             mpm.form.enableSubmit(form);
             var response = null;
@@ -119,10 +150,10 @@ mpm.form.submitJSON = function(form, json, callback) {
     xhr.send(data);
 };
 
-mpm.xhr = function(method, action, formData, callback) {
+mpm.xhr = function (method, action, formData, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open(method, action, true);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             var response = null;
             try {
@@ -140,13 +171,13 @@ mpm.xhr = function(method, action, formData, callback) {
     xhr.send(formData, null, 2);
 }
 
-mpm.xhrJSON = function(method, action, json, callback) {
+mpm.xhrJSON = function (method, action, json, callback) {
     var xhr = new XMLHttpRequest();
     var data = JSON.stringify(json);
     xhr.open(method, action, true);
     xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     xhr.setRequestHeader("Content-length", data.length);
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function (e) {
         if (this.readyState == 4) {
             var response = null;
             try {
@@ -166,7 +197,7 @@ mpm.xhrJSON = function(method, action, json, callback) {
 
 mpm.pagination = mpm.pagination || {};
 
-mpm.pagination.setControls = function(actualPage, totalPages) {
+mpm.pagination.setControls = function (actualPage, totalPages) {
     $(".pager_actual_page").text(actualPage);
     $(".pager_total_pages").text(totalPages);
     if (actualPage < totalPages) {
@@ -183,7 +214,7 @@ mpm.pagination.setControls = function(actualPage, totalPages) {
 
 mpm.error = mpm.error || {};
 
-mpm.error.getStackTrace = function() {
+mpm.error.getStackTrace = function () {
     var stackTrace = null;
     try {
         throw new Error();
@@ -193,7 +224,7 @@ mpm.error.getStackTrace = function() {
     return (stackTrace);
 };
 
-mpm.error.showModal = function() {
+mpm.error.showModal = function () {
     $("div#stack_trace").text(mpm.error.getStackTrace());
     $('html').addClass('is-clipped');
     $("div#modal_general_error").addClass('is-active');
@@ -202,7 +233,7 @@ mpm.error.showModal = function() {
 mpm.data = mpm.data || {};
 
 // TODO: escape chars!!!
-mpm.data.tableExport = function(table, format) {
+mpm.data.tableExport = function (table, format) {
     var tableName = $(table).attr("id");
     var collectionName = tableName || "rows";
     if (!tableName) {
@@ -211,27 +242,27 @@ mpm.data.tableExport = function(table, format) {
         tableName += "-" + (new Date()).toISOString().slice(0, 10).replace(/-/g, "")
     }
     // get real cell value (removing icons)
-    var getCellText = function(element) {
+    var getCellText = function (element) {
         var cloned = $(element).clone();
         $(cloned).children("i.fa").remove();
         return ($(cloned).text().trim());
     };
     if (format === "json") {
         var fields = [];
-        $(table).find("thead tr:last th").each(function(i) {
+        $(table).find("thead tr:last th").each(function (i) {
             if (!$(this).hasClass("ignore_on_export")) {
                 fields.push(getCellText($(this)));
             }
         });
         var data = {};
         data[collectionName] = [];
-        $(table).find("tbody tr").each(function(i) {
+        $(table).find("tbody tr").each(function (i) {
             var element = {};
             if ($(this).data("id")) {
                 element.id = $(this).data("id");
             }
             var fieldIdx = 0;
-            $(this).find("td").each(function(j) {
+            $(this).find("td").each(function (j) {
                 if (!$(this).hasClass("ignore_on_export")) {
                     element[fields[fieldIdx]] = $(this).data("date") ? $(this).data("date") : getCellText($(this));
                     fieldIdx++;
@@ -242,19 +273,19 @@ mpm.data.tableExport = function(table, format) {
         saveAs(new Blob([JSON.stringify(data)], { type: "application/json; charset=utf-8" }), tableName + ".json");
     } else if (format == "xml") {
         var fields = [];
-        $(table).find("thead tr:last th").each(function(i) {
+        $(table).find("thead tr:last th").each(function (i) {
             if (!$(this).hasClass("ignore_on_export")) {
                 fields.push(getCellText($(this)));
             }
         });
         var data = '<xml><' + collectionName + '>';
-        $(table).find("tbody tr").each(function(i) {
+        $(table).find("tbody tr").each(function (i) {
             var row = '<element>';
             if ($(this).data("id")) {
                 row += '<col name="id">' + $(this).data("id") + '</col>';
             }
             var fieldIdx = 0;
-            $(this).find("td").each(function(j) {
+            $(this).find("td").each(function (j) {
                 if (!$(this).hasClass("ignore_on_export")) {
                     row += '<col name="' + fields[fieldIdx] + '">' + ($(this).data("date") ? $(this).data("date") : getCellText($(this))) + '</col>';
                     fieldIdx++;
@@ -267,7 +298,7 @@ mpm.data.tableExport = function(table, format) {
         saveAs(new Blob([data], { type: "text/xml; charset=utf-8" }), tableName + ".xml");
     } else if (format === "csv") {
         // get real cell value (removing icons)
-        var escapeValue = function(value) {
+        var escapeValue = function (value) {
             // borrowed some ideas from
             // (Xavier John) http://stackoverflow.com/a/24922761
             value = value.replace(/"/g, '""');
@@ -278,20 +309,20 @@ mpm.data.tableExport = function(table, format) {
         };
         var data = "";
         var fields = ["id"];
-        $(table).find("thead tr:last th").each(function(i) {
+        $(table).find("thead tr:last th").each(function (i) {
             if (!$(this).hasClass("ignore_on_export")) {
                 fields.push(escapeValue(getCellText($(this))));
             }
         });
         data += fields.join(", ") + "\n";
-        $(table).find("tbody tr").each(function(i) {
+        $(table).find("tbody tr").each(function (i) {
             var rowValues = [];
             var row = "";
             if ($(this).data("id")) {
                 rowValues.push(escapeValue($(this).data("id")));
             }
             var fieldIdx = 0;
-            $(this).find("td").each(function(j) {
+            $(this).find("td").each(function (j) {
                 if (!$(this).hasClass("ignore_on_export")) {
                     var v = ($(this).data("date") ? $(this).data("date") : getCellText($(this)));
                     rowValues.push(escapeValue(v));
@@ -312,7 +343,7 @@ mpm.utils = mpm.utils || {};
  * 
  * (Hermann Ingjaldsson) http://stackoverflow.com/a/16938481
  */
-mpm.utils.getBrowserFromUserAgent = function(ua) {
+mpm.utils.getBrowserFromUserAgent = function (ua) {
     if (ua) {
         var tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
         if (/trident/i.test(M[1])) {
@@ -334,7 +365,7 @@ mpm.utils.getBrowserFromUserAgent = function(ua) {
 /**
  * get operating system from user agent
  */
-mpm.utils.getOSFromUserAgent = function(ua) {
+mpm.utils.getOSFromUserAgent = function (ua) {
     if (ua) {
         var tmp = [
             // Match user agent string with operating systems
@@ -371,59 +402,70 @@ mpm.utils.getOSFromUserAgent = function(ua) {
 
 mpm.user = mpm.user || {};
 
-mpm.user.search = function(page, resultsPage, text, callback) {
+mpm.user.search = function (page, resultsPage, text, callback) {
     var json = {
         page: page,
         resultsPage: resultsPage,
         text: text
     };
-    mpm.xhrJSON("POST", "/api/user/search.php", json, function(httpStatusCode, response) {
+    mpm.xhrJSON("POST", "/api/user/search.php", json, function (httpStatusCode, response) {
         callback(httpStatusCode, response);
     });
 }
 
 mpm.group = mpm.group || {};
 
-mpm.group.get = function(id, callback) {
+mpm.group.get = function (id, callback) {
     var json = {
         id: id
     };
-    mpm.xhrJSON("POST", "/api/group/get.php", json, function(httpStatusCode, response) {
+    mpm.xhrJSON("POST", "/api/group/get.php", json, function (httpStatusCode, response) {
         callback(httpStatusCode, response);
     });
 }
 
-mpm.group.search = function(page, resultsPage, text, callback) {
+mpm.group.search = function (page, resultsPage, text, callback) {
     var json = {
         page: page,
         resultsPage: resultsPage,
         text: text
     };
-    mpm.xhrJSON("POST", "/api/group/search.php", json, function(httpStatusCode, response) {
+    mpm.xhrJSON("POST", "/api/group/search.php", json, function (httpStatusCode, response) {
         callback(httpStatusCode, response);
     });
 }
 
 mpm.attribute = mpm.attribute || {};
 
-mpm.attribute.search = function(page, resultsPage, text, callback) {
+mpm.attribute.search = function (page, resultsPage, text, callback) {
     var json = {
         page: page,
         resultsPage: resultsPage,
         text: text
     };
-    mpm.xhrJSON("POST", "/api/attribute/search.php", json, function(httpStatusCode, response) {
+    mpm.xhrJSON("POST", "/api/attribute/search.php", json, function (httpStatusCode, response) {
         callback(httpStatusCode, response);
     });
 }
 
 mpm.template = mpm.template || {};
 
-mpm.template.get = function(id, callback) {
+mpm.template.get = function (id, callback) {
     var json = {
         id: id
     };
-    mpm.xhrJSON("POST", "/api/template/get.php", json, function(httpStatusCode, response) {
+    mpm.xhrJSON("POST", "/api/template/get.php", json, function (httpStatusCode, response) {
         callback(httpStatusCode, response);
     });
+}
+
+mpm.element = mpm.element || {};
+
+mpm.element.create = function(templateId, callback) {
+    var json = {
+        templateId: templateId
+    };
+    mpm.xhrJSON("POST", "/api/element/create.php", json, function (httpStatusCode, response) {
+        callback(httpStatusCode, response);
+    });    
 }
