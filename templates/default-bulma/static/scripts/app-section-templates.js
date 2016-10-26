@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * fill templates table data
  */
@@ -7,7 +9,7 @@ function fillTable(actualPage, totalPages, templates) {
     if (templates && templates.length > 0) {
         for (var i = 0; i < templates.length; i++) {
             html += '<tr data-id="' + templates[i].id + '">';
-            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_template" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_template" data-target="#modal_delete">Delete</a></td>';
+            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-primary btn_create_template" href="?page=create_element&amp;template_id=' + templates[i].id + '">Create</a> <a class="button is-small is-info modal-button btn_update_template" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_template" data-target="#modal_delete">Delete</a></td>';
             html += '<td>' + templates[i].name + '</td>';
             html += '<td>' + (templates[i].description ? templates[i].description : "") + '</td>';
             html += '<td data-id="' + templates[i].creatorId + '">' + (templates[i].creatorId != templates[i].id ? templates[i].creatorName : "auto-register") + '</td>';
@@ -442,8 +444,8 @@ function updateFormHTML(table, hasLinks, hasFiles, hasNotes) {
     html += "\t" + '</ul>' + "\n";
     html += '</div>' + "\n";
 
-    html += '<form id="f_metadata">' + "\n";
-    html += '<div class="tab-content" id="frm_signin">';
+    html += '<form id="frm_new_element">' + "\n";
+    html += '<div class="tab-content" id="f_metadata">';
     var attributes = getAttributes(table);
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
