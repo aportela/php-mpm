@@ -44,6 +44,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.js"></script>
                 <?php
             break;
+            case "create_element":
+                ?>
+<script src="/templates/default-bulma/static/scripts/app-section-create_element.js"></script>
+                <?php
+            break;
         }
     }
 ?>
