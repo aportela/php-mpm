@@ -38,6 +38,9 @@ function fillTable(actualPage, totalPages, attributes) {
                 case 8:
                     html += '<span class="icon is-small"><i class="fa fa-1x fa-check" aria-hidden="true"></i></span> boolean';
                     break;
+                case 9:
+                    html += '<span class="icon is-small"><i class="fa fa-1x fa-caret-square-o-down" aria-hidden="true"></i></span> select';
+                    break;
                 case 10:
                     html += '<span class="icon is-small"><i class="fa fa-1x fa-user" aria-hidden="true"></i></span> user';
                     break;
@@ -66,8 +69,11 @@ $("form#frm_add_attribute").submit(function(e) {
         id: mpm.util.uuid(),
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
-        type: $(this).find('select[name="type"]').val()
+        type: parseInt($(this).find('select[name="type"]').val())
     };
+    if (json.type === 9) {
+        json.options = getAttributeOptions($("table#add_attribute_options"));
+    }
     mpm.form.submitJSON(this, json, function(httpStatusCode, response) {
         switch (httpStatusCode) {
             case 409:
@@ -166,6 +172,56 @@ $('table tbody').on("click", ".btn_delete_attribute", function(e) {
     $("input#delete_attribute_id").val($(tr).data("id"));
     $("strong#delete_attribute_name").text($(tr).find("td:nth-child(2)").text());
 });
+
+/**
+ * show attribute options tab when attribute type is "select" 
+ */
+$("select.attribute_type").change(function(e) {
+    if ($(this).val() == 9) {
+        $("li.tab_attribute_options").removeClass("is-hidden");
+    } else {
+        $("li.tab_attribute_options").addClass("is-hidden");
+    }
+});
+
+/**
+ * add attribute option button click event
+ * description: add new option on table
+ */
+$("a.btn_add_attribute_option").click(function(e) {
+    e.preventDefault();
+    var optionValue = $(this).prev("input").val();
+    if (optionValue) {
+        appendAttributeOption($("table#add_attribute_options"), null, optionValue);
+    }
+});
+
+/**
+ * append attribute option into table
+ */
+function appendAttributeOption(table, id, name) {
+    var html = "";
+    html += '<tr data-id="' + (id ? id : "") + '" data-option_id="' + (id ? id : "") + '" data-option_value="' + (name ? name : "") + '">';
+    html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
+    html += "<td>" + name + "</td>";
+    html += "</tr>";
+    $(table).find("tbody").append(html);
+}
+
+/**
+ * get attribute options from table
+ */
+function getAttributeOptions(table) {
+    var options = [];
+    $(table).find("tbody tr").each(function (i) {
+        options.push({
+            id: String($(this).data("id")),
+            name: String($(this).data("option_value")),
+            idx: i
+        });
+    });
+    return (options);    
+}
 
 /**
  * launch search on start
