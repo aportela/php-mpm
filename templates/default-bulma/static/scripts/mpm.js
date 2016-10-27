@@ -437,6 +437,15 @@ mpm.group.search = function (page, resultsPage, text, callback) {
 
 mpm.attribute = mpm.attribute || {};
 
+mpm.attribute.get = function (id, callback) {
+    var json = {
+        id: id
+    };
+    mpm.xhrJSON("POST", "/api/attribute/get.php", json, function (httpStatusCode, response) {
+        callback(httpStatusCode, response);
+    });
+}
+
 mpm.attribute.search = function (page, resultsPage, text, callback) {
     var json = {
         page: page,
