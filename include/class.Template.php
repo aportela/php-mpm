@@ -254,6 +254,7 @@
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
+                    $this->id = $this->id;
                     $this->name = $rows[0]->name;
                     $this->description = $rows[0]->description;
                     $this->htmlForm = $rows[0]->htmlForm;
