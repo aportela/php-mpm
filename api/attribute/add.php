@@ -10,6 +10,7 @@
     *   @param string name
     *   @param string description
     *   @param int type
+    *   @param array options (optional)
     */
     namespace PHP_MPM;
 
@@ -33,6 +34,24 @@
             isset($params["description"]) ? $params["description"]: "",
             isset($params["type"]) ? $params["type"]: \PHP_MPM\AttributeType::NONE
         );
+        if (isset($params["options"])) {            
+            if (is_array($params["options"])) {
+                $options = array();
+                $t = count($params["attributes"]);
+                for ($i = 0; $i < $t; $i++) {
+                    $ao = new \PHP_MPM\AttributeOption();
+                    $ao->set(
+                        isset($params["options"][$i]["id"]) ? $params["options"][$i]["id"]: "",
+                        isset($params["options"][$i]["name"]) ? $params["options"][$i]["name"]: "",
+                        isset($params["options"][$i]["idx"]) ? intval($params["options"][$i]["idx"]): 0,
+                    );
+                    $options[] = $ao;
+                }
+                $a->options = $options;
+            } else {
+                throw new \PHP_MPM\MPMInvalidParamsException("options");
+            }            
+        }         
         $a->add();
         $result["success"] = true;
         ob_clean();
