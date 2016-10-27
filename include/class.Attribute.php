@@ -16,6 +16,7 @@
         const TIME = 6;             // time
         const DATETIME = 7;         // date & time
         const BOOLEAN = 8;          // boolean (true/false)
+        const SELECT = 9;           // select (multiple options) 
         const USER = 10;            // user
         const GROUP = 11;           // group
     }
@@ -28,6 +29,7 @@
         public $name;
         public $description;
         public $type;
+        public $options;
 
 		public function __construct () { }
 
@@ -166,6 +168,15 @@
                         $param->str(":creator", User::getSessionUserId());
                         $params[] = $param;                
                         \PHP_MPM\Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
+                        // TODO: transaction support
+                        if ($this->type == \PHP_MPM\AttributeType::SELECT) {
+                            if ($this->options) {
+                                $t = count($this->options);
+                                for ($i = 0; $i < $t; $i++) {
+                                    $this->options[$i].add($this->id);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -200,6 +211,16 @@
                     }
                     $params[] = $param;                
                     \PHP_MPM\Database::execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
+                    // TODO: transaction support
+                    if ($this->type == \PHP_MPM\AttributeType::SELECT) {
+                        \PHP_MPM\AttributeOption::deleteAll($this->id);
+                        if ($this->options) {
+                            $t = count($this->options);
+                            for ($i = 0; $i < $t; $i++) {
+                                $this->options[$i].add($this->id);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -220,7 +241,33 @@
                 $param->str(":id", $this->id);
                 $params[] = $param;                                
                 \PHP_MPM\Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
+                // TODO: transaction support
+                \PHP_MPM\AttributeOption::deleteAll($this->id);
             }
         }
+
+        /**
+        *   get attribute (metadata / options)
+        */
+        public function get() {
+            if (! \PHP_MPM\User::isAuthenticated()) {
+                throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
+            } else if (empty($this->id)) {                
+                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
+            } else {
+                $param = new \PHP_MPM\DatabaseParam();
+                $param->str(":id", $this->id);                
+                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description, type FROM [ATTRIBUTE] WHERE id = :id ", array($param));
+                if (count($rows) != 1) {
+                    throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
+                } else {
+                    $this->set($this->id, $rows[0]->name, $rows[0]->description, $rows[0]->type);
+                    if ($this->type == \PHP_MPM\AttributeType::SELECT) {
+                        $this->options = \PHP_MPM\AttributeOption::search($this->id);
+                    }                    
+                    return(get_object_vars($this));
+                }
+            }
+        }        
     }
 ?>
