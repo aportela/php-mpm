@@ -12,6 +12,9 @@ $("form#frm_signup").submit(function(e) {
             case 400:
                 mpm.form.putValidationError("c_signup_submit", SIGN_UP_GENERAL_ERROR_MESSAGE);
                 break;
+            case 403:
+                mpm.form.putValidationError("c_signup_submit", SIGN_UP_PUBLIC_REGISTER_NOT_ALLOWED);
+                break;
             case 409:
                 mpm.form.putValidationError("c_signup_email", SIGN_UP_EMAIL_EXISTS);
                 break;

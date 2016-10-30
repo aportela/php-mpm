@@ -6,6 +6,7 @@ const SIGN_IN_GENERAL_ERROR_MESSAGE = "error starting session";
 
 const SIGN_UP_EMAIL_EXISTS = "email already used";
 const SIGN_UP_GENERAL_ERROR_MESSAGE = "error registering user";
+const SIGN_UP_PUBLIC_REGISTER_NOT_ALLOWED = "public registering is not allowed";
 
 const RECOVER_ACCOUNT_EMAIL_NOT_FOUND_ON_SERVER = "email not found";
 const RECOVER_ACCOUNT_EMAIL_FIELD_REQUIRED = "email required";

@@ -30,6 +30,7 @@
     define("TEMPLATES_PATH", APP_ROOT_LOCAL_PATH . DIRECTORY_SEPARATOR . "templates");
     define("DEFAULT_TEMPLATE_THEME", "default-bulma");
 
+    define("ALLOW_PUBLIC_SIGNUP", true);
 
     if (ENVIRONMENT_DEV) {
 		ini_set('display_errors', 'On');

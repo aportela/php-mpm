@@ -72,32 +72,36 @@
             if ($this->exists()) {
                 throw new \PHP_MPM\MPMAlreadyExistsException(print_r(get_object_vars($this), true));
             } else {
-                if (empty($this->email) || empty($this->password) || empty($this->name)) {
-                    throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                if (! ALLOW_PUBLIC_SIGNUP) {
+                    throw new \PHP_MPM\MPMAccessDeniedException(print_r(get_object_vars($this), true));
                 } else {
-                    if (empty($this->id)) {
-                        $this->id = \PHP_MPM\Utils::uuid();
+                    if (empty($this->email) || empty($this->password) || empty($this->name)) {
+                        throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
+                    } else {
+                        if (empty($this->id)) {
+                            $this->id = \PHP_MPM\Utils::uuid();
+                        }
+                        $params = array();
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":id", $this->id);
+                        $params[] = $param;                
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":email", $this->email);
+                        $params[] = $param;                
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
+                        $params[] = $param;                                
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->int(":type", \PHP_MPM\UserType::DEFAULT);
+                        $params[] = $param;                                
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":name", $this->name);
+                        $params[] = $param;                                
+                        $param = new \PHP_MPM\DatabaseParam();
+                        $param->str(":creator", \PHP_MPM\User::isAuthenticated() ? \PHP_MPM\User::getSessionUserId(): $this->id);
+                        $params[] = $param;                                
+                        \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                     }
-                    $params = array();
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":id", $this->id);
-                    $params[] = $param;                
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":email", $this->email);
-                    $params[] = $param;                
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":password", password_hash($this->password, PASSWORD_BCRYPT, array("cost" => 12)));
-                    $params[] = $param;                                
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->int(":type", \PHP_MPM\UserType::DEFAULT);
-                    $params[] = $param;                                
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":name", $this->name);
-                    $params[] = $param;                                
-                    $param = new \PHP_MPM\DatabaseParam();
-                    $param->str(":creator", \PHP_MPM\User::isAuthenticated() ? \PHP_MPM\User::getSessionUserId(): $this->id);
-                    $params[] = $param;                                
-                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }

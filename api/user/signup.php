@@ -45,6 +45,13 @@
         if (ENVIRONMENT_DEV && DEBUG) {
             $result["exception"] = print_r($e, true);
         }
+    } catch (\PHP_MPM\MPMAccessDeniedException $e) {
+        \PHP_MPM\Error::save($e);
+        ob_clean();
+        header("HTTP/1.1 403 Forbidden", 403, true);
+        if (ENVIRONMENT_DEV && DEBUG) {
+            $result["exception"] = print_r($e, true);
+        }
     } catch (\PDOException $e) {
         \PHP_MPM\Error::save($e);
         ob_clean();
