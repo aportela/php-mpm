@@ -35,7 +35,7 @@
 
         public function __destruct() { }
 
-        public function set(string $id = "", string $name = "", string $description = "", int $type = \PHP_MPM\AttributeType::NONE) {
+        public function set(string $id = "", string $name = "", $description = "", int $type = \PHP_MPM\AttributeType::NONE) {
             $this->id = $id;
             $this->name = $name;
             $this->description = $description;
