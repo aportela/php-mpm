@@ -43,7 +43,7 @@
                     $ao->set(
                         isset($params["options"][$i]["id"]) ? $params["options"][$i]["id"]: "",
                         isset($params["options"][$i]["name"]) ? $params["options"][$i]["name"]: "",
-                        isset($params["options"][$i]["idx"]) ? intval($params["options"][$i]["idx"]): 0,
+                        isset($params["options"][$i]["idx"]) ? intval($params["options"][$i]["idx"]): 0
                     );
                     $options[] = $ao;
                 }
