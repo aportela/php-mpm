@@ -61,6 +61,23 @@ function fillTable(actualPage, totalPages, attributes) {
 }
 
 /**
+ * clear previous permissions table
+ */
+function clearTable(table) {
+    $(table).find("tbody").html("");
+}
+
+/**
+ * select first tab contained on form
+ */
+function selectFirstTab(form) {
+    $(form).find("div.tabs ul li").removeClass("is-active");
+    $(form).find("div.tabs ul li:first").addClass("is-active");
+    $(form).find("div.tab-content").addClass("is-hidden");
+    $(form).find("div.tab-content:first").removeClass("is-hidden");
+}
+
+/**
  * add attribute modal form submit event
  */
 $("form#frm_add_attribute").submit(function(e) {
@@ -149,7 +166,10 @@ $("form#frm_delete_attribute").submit(function(e) {
  * reset add form before show modal
  */
 $('table thead').on("click", ".btn_add_attribute", function(e) {
+    $("select.attribute_type").trigger("change");
     mpm.form.reset($("form#frm_add_attribute"));
+    selectFirstTab($("form#frm_add_attribute"));
+    clearTable($("table#add_attribute_options"));
 });
 
 /**
@@ -158,9 +178,16 @@ $('table thead').on("click", ".btn_add_attribute", function(e) {
 $('table tbody').on("click", ".btn_update_attribute", function(e) {
     mpm.form.reset($("form#frm_delete_attribute"));
     var tr = $(this).closest("tr");
-    $("input#update_attribute_id").val($(tr).data("id"));
-    $("input#update_attribute_name").val($(tr).find("td:nth-child(2)").text());
-    $("input#update_attribute_description").val($(tr).find("td:nth-child(3)").text());
+    getAttribute($(tr).data("id"), function(data) {
+        if (data === null) {
+             mpm.error.showModal();
+        } else {
+            $("input#update_attribute_id").val(data.id);
+            $("input#update_attribute_name").val(data.name);
+            $("input#update_attribute_description").val(data.description);
+            $("select.attribute_type").val(data.type);
+        }
+    });    
 });
 
 /**
@@ -223,6 +250,25 @@ function getAttributeOptions(table) {
     return (options);    
 }
 
+/**
+ * get attribute info from server
+ */
+function getAttribute(id, callback) {
+    mpm.attribute.get(id, function (httpStatusCode, response) {
+        switch (httpStatusCode) {
+            case 200:
+                if (!(response && response.success)) {
+                    callback(null);
+                } else {
+                    callback(response.data);
+                }
+                break;
+            default:
+                callback(null);
+                break;
+        }
+    });
+}
 /**
  * launch search on start
  */
