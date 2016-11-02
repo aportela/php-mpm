@@ -81,13 +81,13 @@
         *   get attribute options
         */
         public static function search($attributeId) {
-            if (empty($templateId)) {
+            if (empty($attributeId)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $options = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":attribute_id", $attributeId);
-                $results = \PHP_MPM\Database::execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.template_id = :attribute_id ", array($param));
+                $results = \PHP_MPM\Database::execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.attribute_id = :attribute_id ", array($param));
                 foreach($results as $result) {
                     $option = new \PHP_MPM\AttributeOption();
                     $option->set($result->id, $result->name, $result->idx);
