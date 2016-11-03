@@ -156,31 +156,57 @@
         <button class="delete modal_close"></button>
       </header>
       <section class="modal-card-body">
-        <p class="control has-icon" id="cu_name">
-            <input class="input" type="text" name="name" id="update_attribute_name" placeholder="Name" maxlength="32" required>
-            <i class="fa fa-users"></i>
-        </p>
-        <p class="control has-icon" id="cu_description">
-            <input class="input" type="text" name="description" id="update_attribute_description" placeholder="Description" maxlength="128">
-            <i class="fa fa-comments-o" aria-hidden="true"></i>
-        </p>
-        <p class="control" id="cu_type">
-          <span class="select is-expanded">
-            <select class="attribute_type" name="type" required disabled>
-              <option value="1">short text</option>
-              <option value="2">long text</option>
-              <option value="3">integer number</option>
-              <option value="4">decimal number</option>
-              <option value="5">date</option>
-              <option value="6">time</option>
-              <option value="7">datetime</option>
-              <option value="8">boolean</option>
-              <option value="9">select</option>                
-              <option value="10">user</option>
-              <option value="11">group</option>
-            </select>
-          </span>                    
-        </p>
+
+        <div class="tabs">
+          <ul>
+            <li class="is-active"><a data-target="update_attribute_tab_metadata" href="#">Metadata</a></li>
+            <li class="tab_attribute_options is-hidden"><a data-target="update_attribute_tab_options" href="#">Options</a></li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="update_attribute_tab_metadata">
+          <p class="control has-icon" id="cu_name">
+              <input class="input" type="text" name="name" id="update_attribute_name" placeholder="Name" maxlength="32" required>
+              <i class="fa fa-users"></i>
+          </p>
+          <p class="control has-icon" id="cu_description">
+              <input class="input" type="text" name="description" id="update_attribute_description" placeholder="Description" maxlength="128">
+              <i class="fa fa-comments-o" aria-hidden="true"></i>
+          </p>
+          <p class="control" id="cu_type">
+            <span class="select is-expanded">
+              <select class="attribute_type" name="type" required disabled>
+                <option value="1">short text</option>
+                <option value="2">long text</option>
+                <option value="3">integer number</option>
+                <option value="4">decimal number</option>
+                <option value="5">date</option>
+                <option value="6">time</option>
+                <option value="7">datetime</option>
+                <option value="8">boolean</option>
+                <option value="9">select</option>                
+                <option value="10">user</option>
+                <option value="11">group</option>
+              </select>
+            </span>                    
+          </p>
+        </div>
+        <div class="tab-content is-hidden" id="update_attribute_tab_options">
+          <p class="control has-addons">
+            <input class="input" type="text">
+            <a class="button is-primary btn_add_attribute_option">Add new option</a>
+          </p>                            
+           <table id="update_attribute_options" class="table is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Option name</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>        
+        </div>
         
         <article class="message is-danger is-hidden modal_error">
           <div class="message-header">

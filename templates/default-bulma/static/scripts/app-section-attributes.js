@@ -176,7 +176,7 @@ $('table thead').on("click", ".btn_add_attribute", function(e) {
  * reset & assign form values before show modal
  */
 $('table tbody').on("click", ".btn_update_attribute", function(e) {
-    mpm.form.reset($("form#frm_delete_attribute"));
+    mpm.form.reset($("form#frm_update_attribute"));
     var tr = $(this).closest("tr");
     getAttribute($(tr).data("id"), function(data) {
         if (data === null) {
@@ -186,6 +186,15 @@ $('table tbody').on("click", ".btn_update_attribute", function(e) {
             $("input#update_attribute_name").val(data.name);
             $("input#update_attribute_description").val(data.description);
             $("select.attribute_type").val(data.type);
+            $("select.attribute_type").trigger("change");
+            if (data.type == 9) {
+                if (data.options && data.options.length > 0) {
+                    for (var i = 0; i < data.options.length; i++) {
+                        appendAttributeOption($("table#update_attribute_options"), null, optionValue);
+                    }
+                }
+            }
+            selectFirstTab($("form#frm_update_attribute"));
         }
     });    
 });
