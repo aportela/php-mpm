@@ -49,7 +49,9 @@
             $param->str(":user_remote_address", \PHP_MPM\Utils::getRemoteIpAddress());
             $params[] = $param;            
             try {
-                \PHP_MPM\Database::execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, message, trace, user_id, user_agent, user_remote_address) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :message, :trace, :user_id, :user_agent, :user_remote_address) ", $params);
+                $db = \PHP_MPM\Database::getHandler();
+                $db->endTrans();
+                $db->execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, message, trace, user_id, user_agent, user_remote_address) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :message, :trace, :user_id, :user_agent, :user_remote_address) ", $params);
             } catch (\Throwable $e) {
                 // we do not want to throw (again) on error 
             }
@@ -66,7 +68,8 @@
             } else {
                 $data = new \PHP_MPM\SearchResults();
                 if ($resultsPage > 0) {
-                    $totalResults = \PHP_MPM\Database::execScalar(" SELECT COUNT(E.created) FROM [ERROR] E ", array());
+                    $db = \PHP_MPM\Database::getHandler();
+                    $totalResults = $db->execScalar(" SELECT COUNT(E.created) FROM [ERROR] E ", array());
                     $data->setPager($totalResults, $page, $resultsPage);
                     $params = array();
                     $param = new \PHP_MPM\DatabaseParam();
@@ -75,10 +78,11 @@
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->int(":results_page", $resultsPage);
                     $params[] = $param;                    
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT datetime(E.created, 'localtime') AS creationDate, E.class, E.line, E.filename, E.code, E.message, E.trace, E.user_agent as userAgent, E.user_remote_address as remoteAddress, U.id AS userId, U.name AS userName FROM [ERROR] E LEFT JOIN [USER] U ON U.id = user_id ORDER BY E.created DESC LIMIT :start, :results_page ", $params));
+                    $data->setResults($db->execWithResult(" SELECT datetime(E.created, 'localtime') AS creationDate, E.class, E.line, E.filename, E.code, E.message, E.trace, E.user_agent as userAgent, E.user_remote_address as remoteAddress, U.id AS userId, U.name AS userName FROM [ERROR] E LEFT JOIN [USER] U ON U.id = user_id ORDER BY E.created DESC LIMIT :start, :results_page ", $params));
                 } else {
                     $data->setPager(0, 1, 0);
-                    $data->setResults(\PHP_MPM\Database::execWithResult(" SELECT datetime(E.created, 'localtime') AS creationDate, E.class, E.line, E.filename, E.code, E.message, E.trace, E.user_agent as userAgent, E.user_remote_address as remoteAddress, U.id AS userId, U.name AS userName FROM [ERROR] E LEFT JOIN [USER] U ON U.id = user_id ORDER BY E.created DESC ", array()));
+                    $db = \PHP_MPM\Database::getHandler();
+                    $data->setResults($db->execWithResult(" SELECT datetime(E.created, 'localtime') AS creationDate, E.class, E.line, E.filename, E.code, E.message, E.trace, E.user_agent as userAgent, E.user_remote_address as remoteAddress, U.id AS userId, U.name AS userName FROM [ERROR] E LEFT JOIN [USER] U ON U.id = user_id ORDER BY E.created DESC ", array()));
                 }                                
                 return($data);                
             }

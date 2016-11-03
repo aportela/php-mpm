@@ -51,8 +51,9 @@
                         $params[] = $param;                
                         $param = new \PHP_MPM\DatabaseParam();
                         $param->int(":option_index", $this->idx);
-                        $params[] = $param;                
-                        \PHP_MPM\Database::execWithoutResult(" INSERT INTO [ATTRIBUTE_OPTIONS] (attribute_id, option_id, option_value, option_index) VALUES (:attribute_id, :option_id, :option_value, :option_index) ", $params);
+                        $params[] = $param;
+                        $db = \PHP_MPM\Database::getHandler(true);                
+                        $db->execWithoutResult(" INSERT INTO [ATTRIBUTE_OPTIONS] (attribute_id, option_id, option_value, option_index) VALUES (:attribute_id, :option_id, :option_value, :option_index) ", $params);
                     }
                 }
             }
@@ -61,7 +62,7 @@
         /**
         *   delete all attribute options
         */
-        public function deleteAll($attributeId) {
+        public static function deleteAll($attributeId) {
             if (! User::isAuthenticated()) {
                 throw new \PHP_MPM\MPMAuthSessionRequiredException(print_r(get_object_vars($this), true));
             } else if (! User::isAuthenticatedAsAdmin()) {
@@ -72,8 +73,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":attribute_id", $attributeId);
-                $params[] = $param;                                
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [ATTRIBUTE_OPTIONS] WHERE attribute_id = :attribute_id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                                
+                $db->execWithoutResult(" DELETE FROM [ATTRIBUTE_OPTIONS] WHERE attribute_id = :attribute_id ", $params);
             }
         }
 
@@ -87,7 +89,8 @@
                 $options = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":attribute_id", $attributeId);
-                $results = \PHP_MPM\Database::execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.attribute_id = :attribute_id ", array($param));
+                $db = \PHP_MPM\Database::getHandler();
+                $db->execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.attribute_id = :attribute_id ", array($param));
                 foreach($results as $result) {
                     $option = new \PHP_MPM\AttributeOption();
                     $option->set($result->id, $result->name, $result->idx);

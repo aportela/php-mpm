@@ -39,7 +39,8 @@
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->bool(":allow_delete", $this->flags->allowDelete);
                     $params[] = $param;
-                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE_PERMISSION] (template_id, group_id, allow_create, allow_view, allow_update, allow_delete) VALUES (:template_id, :group_id, :allow_create, :allow_view, :allow_update, :allow_delete) ", $params);
+                    $db = \PHP_MPM\Database::getHandler(true);
+                    $db->execWithoutResult(" INSERT INTO [TEMPLATE_PERMISSION] (template_id, group_id, allow_create, allow_view, allow_update, allow_delete) VALUES (:template_id, :group_id, :allow_create, :allow_view, :allow_update, :allow_delete) ", $params);
                 }
             }                        
         }
@@ -69,8 +70,9 @@
                 $params[] = $param;                            
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":group_id", $this->group->id);
-                $params[] = $param;                                
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [TEMPLATE_PERMISSION] SET allow_create = :allow_create, allow_view = :allow_view, allow_update = :allow_update, allow_delete = :allow_delete WHERE template_id = :template_id AND group_id = :group_id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                                
+                $db->execWithoutResult(" UPDATE [TEMPLATE_PERMISSION] SET allow_create = :allow_create, allow_view = :allow_view, allow_update = :allow_update, allow_delete = :allow_delete WHERE template_id = :template_id AND group_id = :group_id ", $params);
             }                                    
         }
 
@@ -87,8 +89,9 @@
                 $params[] = $param;                            
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":group_id", $this->group->id);
-                $params[] = $param;                                
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE_PERMISSION] WHERE template_id = :template_id AND group_id = :group_id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                                
+                $db->execWithoutResult(" DELETE FROM [TEMPLATE_PERMISSION] WHERE template_id = :template_id AND group_id = :group_id ", $params);
             }                                    
         }
 
@@ -102,8 +105,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":template_id", $templateId);
-                $params[] = $param;                            
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE_PERMISSION] WHERE template_id = :template_id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                            
+                $db->execWithoutResult(" DELETE FROM [TEMPLATE_PERMISSION] WHERE template_id = :template_id ", $params);
             }                                    
         } 
 
@@ -117,7 +121,8 @@
                 $permissions = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":template_id", $templateId);
-                $results = \PHP_MPM\Database::execWithResult(" SELECT TP.group_id AS groupId, G.name AS groupName, G.description AS groupDescription, TP.allow_create AS allowCreate, TP.allow_update AS allowUpdate, TP.allow_view AS allowView, TP.allow_delete AS allowDelete FROM [TEMPLATE_PERMISSION] TP LEFT JOIN [GROUP] G ON G.id = TP.group_id WHERE TP.template_id = :template_id ", array($param));
+                $db = \PHP_MPM\Database::getHandler();
+                $results = $db->execWithResult(" SELECT TP.group_id AS groupId, G.name AS groupName, G.description AS groupDescription, TP.allow_create AS allowCreate, TP.allow_update AS allowUpdate, TP.allow_view AS allowView, TP.allow_delete AS allowDelete FROM [TEMPLATE_PERMISSION] TP LEFT JOIN [GROUP] G ON G.id = TP.group_id WHERE TP.template_id = :template_id ", array($param));
                 foreach($results as $result) {
                     $permission = new \PHP_MPM\Permission();
                     $g = new \PHP_MPM\Group();

@@ -60,7 +60,8 @@
                     $param->str(":id", $this->id);
                     $params[] = $param;
                 }
-                $rows = \PHP_MPM\Database::execWithResult($sql, $params);
+                $db = \PHP_MPM\Database::getHandler();
+                $rows = $db->execWithResult($sql, $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -99,8 +100,9 @@
                         $params[] = $param;                                
                         $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":creator", \PHP_MPM\User::isAuthenticated() ? \PHP_MPM\User::getSessionUserId(): $this->id);
-                        $params[] = $param;                                
-                        \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
+                        $params[] = $param;
+                        $db = \PHP_MPM\Database::getHandler(true);                                
+                        $db->execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                     }
                 }
             }
@@ -142,8 +144,9 @@
                     $params[] = $param;                                                                                    
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->str(":creator", \PHP_MPM\User::getSessionUserId());
-                    $params[] = $param;                                
-                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
+                    $params[] = $param;
+                    $db = \PHP_MPM\Database::getHandler(true);                                
+                    $db->execWithoutResult(" INSERT INTO USER (id, email, password, type, name, created, creator, deleted) VALUES (:id, :email, :password, :type, :name, CURRENT_TIMESTAMP, :creator, NULL) ", $params);
                 }
             }
         }
@@ -161,8 +164,9 @@
                 $params[] = $param;                
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":email", $this->email);
-                $params[] = $param;                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler();              
+                $rows = $db->execWithResult(" SELECT id, email, password, name, type FROM USER WHERE deleted IS NULL AND (id = :id OR email = :email) ", $params);
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
@@ -252,13 +256,13 @@
             $param = new \PHP_MPM\DatabaseParam();
             $param->str(":user_id", $this->id);
             $params[] = $param;
-            // TODO: transaction support
-            \PHP_MPM\Database::execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
+            $db = \PHP_MPM\Database::getHandler(true);
+            $db->execWithoutResult(" DELETE FROM RECOVER_ACCOUNT_REQUEST WHERE user_id = :user_id ", $params);                
             $param = new \PHP_MPM\DatabaseParam();
             $token = password_hash((sha1(uniqid()) . sha1(uniqid())), PASSWORD_BCRYPT, array("cost" => 12));
             $param->str(":token", $token);
             $params[] = $param;                
-            \PHP_MPM\Database::execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
+            $db->execWithoutResult(" INSERT OR REPLACE INTO RECOVER_ACCOUNT_REQUEST (created, token, user_id) VALUES (CURRENT_TIMESTAMP, :token, :user_id) ", $params);
             return($token);
         }
 
@@ -274,8 +278,9 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":token", $token);
                 $params[] = $param;
-                // tokens are valid only for 60 minutes 
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
+                // tokens are valid only for 60 minutes
+                $db = \PHP_MPM\Database::getHandler(); 
+                $rows = $db->execWithResult(" SELECT RAR.user_id AS id, U.email, U.type FROM RECOVER_ACCOUNT_REQUEST RAR LEFT JOIN USER U ON U.id = RAR.user_id WHERE RAR.token = :token AND U.deleted IS NULL AND ((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', RAR.created)) / 60) < 60 ", $params);
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException($token);
                 } else {
@@ -310,7 +315,8 @@
                     } else { 
                         $sql = " SELECT COUNT(U.id) FROM [USER] U WHERE U.deleted IS NULL ";
                     }
-                    $totalResults = \PHP_MPM\Database::execScalar($sql, $params);
+                    $db = \PHP_MPM\Database::getHandler();
+                    $totalResults = $db->execScalar($sql, $params);
                     $data->setPager($totalResults, $page, $resultsPage);
                     if ($totalResults > 0) {                     
                         $param = new \PHP_MPM\DatabaseParam();
@@ -324,7 +330,7 @@
                         } else {
                             $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         }
-                        $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                        $data->setResults($db->execWithResult($sql, $params));
                     }
                 } else {
                     $data->setPager(0, 1, 0);
@@ -336,7 +342,8 @@
                     } else {
                         $sql = " SELECT U.id, U.email, U.name, U.type, UC.id AS creatorId, UC.name AS creatorName, datetime(U.created, 'localtime') AS creationDate FROM [USER] U LEFT JOIN [USER] UC ON U.creator = UC.id WHERE U.deleted IS NULL ORDER BY U.name COLLATE NOCASE ASC, U.email COLLATE NOCASE ASC ";
                     }
-                    $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                    $db = \PHP_MPM\Database::getHandler();
+                    $data->setResults($db->execWithResult($sql, $params));
                 }                                
                 return($data);
             }
@@ -362,7 +369,8 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
                 $params[] = $param;
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [USER] SET email = :email, deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
+                $db = \PHP_MPM\Database::getHandler(true);
+                $db->execWithoutResult(" UPDATE [USER] SET email = :email, deleted = CURRENT_TIMESTAMP WHERE id = :id ", $params);
             }
         }
 
@@ -403,7 +411,8 @@
                 } else {
                     $sql = " UPDATE [USER] SET name = :name, email = :email, type = :type WHERE id = :id ";
                 }
-                \PHP_MPM\Database::execWithoutResult($sql, $params);
+                $db = \PHP_MPM\Database::getHandler(true);
+                $db->execWithoutResult($sql, $params);
             }
         }
         

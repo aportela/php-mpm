@@ -104,8 +104,9 @@
                     );
                     $exception = null;                
                     try {
+                        $db = \PHP_MPM\Database::getHandler(true);
                         foreach($queries as $query) {
-                            \PHP_MPM\Database::execWithoutResult($query, array());
+                            $db->execWithoutResult($query, array());
                         }
                     } catch (\PDOException $e) {
                         $exception = $e;

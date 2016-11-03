@@ -66,15 +66,57 @@
     */    
 	class Database {
 
-        /**
-        *   
-        */		
-		public static function execWithoutResult(string $sql, $params = array()) {
-			$dbh = null;
+		private $dbh;
+		private $transaction;
+		private $errors;
+
+		private static $handler;
+
+		public static function getHandler(bool $transaction = false) {
+			if (self::$handler == null) {
+				self::$handler = new Database($transaction);
+			}
+			return(self::$handler);
+		}
+
+		public function __construct (bool $transaction = false) {
+			$this->errors = false;
+			$this->transaction = false;
+			$this->dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
+			if ($transaction) {
+				$this->beginTrans();
+			}
+		} 
+
+		public function __destruct() {
+			if ($this->transaction) {
+				if ($this->errors) {
+					$this->dbh->exec("ROLLBACK;");
+				} else {
+					$this->dbh->exec("COMMIT;");
+				} 
+			}
+			$this->dbh = null;
+		}
+
+		public function beginTrans() {
+			$this->dbh->exec("BEGIN;");
+			$this->transaction = true;
+		}
+
+		public function endTrans() {
+			if ($this->errors) {
+				$this->dbh->exec("ROLLBACK;");
+			} else {
+				$this->dbh->exec("COMMIT;");
+			}
+			$this->transaction = false; 			
+		} 
+
+		public function execWithoutResult(string $sql, $params = array()) {
 			$stmt = null;
 			try {
-				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
-				$stmt = $dbh->prepare($sql);
+				$stmt = $this->dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
 					for ($i = 0; $i < $total_params; $i++) {						
@@ -84,15 +126,14 @@
 				$stmt->execute();
 			} finally {
 				$stmt = null;
-				$dbh = NULL;
 			}		
 		}
 
-		public static function execWithResult($sql, $params = array()): array {
+		public function execWithResult($sql, $params = array()): array {
 			$rows = array();
+			$stmt = null;
 			try {
-				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
-				$stmt = $dbh->prepare($sql);
+				$stmt = $this->dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
 					for ($i = 0; $i < $total_params; $i++) {
@@ -105,19 +146,17 @@
 					}
 				}
                 $stmt->closeCursor();
-				$dbh = NULL;
 			} finally {
 				$stmt = null;
-				$dbh = NULL;
 			}		
 			return($rows);
 		}
 
-		public static function execScalar($sql, $params = array()): int {
+		public function execScalar($sql, $params = array()): int {
 			$result = null;
+			$stmt = null;
 			try {
-				$dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
-				$stmt = $dbh->prepare($sql);
+				$stmt = $this->dbh->prepare($sql);
 				$total_params = count($params);
 				if ($total_params > 0) {
 					for ($i = 0; $i < $total_params; $i++) {
@@ -130,10 +169,8 @@
 					}
 				}
                 $stmt->closeCursor();
-				$dbh = NULL;
 			} finally {
 				$stmt = null;
-				$dbh = NULL;
 			}		
 			return($result);
 		}

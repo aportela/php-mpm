@@ -56,8 +56,9 @@
                     $params[] = $param;
                     $param = new \PHP_MPM\DatabaseParam();
                     $param->bool(":required", $this->required);
-                    $params[] = $param;
-                    \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE_ATTRIBUTE] (id, template_id, attribute_id, label, required) VALUES (:id, :template_id, :attribute_id, :label, :required) ", $params);
+                    $params[] = $param;                    
+                    $db = \PHP_MPM\Database::getHandler(true);
+                    $db->execWithoutResult(" INSERT INTO [TEMPLATE_ATTRIBUTE] (id, template_id, attribute_id, label, required) VALUES (:id, :template_id, :attribute_id, :label, :required) ", $params);
                 }
             }                        
         }
@@ -79,7 +80,8 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->bool(":required", $this->required);
                 $params[] = $param;
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [TEMPLATE_ATTRIBUTE] SET label = :label, required = :required WHERE id = :id ", $params);
+                $db = \PHP_MPM\Database::getHandler(true);
+                $db->execWithoutResult(" UPDATE [TEMPLATE_ATTRIBUTE] SET label = :label, required = :required WHERE id = :id ", $params);
             }                                    
         }
 
@@ -93,8 +95,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
-                $params[] = $param;                            
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE_ATTRIBUTE] WHERE id = :id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                            
+                $db->execWithoutResult(" DELETE FROM [TEMPLATE_ATTRIBUTE] WHERE id = :id ", $params);
             }                                    
         }
 
@@ -108,7 +111,8 @@
                 $attributes = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":template_id", $templateId);
-                $results = \PHP_MPM\Database::execWithResult(" SELECT TA.id AS id, A.id AS attributeId, A.name AS attributeName, A.description AS attributeDescription, A.type AS attributeType, TA.label, TA.required FROM [TEMPLATE_ATTRIBUTE] TA LEFT JOIN [ATTRIBUTE] A ON A.id = TA.attribute_id WHERE TA.template_id = :template_id ", array($param));
+                $db = \PHP_MPM\Database::getHandler();
+                $results = $db->execWithResult(" SELECT TA.id AS id, A.id AS attributeId, A.name AS attributeName, A.description AS attributeDescription, A.type AS attributeType, TA.label, TA.required FROM [TEMPLATE_ATTRIBUTE] TA LEFT JOIN [ATTRIBUTE] A ON A.id = TA.attribute_id WHERE TA.template_id = :template_id ", array($param));
                 foreach($results as $result) {
                     $templateAttribute = new \PHP_MPM\TemplateAttributeDefinition();
                     $a = new \PHP_MPM\Attribute();
@@ -133,8 +137,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":template_id", $templateId);
-                $params[] = $param;                            
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE_ATTRIBUTE] WHERE template_id = :template_id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                            
+                $db->execWithoutResult(" DELETE FROM [TEMPLATE_ATTRIBUTE] WHERE template_id = :template_id ", $params);
             }                                                
         }
     }

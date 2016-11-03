@@ -73,7 +73,8 @@
                     $param->str(":id", $this->id);
                     $params[] = $param;                
                 }
-                $rows = \PHP_MPM\Database::execWithResult($sql, $params);
+                $db = \PHP_MPM\Database::getHandler();
+                $rows = $db->execWithResult($sql, $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -97,7 +98,8 @@
                     } else {
                         $sql = " SELECT COUNT(A.id) FROM [ATTRIBUTE] A ";
                     }
-                    $totalResults = \PHP_MPM\Database::execScalar($sql, $params);
+                    $db = \PHP_MPM\Database::getHandler();
+                    $totalResults = $db->execScalar($sql, $params);
                     $data->setPager($totalResults, $page, $resultsPage);
                     if ($totalResults > 0) {
                         $param = new \PHP_MPM\DatabaseParam();
@@ -111,7 +113,7 @@
                         } else {
                             $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         }                    
-                        $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                        $data->setResults($db->execWithResult($sql, $params));
                     }
                 } else {
                     $data->setPager(0, 1, 0);
@@ -123,7 +125,8 @@
                     } else {
                         $sql = " SELECT A.id, A.name, A.description, A.type, U.id AS creatorId, U.name AS creatorName, datetime(A.created, 'localtime') AS creationDate FROM [ATTRIBUTE] A LEFT JOIN [USER] U ON U.id = A.creator ORDER BY A.name COLLATE NOCASE ASC ";
                     }
-                    $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                    $db = \PHP_MPM\Database::getHandler();
+                    $data->setResults($db->execWithResult($sql, $params));
                 }                                
                 return($data);
             }
@@ -166,9 +169,9 @@
                         $params[] = $param;                
                         $param = new \PHP_MPM\DatabaseParam();
                         $param->str(":creator", User::getSessionUserId());
-                        $params[] = $param;                
-                        \PHP_MPM\Database::execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
-                        // TODO: transaction support
+                        $params[] = $param;
+                        $db = \PHP_MPM\Database::getHandler(true);                
+                        $db->execWithoutResult(" INSERT INTO [ATTRIBUTE] (id, name, description, type, created, creator) VALUES (:id, :name, :description, :type, CURRENT_TIMESTAMP, :creator) ", $params);
                         if ($this->type == \PHP_MPM\AttributeType::SELECT) {
                             if ($this->options) {
                                 $t = count($this->options);
@@ -210,8 +213,8 @@
                         $param->null(":description");
                     }
                     $params[] = $param;                
-                    \PHP_MPM\Database::execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
-                    // TODO: transaction support
+                    $db = \PHP_MPM\Database::getHandler(true);
+                    $db->execWithoutResult(" UPDATE [ATTRIBUTE] SET name = :name, description = :description WHERE id = :id ", $params);
                     if ($this->type == \PHP_MPM\AttributeType::SELECT) {
                         \PHP_MPM\AttributeOption::deleteAll($this->id);
                         if ($this->options) {
@@ -239,9 +242,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
-                $params[] = $param;                                
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
-                // TODO: transaction support
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                                
+                $db->execWithoutResult(" DELETE FROM [ATTRIBUTE] WHERE id = :id ", $params);
                 \PHP_MPM\AttributeOption::deleteAll($this->id);
             }
         }
@@ -256,8 +259,9 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $param = new \PHP_MPM\DatabaseParam();
-                $param->str(":id", $this->id);                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description, type FROM [ATTRIBUTE] WHERE id = :id ", array($param));
+                $param->str(":id", $this->id);
+                $db = \PHP_MPM\Database::getHandler();                
+                $rows = $db->execWithResult(" SELECT name, description, type FROM [ATTRIBUTE] WHERE id = :id ", array($param));
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {

@@ -59,7 +59,8 @@
                     $param->str(":id", $this->id);
                     $params[] = $param;                
                 }
-                $rows = \PHP_MPM\Database::execWithResult($sql, $params);
+                $db = \PHP_MPM\Database::getHandler();
+                $rows = $db->execWithResult($sql, $params);
                 return(count($rows) > 0);                
             }            
         }
@@ -100,8 +101,8 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":html_form", $this->htmlForm);
                 $params[] = $param;
-                // TODO: transaction support
-                \PHP_MPM\Database::execWithoutResult(" INSERT INTO [TEMPLATE] (id, name, description, created, creator, html_form) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator, :html_form) ", $params);
+                $db = \PHP_MPM\Database::getHandler(true);
+                $db->execWithoutResult(" INSERT INTO [TEMPLATE] (id, name, description, created, creator, html_form) VALUES (:id, :name, :description, CURRENT_TIMESTAMP, :creator, :html_form) ", $params);
                 foreach($this->permissions as $permission) {
                     $permission->add($this->id);
                 }
@@ -148,8 +149,8 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":html_form", $this->htmlForm);
                 $params[] = $param;                
-                // TODO: transaction support
-                \PHP_MPM\Database::execWithoutResult(" UPDATE [TEMPLATE] SET name = :name, description = :description, html_form = :html_form WHERE id = :id ", $params);
+                $db = \PHP_MPM\Database::getHandler(true);
+                $db->execWithoutResult(" UPDATE [TEMPLATE] SET name = :name, description = :description, html_form = :html_form WHERE id = :id ", $params);
                 // TODO: better check user diffs ¿?
                 \PHP_MPM\TemplatePermission::deleteAll($this->id);
                 foreach($this->permissions as $permission) {
@@ -185,7 +186,8 @@
                     } else {           
                         $sql = " SELECT COUNT(T.id) FROM [TEMPLATE] T ";
                     }
-                    $totalResults = \PHP_MPM\Database::execScalar($sql, $params);
+                    $db = \PHP_MPM\Database::getHandler();
+                    $totalResults = $db->execScalar($sql, $params);
                     $data->setPager($totalResults, $page, $resultsPage);
                     if ($totalResults > 0) {
                         $param = new \PHP_MPM\DatabaseParam();
@@ -199,7 +201,7 @@
                         } else {
                             $sql = " SELECT T.id, T.name, T.description, U.id AS creatorId, U.name AS creatorName, datetime(T.created, 'localtime') AS creationDate FROM [TEMPLATE] T LEFT JOIN [USER] U ON U.id = T.creator ORDER BY T.name COLLATE NOCASE ASC LIMIT :start, :results_page ";
                         }                 
-                        $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                        $data->setResults($db->execWithResult($sql, $params));
                     }
                 } else {
                     $data->setPager(0, 1, 0);
@@ -211,7 +213,8 @@
                     } else {
                         $sql = " SELECT T.id, T.name, T.description, U.id AS creatorId, U.name AS creatorName, datetime(T.created, 'localtime') AS creationDate FROM [TEMPLATE] T LEFT JOIN [USER] U ON U.id = T.creator ORDER BY T.name COLLATE NOCASE ASC ";
                     }
-                    $data->setResults(\PHP_MPM\Database::execWithResult($sql, $params));
+                    $db = \PHP_MPM\Database::getHandler();
+                    $data->setResults($db->execWithResult($sql, $params));
                 }                                
                 return($data);
             }
@@ -230,8 +233,9 @@
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":id", $this->id);
-                $params[] = $param;                                
-                \PHP_MPM\Database::execWithoutResult(" DELETE FROM [TEMPLATE] WHERE id = :id ", $params);
+                $params[] = $param;
+                $db = \PHP_MPM\Database::getHandler(true);                                
+                $db->execWithoutResult(" DELETE FROM [TEMPLATE] WHERE id = :id ", $params);
                 \PHP_MPM\TemplateAttributeDefinition::deleteAll($this->id);
                 \PHP_MPM\TemplatePermission::deleteAll($this->id);
             }
@@ -249,8 +253,9 @@
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else {
                 $param = new \PHP_MPM\DatabaseParam();
-                $param->str(":id", $this->id);                
-                $rows = \PHP_MPM\Database::execWithResult(" SELECT name, description, html_form AS htmlForm FROM [TEMPLATE] WHERE id = :id ", array($param));
+                $param->str(":id", $this->id);
+                $db = \PHP_MPM\Database::getHandler();                
+                $rows = $db->execWithResult(" SELECT name, description, html_form AS htmlForm FROM [TEMPLATE] WHERE id = :id ", array($param));
                 if (count($rows) != 1) {
                     throw new \PHP_MPM\MPMNotFoundException(print_r(get_object_vars($this), true));
                 } else {
