@@ -47,13 +47,15 @@
             $params[] = $param;            
             $param = new \PHP_MPM\DatabaseParam();
             $param->str(":user_remote_address", \PHP_MPM\Utils::getRemoteIpAddress());
-            $params[] = $param;            
+            $params[] = $param;
+            $db = null;            
             try {
-                $db = \PHP_MPM\Database::getHandler();
-                $db->endTrans();
-                $db->execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, message, trace, user_id, user_agent, user_remote_address) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :message, :trace, :user_id, :user_agent, :user_remote_address) ", $params);
+                $db = new \PHP_MPM\Database();
+                $db->execWithoutResult(" INSERT INTO ERROR (created, class, line, filename, code, message, trace, user_id, user_agent, user_remote_address) VALUES (CURRENT_TIMESTAMP, :class, :line, :filename, :code, :message, :trace, :user_id, :user_agent, :user_remote_address) ", $params);      
             } catch (\Throwable $e) {
                 // we do not want to throw (again) on error 
+            } finally {
+                $db = null;
             }
         }
 
