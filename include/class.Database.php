@@ -110,6 +110,7 @@
 			} else {
 				$this->dbh->exec("COMMIT;");
 			}
+			$this->errors = false;
 			$this->transaction = false; 			
 		} 
 
@@ -124,6 +125,9 @@
 					}
 				}				
 				$stmt->execute();
+			} catch (\Throwable $e) {
+				$this->errors = true;
+				throw $e;
 			} finally {
 				$stmt = null;
 			}		
@@ -146,6 +150,9 @@
 					}
 				}
                 $stmt->closeCursor();
+			} catch (\Throwable $e) {
+				$this->errors = true;
+				throw $e;
 			} finally {
 				$stmt = null;
 			}		
@@ -169,6 +176,9 @@
 					}
 				}
                 $stmt->closeCursor();
+			} catch (\Throwable $e) {
+				$this->errors = true;
+				throw $e;
 			} finally {
 				$stmt = null;
 			}		
