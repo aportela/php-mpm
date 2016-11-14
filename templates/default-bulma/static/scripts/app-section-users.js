@@ -7,9 +7,14 @@ function fillTable(actualPage, totalPages, users) {
     mpm.pagination.setControls(actualPage, totalPages);
     var html = null;
     if (users && users.length > 0) {
+        var userId = $("a#a_profile").data("id");
         for (var i = 0; i < users.length; i++) {
             html += '<tr data-id="' + users[i].id + '">';
-            html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_user" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_user"  data-target="#modal_delete">Delete</a></td>'
+            if (users[i].id != userId) {
+                html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_user" data-target="#modal_update">Update</a> <a class="button is-small is-danger modal-button btn_delete_user" data-target="#modal_delete">Delete</a></td>'
+            } else {
+                html += '<td class="has-text-centered ignore_on_export"><a class="button is-small is-info modal-button btn_update_user" data-target="#modal_update">Update</a></td>'
+            }            
             if (users[i].type == 1) {
                 html += '<td ><span class="icon is-small"><i class="fa fa-1x fa-user-md" aria-hidden="true"></i></span> <span>super</span></td>';
             } else {

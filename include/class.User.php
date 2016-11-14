@@ -360,7 +360,7 @@
             } else if (empty($this->id)) {
                 throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));
             } else if ($this->id == \PHP_MPM\User::getSessionUserId()) {
-                throw new \PHP_MPM\MPMInvalidParamsException(print_r(get_object_vars($this), true));                
+                throw new \PHP_MPM\MPMAccessDeniedException(print_r(get_object_vars($this), true));                
             } else {
                 $params = array();
                 $param = new \PHP_MPM\DatabaseParam();

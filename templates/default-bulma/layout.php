@@ -26,7 +26,7 @@
             <?php
               if ($_TEMPLATE["session_user_is_logged"] == true) {
             ?>
-            <a class="nav-item" href="#" data-id="<?= $_TEMPLATE["session_user_id"] ?>" data-admin="<?= $_TEMPLATE["session_user_is_admin"] ?>"><span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span> Signed as <?= $_TEMPLATE["session_user_name"] ?></a>
+            <a class="nav-item" id="a_profile" href="#" data-id="<?= $_TEMPLATE["session_user_id"] ?>" data-admin="<?= $_TEMPLATE["session_user_is_admin"] ?>"><span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span> Signed as <?= $_TEMPLATE["session_user_name"] ?></a>
             <a class="nav-item" id="signout" href="/api/user/signout.php"><span class="icon"><i class="fa fa-sign-out" aria-hidden="true"></i></span> Sign Out</a>
             <?php
               }
