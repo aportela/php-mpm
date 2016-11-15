@@ -14,9 +14,18 @@
         const ADMIN_USER_NAME = "administrator";        
         const ADMIN_PASSWORD = "password";
 
+        public $db;
+
         public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
+            }
+            $this->db = \PHP_MPM\Database::getHandler(true);
+        }
+
+        public function __destruct () {
+            if ($this->db) {
+                $this->db->rollbackTrans();
             }
         }
 
@@ -140,14 +149,15 @@
         public function testAdd() {
             $this->signInAsAdmin();
             $err = null;
-            try {
+            $db = \PHP_MPM\Database::getHandler(true);
+            try {                
                 $u = new \PHP_MPM\User();
                 $uuid = \PHP_MPM\Utils::uuid();            
                 $u->set($uuid, sprintf("%s@server.com", $uuid), "password", "administrator", \PHP_MPM\UserType::ADMINISTRATOR);
                 $u->add();
             } catch (Throwable $e) {
                 $err = e;
-            } finally {
+            } finally {                
                 $this->assertNull($err);
             }            
         }
@@ -302,7 +312,7 @@
         }
 
         public function testDeleteOwnUser() {
-            $this->setExpectedException('PHP_MPM\MPMInvalidParamsException');
+            $this->setExpectedException('PHP_MPM\MPMAccessDeniedException');
             $this->signInAsAdmin();
             $uuid = \PHP_MPM\Utils::uuid();
             $u = new \PHP_MPM\User();             

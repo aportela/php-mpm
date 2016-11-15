@@ -14,11 +14,20 @@
         const ADMIN_EMAIL = "admin@localhost";
         const ADMIN_PASSWORD = "password";
 
+        public $db;
+
         public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
+            $this->db = \PHP_MPM\Database::getHandler(true);
         }
+
+        public function __destruct () {
+            if ($this->db) {
+                $this->db->rollbackTrans();
+            }
+        }        
 
         private function signInAsAdmin() {
             $u = new \PHP_MPM\User();

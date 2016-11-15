@@ -13,9 +13,18 @@
         const EXISTENT_ATTRIBUTE_ID = "1111111-1111-1111-0000-333333333333";
         const EXISTENT_ATTRIBUTE_NAME = "Age";
 
+        public $db;
+
         public function __construct () { 
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
+            }
+            $this->db = \PHP_MPM\Database::getHandler(true);
+        }
+
+        public function __destruct () {
+            if ($this->db) {
+                $this->db->rollbackTrans();
             }
         }
 
