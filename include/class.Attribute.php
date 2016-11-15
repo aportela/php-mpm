@@ -176,7 +176,7 @@
                             if ($this->options) {
                                 $t = count($this->options);
                                 for ($i = 0; $i < $t; $i++) {
-                                    $this->options[$i].add($this->id);
+                                    $this->options[$i]->add($this->id);
                                 }
                             }
                         }
