@@ -31,12 +31,12 @@
             isset($params["id"]) ? $params["id"]: "", 
             isset($params["name"]) ? $params["name"]: "", 
             isset($params["description"]) ? $params["description"]: "",
-            \PHP_MPM\AttributeType::NONE
+            isset($params["type"]) ? $params["type"]: \PHP_MPM\AttributeType::NONE
         );
         if (isset($params["options"])) {            
             if (is_array($params["options"])) {
                 $options = array();
-                $t = count($params["attributes"]);
+                $t = count($params["options"]);
                 for ($i = 0; $i < $t; $i++) {
                     $ao = new \PHP_MPM\AttributeOption();
                     $ao->set(

@@ -121,8 +121,11 @@ $("form#frm_update_attribute").submit(function(e) {
         id: $(this).find('input[name="id"]').val(),
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
-        type: $(this).find('select[name="type"]').val()
+        type: parseInt($(this).find('select[name="type"]').val())
     };
+    if (json.type === 9) {
+        json.options = getAttributeOptions($("table#update_attribute_options"));
+    }    
     mpm.form.submitJSON(this, json, function(httpStatusCode, result) {
         switch (httpStatusCode) {
             case 200:
@@ -187,6 +190,7 @@ $('table tbody').on("click", ".btn_update_attribute", function(e) {
             $("input#update_attribute_description").val(data.description);
             $("select.attribute_type").val(data.type);
             $("select.attribute_type").trigger("change");
+            clearTable($("table#update_attribute_options"));
             if (data.type == 9) {
                 if (data.options && data.options.length > 0) {
                     for (var i = 0; i < data.options.length; i++) {
@@ -229,7 +233,8 @@ $("a.btn_add_attribute_option").click(function(e) {
     var input = $(this).prev("input");
     var optionValue = $(input).val();
     if (optionValue) {
-        appendAttributeOption($("table#add_attribute_options"), null, optionValue);
+        var table = $(this).closest("div").find("table");
+        appendAttributeOption($(table), null, optionValue);
         $(input).val("");
     }
 });
