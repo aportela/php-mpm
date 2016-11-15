@@ -81,7 +81,7 @@
 
 		public function __construct (bool $transaction = false) {
 			$this->errors = false;
-			$this->transaction = false;
+			$this->transaction = $transaction;
 			$this->dbh = new \PDO(PDO_CONNECTION_STRING, DATABASE_USERNAME, DATABASE_PASSWORD, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 			if ($transaction) {
 				$this->beginTrans();
@@ -104,14 +104,30 @@
 			$this->transaction = true;
 		}
 
-		public function endTrans() {
-			if ($this->errors) {
-				$this->dbh->exec("ROLLBACK;");
-			} else {
+		public function commitTrans() {
+			if ($this->transaction) {
 				$this->dbh->exec("COMMIT;");
+				$this->transaction = false;
 			}
-			$this->errors = false;
-			$this->transaction = false; 			
+		}
+
+		public function rollbackTrans() {
+			if ($this->transaction) {
+				$this->dbh->exec("ROLLBACK;");
+				$this->transaction = false;
+			}			
+		}
+
+		public function endTrans() {
+			if ($this->transaction) {
+				if ($this->errors) {
+					$this->dbh->exec("ROLLBACK;");
+				} else {
+					$this->dbh->exec("COMMIT;");
+				}
+				$this->errors = false;
+				$this->transaction = false;
+			} 			
 		} 
 
 		public function execWithoutResult(string $sql, $params = array()) {
