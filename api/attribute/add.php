@@ -37,7 +37,7 @@
         if (isset($params["options"])) {            
             if (is_array($params["options"])) {
                 $options = array();
-                $t = count($params["attributes"]);
+                $t = count($params["options"]);
                 for ($i = 0; $i < $t; $i++) {
                     $ao = new \PHP_MPM\AttributeOption();
                     $ao->set(
