@@ -165,6 +165,7 @@ $('table tbody').on("click", ".btn_update_template", function (e) {
                     appendAttribute("table#update_template_attributes",
                         data.attributes[i].id,
                         data.attributes[i].attribute.id,
+                        data.attributes[i].attribute.type,
                         data.attributes[i].attribute.name,
                         data.attributes[i].label,
                         data.attributes[i].required,
@@ -247,7 +248,7 @@ function fillAttributesCombo(attributes) {
     var html = '<option value="">select attribute</option>';
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
-            html += '<option value="' + attributes[i].id + '" data-id="' + attributes[i].id + '" data-name="' + attributes[i].name + '">' + attributes[i].name + '</option>';
+            html += '<option value="' + attributes[i].id + '" data-id="' + attributes[i].id + '" data-name="' + attributes[i].name + '" data-type="' + attributes[i].type + '">' + attributes[i].name + '</option>';
         }
     }
     $("select.template_attribute_list").html(html);
@@ -385,7 +386,8 @@ function getAttributes(table) {
         attributes.push({
             id: String($(this).data("id")),
             attribute: {
-                id: String($(this).data("attribute_id"))
+                id: String($(this).data("attribute_id")),
+                type: parseInt($(this).data("attribute_type"))
             },
             label: $(this).find("input.attribute_label").val(),
             required: $(this).find("input.required").prop("checked")
@@ -397,9 +399,9 @@ function getAttributes(table) {
 /**
  * add new attribute to template permission list table
  */
-function appendAttribute(table, id, attributeId, attributeName, label, required, defaultValue) {
+function appendAttribute(table, id, attributeId, attributeType, attributeName, label, required, defaultValue) {
     var html = "";
-    html += '<tr data-id="' + (id ? id : "") + '" data-attribute_id="' + attributeId + '">';
+    html += '<tr data-id="' + (id ? id : "") + '" data-attribute_id="' + attributeId + '" data-attribute_type="' + attributeType + '">';
     html += '<td><a class="button btn_delete_row"><span class="icon"><i class="fa fa-trash"></i></span><span>Delete</span></a></td>';
     html += "<td>" + attributeName + "</td>";
     html += '<td><input class="input attribute_label" type="text" value="' + label + '"></td>';
@@ -415,7 +417,7 @@ function appendAttribute(table, id, attributeId, attributeName, label, required,
  */
 $("a.btn_add_template_attribute").click(function (e) {
     var o = $(this).closest("p").find("select.template_attribute_list option:selected");
-    appendAttribute($(this).closest("div.tab-content").find("table"), null, $(o).data("id"), $(o).data("name"), $(o).data("name"), false, null);
+    appendAttribute($(this).closest("div.tab-content").find("table"), null, $(o).data("id"), $(o).data("type"), $(o).data("name"), $(o).data("name"), false, null);
     $("select.template_attribute_list").val("");
     $(this).addClass("is-disabled");
 });
@@ -449,7 +451,11 @@ function updateFormHTML(table, hasLinks, hasFiles, hasNotes) {
     var attributes = getAttributes(table);
     if (attributes && attributes.length > 0) {
         for (var i = 0; i < attributes.length; i++) {
-            html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><input data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '></p>' + "\n";
+            if (parseInt(attributes[i].attribute.type) !== 9) {
+                html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><input data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '></p>' + "\n";
+            } else {
+                html += "\t" + '<label class="label">' + attributes[i].label + '</label>' + "\n" + '<p class="control"><span class="select"><select data-id="' + attributes[i].id + '" class="input" type="text" ' + (attributes[i].required ? "required" : "") + '><option value="">foobar</option></select></span></p>' + "\n";
+            }
         }
     }
     html += '<p class="control">' + "\n";
