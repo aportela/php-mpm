@@ -226,9 +226,11 @@ $("select.attribute_type").change(function(e) {
  */
 $("a.btn_add_attribute_option").click(function(e) {
     e.preventDefault();
-    var optionValue = $(this).prev("input").val();
+    var input = $(this).prev("input");
+    var optionValue = $(input).val();
     if (optionValue) {
         appendAttributeOption($("table#add_attribute_options"), null, optionValue);
+        $(input).val("");
     }
 });
 
