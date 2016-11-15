@@ -36,7 +36,7 @@ function fillTable(actualPage, totalPages, users) {
 $("form#frm_add_user").submit(function(e) {
     e.preventDefault();
     var json = {
-        id: mpm.util.uuid(),
+        id: "",
         email: $(this).find('input[name="email"]').val(),
         password: $(this).find('input[name="password"]').val(),
         name: $(this).find('input[name="name"]').val(),

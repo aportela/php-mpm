@@ -83,7 +83,7 @@ function selectFirstTab(form) {
 $("form#frm_add_attribute").submit(function(e) {
     e.preventDefault();
     var json = {
-        id: mpm.util.uuid(),
+        id: "",
         name: $(this).find('input[name="name"]').val(),
         description: $(this).find('input[name="description"]').val(),
         type: parseInt($(this).find('select[name="type"]').val())
