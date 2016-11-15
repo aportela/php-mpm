@@ -77,7 +77,6 @@
             if (! file_exists(SQLITE_DATABASE_PATH)) {
                 if (! $errors) {
                     $queries = array(
-                        " PRAGMA journal_mode=WAL;", // this is a persistent setting
                         " CREATE TABLE [USER] ([id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY, [email] VARCHAR(254) UNIQUE NOT NULL, [password] VARCHAR(255) NOT NULL, [name] VARCHAR(32) NOT NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL, [type] BOOLEAN DEFAULT '0' NOT NULL, [deleted] TIMESTAMP); ",
                         " CREATE TABLE [GROUP] ([id] VARCHAR(36) NOT NULL PRIMARY KEY, [name] VARCHAR(32) UNIQUE NOT NULL, [description] VARCHAR(128) NULL, [created] TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, [creator] VARCHAR(36) NOT NULL); ",
                         " CREATE TABLE [GROUP_USER] ([group_id] VARCHAR(36) NOT NULL, [user_id] VARCHAR(36) NOT NULL, PRIMARY KEY([group_id], [user_id])); ",
@@ -115,8 +114,13 @@
                         $exception = $e;
                         $errors = true;
                     } finally {
+                        $db->endTrans();
                         if (! $errors) {
                             echo putAlert("success", "database creation... ok!");
+                            // this is a persistent setting
+                            // NOTE: can not be executed inside transaction
+                            // TODO: control this
+                            $db->execWithoutResult(" PRAGMA journal_mode=WAL; ", array());
                         } else {
                             echo putAlert("danger", "error creating database");
                             echo putCollapsible("Exception details", print_r($exception, true));
