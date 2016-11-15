@@ -90,7 +90,7 @@
                 $param = new \PHP_MPM\DatabaseParam();
                 $param->str(":attribute_id", $attributeId);
                 $db = \PHP_MPM\Database::getHandler();
-                $db->execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.attribute_id = :attribute_id ", array($param));
+                $results = $db->execWithResult(" SELECT AO.option_id AS id, AO.option_value AS name, AO.option_index AS idx FROM [ATTRIBUTE_OPTIONS] AO WHERE AO.attribute_id = :attribute_id ORDER BY idx ", array($param));
                 foreach($results as $result) {
                     $option = new \PHP_MPM\AttributeOption();
                     $option->set($result->id, $result->name, $result->idx);

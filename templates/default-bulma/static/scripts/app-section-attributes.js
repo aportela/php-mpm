@@ -190,7 +190,7 @@ $('table tbody').on("click", ".btn_update_attribute", function(e) {
             if (data.type == 9) {
                 if (data.options && data.options.length > 0) {
                     for (var i = 0; i < data.options.length; i++) {
-                        appendAttributeOption($("table#update_attribute_options"), null, optionValue);
+                        appendAttributeOption($("table#update_attribute_options"), data.options[i].id, data.options[i].name);
                     }
                 }
             }
