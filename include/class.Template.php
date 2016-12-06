@@ -268,5 +268,14 @@
                 }
             }
         }
+
+
+        /**
+        *   check element creation permission for this template
+        */
+        public function allowElementCreation() {
+            // TODO
+            return(true);
+        } 
     }
 ?>
