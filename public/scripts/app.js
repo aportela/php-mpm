@@ -9,6 +9,9 @@ const bus = new Vue();
  * vue-router route definitions
  */
 const routes = [
+    { path: '/auth', name: 'auth', component: TheAuth },
+    { path: '/app', name: 'theAppLayout', component: TheAppLayout },
+
 ];
 
 /**
@@ -29,6 +32,11 @@ const app = new Vue({
         });
     },
     created: function () {
+        if (! initialState.logged) {
+            this.$router.push({ name: 'auth' });
+        } else {
+            this.$router.push({ name: 'theAppLayout' });
+        }
     }
 }).$mount('#app');
 
