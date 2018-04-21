@@ -41,6 +41,7 @@
                             `name` VARCHAR(254) NULL DEFAULT NULL,
                             `is_admin` BIT(1) NOT NULL DEFAULT b\'0\',
                             `creator` VARCHAR(36) NOT NULL,
+                            `created` TIMESTAMP NOT NULL,
                             `deleted` TIMESTAMP NULL DEFAULT NULL,
                             PRIMARY KEY (`id`),
                             INDEX `email` (`email`(191)),
@@ -50,7 +51,7 @@
                         );
                     ',
                     '
-                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", NULL);
+                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", UTC_TIMESTAMP(3), NULL);
                     '
                 )
             )
