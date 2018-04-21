@@ -29,6 +29,30 @@
 
         private $upgradeQueries = array(
             "PDO_MARIADB" => array(
+                "1.01" => array(
+                    '
+                        DROP TABLE IF EXISTS USER;
+                    ',
+                    '
+                        CREATE TABLE `USER` (
+                            `id` VARCHAR(36) NOT NULL,
+                            `email` VARCHAR(254) NOT NULL,
+                            `password_hash` VARCHAR(60) NOT NULL,
+                            `name` VARCHAR(254) NULL DEFAULT NULL,
+                            `is_admin` BIT(1) NOT NULL DEFAULT b\'0\',
+                            `creator` VARCHAR(36) NOT NULL,
+                            `deleted` TIMESTAMP NULL DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            INDEX `email` (`email`(191)),
+                            INDEX `is_admin` (`is_admin`),
+                            INDEX `creator` (`creator`),
+                            INDEX `deleted` (`deleted`)
+                        );
+                    ',
+                    '
+                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", NULL);
+                    '
+                )
             )
         );
 
