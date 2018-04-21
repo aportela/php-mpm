@@ -50,7 +50,7 @@
                         );
                     ',
                     '
-                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", NULL);
+                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", NULL);
                     '
                 )
             )
