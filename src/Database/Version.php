@@ -10,57 +10,25 @@
         private $databaseType;
 
         private $installQueries = array(
-            "PDO_SQLITE" => array(
-                '
-                    CREATE TABLE [VERSION] (
-                        [num]	NUMERIC NOT NULL UNIQUE,
-                        [date]	INTEGER NOT NULL,
-                        PRIMARY KEY([num])
-                    );
-                ',
-                '
-                    INSERT INTO VERSION VALUES ("1.00", current_timestamp);
-                ',
-                '
-                    PRAGMA journal_mode=WAL;
-                '
-            ),
             "PDO_MARIADB" => array(
                 '
+                    DROP TABLE IF EXISTS VERSION;
+                ',
+                '
                     CREATE TABLE `VERSION` (
-                        `num`	FLOAT NOT NULL UNIQUE,
-                        `date`	TIMESTAMP NOT NULL,
-                        PRIMARY KEY(`num`)
+                        `num` DECIMAL(5,2) UNSIGNED NOT NULL,
+                        `installed` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`num`)
                     );
                 ',
                 '
-                    INSERT INTO `VERSION` VALUES ("1.00", utc_timestamp);
+                    INSERT INTO `VERSION` VALUES (1.00, UTC_TIMESTAMP(3));
                 '
             )
         );
 
         private $upgradeQueries = array(
-            "PDO_SQLITE" => array(
-                "1.01" => array(
-                    '
-                        CREATE TABLE [USER] (
-                            [id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY,
-                            [email] VARCHAR(255) UNIQUE NOT NULL,
-                            [password_hash] VARCHAR(60) NOT NULL
-                        );
-                    '
-                )
-            ),
             "PDO_MARIADB" => array(
-                "1.01" => array(
-                    '
-                        CREATE TABLE [USER] (
-                            [id] VARCHAR(36) UNIQUE NOT NULL PRIMARY KEY,
-                            [email] VARCHAR(255) UNIQUE NOT NULL,
-                            [password_hash] VARCHAR(60) NOT NULL
-                        );
-                    '
-                )
             )
         );
 
@@ -83,11 +51,11 @@
 
         private function set(float $number) {
             $params = array(
-                (new \PHP_MPM\Database\DBParam())->str(":num", (string) $number)
+                (new \PHP_MPM\Database\DBParam())->float(":num", $number)
             );
             $query = '
                 INSERT INTO VERSION
-                    (num, date)
+                    (num, installed)
                 VALUES
                     (:num, current_timestamp);
             ';
