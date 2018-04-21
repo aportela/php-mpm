@@ -9,8 +9,53 @@ const bus = new Vue();
  * vue-router route definitions
  */
 const routes = [
-    { path: '/auth', name: 'auth', component: TheAuth },
-    { path: '/app', name: 'theAppLayout', component: TheAppLayout },
+    {
+        path: '/auth',
+        name: 'auth',
+        component: TheAuth
+    },
+    {
+        path: '/app',
+        name: 'theAppLayout',
+        component: TheAppLayout,
+        children: [
+            {
+                path: '/users',
+                name: 'theUserList',
+                component: TheUserList
+            },
+            {
+                path: '/groups',
+                name: 'theGroupList',
+                component: TheGroupList
+            },
+            {
+                path: '/attributes',
+                name: 'theAttributeList',
+                component: TheAttributeList
+            },
+            {
+                path: '/templates',
+                name: 'theTemplateList',
+                component: TheTemplateList
+            },
+            {
+                path: '/search_templates',
+                name: 'theSearchTemplateList',
+                component: TheSearchTemplateList
+            },
+            {
+                path: '/log',
+                name: 'theLogList',
+                component: TheLogList
+            },
+            {
+                path: '/errors',
+                name: 'theErrorList',
+                component: TheErrorList
+            }
+        ]
+    }
 
 ];
 
@@ -32,7 +77,7 @@ const app = new Vue({
         });
     },
     created: function () {
-        if (! initialState.logged) {
+        if (!initialState.logged) {
             this.$router.push({ name: 'auth' });
         } else {
             this.$router.push({ name: 'theAppLayout' });

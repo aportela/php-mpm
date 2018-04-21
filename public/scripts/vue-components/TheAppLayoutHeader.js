@@ -17,7 +17,20 @@ const TheAppLayoutHeader = (function () {
                         </a>
                     </div>
                     <div class="navbar-menu">
+                        <div class="navbar-start">
+                        </div>
                         <div class="navbar-end">
+                            <div class="navbar-item">
+                                <div class="field">
+                                    <div class="control has-icons-left" v-bind:class="{ 'has-icons-right, is-loading': isSearching }">
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                        <input v-on:keyup.enter="search();" v-on:keyup.esc="searchText = null;" v-model.trim="searchText" ref="search" v-bind:disabled="isSearching" class="input is-rounded" type="text" placeholder="search...">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="navbar-item has-dropdown is-hoverable">
                                 <a class="navbar-link">Signed as administrator</a>
                                 <div class="navbar-dropdown">
@@ -36,8 +49,13 @@ const TheAppLayoutHeader = (function () {
         template: template(),
         data: function () {
             return ({
+                searchText: null,
+                isSearching: false
             });
         }, methods: {
+            search: function() {
+
+            },
             signOut: function() {
                 var self = this;
                 phpMPMApi.signOut(function (response) {
