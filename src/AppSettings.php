@@ -12,7 +12,7 @@
             'phpRequiredExtensions' => array('pdo_sqlite', 'mbstring', 'curl'),
             // database settings
             'database' => [
-                'type' => "PDO_SQLITE", // supported types: PDO_SQLITE | PDO_MARIADB
+                'type' => "PDO_MARIADB", // supported types: PDO_SQLITE | PDO_MARIADB
                 'name' => "php-mpm",
                 'username' => '',
                 'password' => '',
