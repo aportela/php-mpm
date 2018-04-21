@@ -6,13 +6,16 @@
 
     class UserSession {
 
-        public static function set($userId = "", string $email = "", string $nick = "", $avatarUrl = "") {
+        public static function set(string $userId = "", string $email = "", string $name = "", bool $isAdmin = false) {
             $_SESSION["userId"] = $userId;
             $_SESSION["email"] = $email;
-            $_SESSION["nick"] = $nick;
-            $_SESSION["avatarUrl"] = $avatarUrl;
+            $_SESSION["name"] = $name;
+            $_SESSION["isAdmin"] = $isAdmin;
         }
 
+        /**
+         * clear current user session
+         */
         public static function clear() {
             $_SESSION = array();
             if (ini_get("session.use_cookies")) {
@@ -52,21 +55,19 @@
         }
 
         /**
-         * return logged user nick
+         * return logged user name
          *
          * @return string nick || null
          */
-        public static function getNick() {
-            return(isset($_SESSION["nick"]) ? $_SESSION["nick"]: null);
+        public static function getName() {
+            return(isset($_SESSION["name"]) ? $_SESSION["name"]: null);
         }
 
         /**
-         * return logged user avatar url
-         *
-         * @return string avatar url || null
+         * return logged user account type
          */
-        public static function getAvatarUrl() {
-            return(isset($_SESSION["avatarUrl"]) ? $_SESSION["avatarUrl"]: null);
+        public static function isAdmin() {
+            return(isset($_SESSION["isAdmin"]) ? $_SESSION["isAdmin"]: false);
         }
 
     }
