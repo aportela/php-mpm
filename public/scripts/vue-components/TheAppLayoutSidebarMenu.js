@@ -8,7 +8,7 @@ const TheAppLayoutSidebarMenu = (function () {
                     General
                 </p>
                 <ul class="menu-list">
-                    <li><a v-on:click.prevent="$router.push({ name: 'theAppLayout' })" v-bind:class="{ 'is-active': $route.name == 'theAppLayout' }"><span class="icon"><i class="fa fa-home"></i></span> Home</a></li>
+                    <li><a v-on:click.prevent="$router.push({ name: 'theDashboard' })" v-bind:class="{ 'is-active': $route.name == 'theDashboard' }"><span class="icon"><i class="fa fa-home"></i></span> Home</a></li>
                 </ul>
                 <p class="menu-label">
                     Administration

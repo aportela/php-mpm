@@ -20,37 +20,42 @@ const routes = [
         component: TheAppLayout,
         children: [
             {
-                path: '/users',
+                path: 'dashboard',
+                name: 'theDashboard',
+                component: TheDashboard
+            },
+            {
+                path: 'users',
                 name: 'theUserList',
                 component: TheUserList
             },
             {
-                path: '/groups',
+                path: 'groups',
                 name: 'theGroupList',
                 component: TheGroupList
             },
             {
-                path: '/attributes',
+                path: 'attributes',
                 name: 'theAttributeList',
                 component: TheAttributeList
             },
             {
-                path: '/templates',
+                path: 'templates',
                 name: 'theTemplateList',
                 component: TheTemplateList
             },
             {
-                path: '/search_templates',
+                path: 'search_templates',
                 name: 'theSearchTemplateList',
                 component: TheSearchTemplateList
             },
             {
-                path: '/log',
+                path: 'log',
                 name: 'theLogList',
                 component: TheLogList
             },
             {
-                path: '/errors',
+                path: 'errors',
                 name: 'theErrorList',
                 component: TheErrorList
             }
@@ -80,7 +85,7 @@ const app = new Vue({
         if (!initialState.logged) {
             this.$router.push({ name: 'auth' });
         } else {
-            this.$router.push({ name: 'theAppLayout' });
+            this.$router.push({ name: 'theDashboard' });
         }
     }
 }).$mount('#app');

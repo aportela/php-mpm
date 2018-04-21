@@ -75,7 +75,7 @@ const TheAuth = (function () {
             if (! initialState.logged) {
                 this.$nextTick(() => this.$refs.signInEmail.focus());
             } else {
-                this.$router.push({ name: 'theAppLayout' });
+                this.$router.push({ name: 'theDashboard' });
             }
         },
         methods: {
@@ -87,7 +87,7 @@ const TheAuth = (function () {
                 self.invalidSignInPassword = false;
                 phpMPMApi.signIn(this.signInEmail, this.signInPassword, function (response) {
                     if (response.ok) {
-                        self.$router.push({ name: 'theAppLayout' });
+                        self.$router.push({ name: 'theDashboard' });
                     } else {
                         switch (response.status) {
                             case 404:
