@@ -13,7 +13,8 @@
                 array(
                     'upgradeAvailable' => $v->hasUpgradeAvailable(),
                     'logged' => \PHP_MPM\UserSession::isLogged(),
-                    'allowSignUp' => $this->get('settings')['common']['allowSignUp']
+                    'allowSignUp' => $this->get('settings')['common']['allowSignUp'],
+                    'defaultResultsPage' => $this->get('settings')['common']['defaultResultsPage'],
                 )
             )
         ));
@@ -54,7 +55,15 @@
                     ),
                     $request->getParam("orderBy", "")
                 );
-                return $response->withJson(['users' => $data->results, 'totalResults' => $data->totalResults, 'actualPage' => $data->actualPage, 'resultsPage' => $data->resultsPage, 'totalPages' => $data->totalPages], 200);
+                return $response->withJson([
+                    'users' => $data->results,
+                    "pagination" => array(
+                        'totalResults' => $data->totalResults,
+                        'actualPage' => $data->actualPage,
+                        'resultsPage' => $data->resultsPage,
+                        'totalPages' => $data->totalPages
+                    )
+                ], 200);
             });
 
             $this->post('/{id}', function (Request $request, Response $response, array $args) {
