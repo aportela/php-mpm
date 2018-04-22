@@ -31,13 +31,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by name">
+                                    <input class="input" type="text" placeholder="search by name" v-model.trim="searchByName">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button">
+                                    <a class="button" v-on:click.prevent="search();">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -48,13 +48,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by email">
+                                    <input class="input" type="text" placeholder="search by email" v-model:trim="searchByEmail">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button">
+                                    <a class="button" v-on:click.prevent="search();">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -148,24 +148,9 @@ const TheUserList = (function () {
         template: template(),
         data: function () {
             return ({
-                users: [
-                    {
-                        id: 1,
-                        name: 'Administrator',
-                        email: 'admin@localhost.localnet',
-                        createdBy: 'installation',
-                        createdOn: new Date(),
-                        isAdmin: true
-                    },
-                    {
-                        id: 2,
-                        name: 'John Doe',
-                        email: 'foo@ba.r',
-                        createdBy: 'auto-register',
-                        createdOn: new Date(),
-                        isAdmin: false
-                    }
-                ]
+                users: [],
+                searchByName: null,
+                searchByEmail: null,
             });
         },
         created: function () {
@@ -173,7 +158,13 @@ const TheUserList = (function () {
         },
         methods: {
             search() {
-
+                var self = this;
+                phpMPMApi.user.search(this.searchByName, this.searchByEmail, 1, 32, "", function (response) {
+                    if (response.ok) {
+                        self.users = response.body.users;
+                    } else {
+                    }
+                });
             }
         }
     });
