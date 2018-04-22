@@ -39,19 +39,19 @@
                             `email` VARCHAR(254) NOT NULL,
                             `password_hash` VARCHAR(60) NOT NULL,
                             `name` VARCHAR(254) NULL DEFAULT NULL,
-                            `is_admin` BIT(1) NOT NULL DEFAULT b\'0\',
+                            `account_type` VARCHAR(1) NOT NULL DEFAULT "U",
                             `creator` VARCHAR(36) NOT NULL,
-                            `created` TIMESTAMP NOT NULL,
+                            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                             `deleted` TIMESTAMP NULL DEFAULT NULL,
                             PRIMARY KEY (`id`),
                             INDEX `email` (`email`(191)),
-                            INDEX `is_admin` (`is_admin`),
                             INDEX `creator` (`creator`),
-                            INDEX `deleted` (`deleted`)
+                            INDEX `deleted` (`deleted`),
+                            INDEX `account_type` (`account_type`)
                         );
                     ',
                     '
-                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", b\'1\', "00000000-0000-0000-0000-000000000000", UTC_TIMESTAMP(3), NULL);
+                        INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", "A", "00000000-0000-0000-0000-000000000000", UTC_TIMESTAMP(3), NULL);
                     '
                 )
             )
