@@ -1,6 +1,19 @@
 "use strict";
 
 /**
+ * create & return a pagination object
+ */
+const getPager = function () {
+    return ({
+        actualPage: 1,
+        previousPage: 1,
+        nextPage: 1,
+        totalPages: 0,
+        resultsPage: initialState.defaultResultsPage
+    });
+}
+
+/**
  * global object for events between vuejs components
  */
 const bus = new Vue();
