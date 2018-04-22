@@ -136,7 +136,7 @@ const TheUserList = (function () {
                 <tfoot>
                     <tr>
                         <th colspan="6">
-                            <table-pagination></table-pagination>
+                            <table-pagination  v-bind:loading="loading" v-bind:data="pager"></table-pagination>
                         </th>
                     </tr>
                 </tfoot>
@@ -148,6 +148,8 @@ const TheUserList = (function () {
         template: template(),
         data: function () {
             return ({
+                loading: false,
+                pager: getPager(),
                 users: [],
                 searchByName: null,
                 searchByEmail: null,
@@ -155,12 +157,21 @@ const TheUserList = (function () {
         },
         created: function () {
             this.search();
+            var self = this;
+            this.pager.refresh = function () {
+                self.search();
+            }
         },
         methods: {
             search() {
                 var self = this;
-                phpMPMApi.user.search(this.searchByName, this.searchByEmail, 1, 32, "", function (response) {
+                self.loading = true;
+                phpMPMApi.user.search(this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, "", function (response) {
+                    self.loading = false;
                     if (response.ok) {
+                        self.pager.actualPage = response.body.pagination.actualPage;
+                        self.pager.totalPages = response.body.pagination.totalPages;
+                        self.pager.totalResults = response.body.pagination.totalResults;
                         self.users = response.body.users;
                     } else {
                     }
