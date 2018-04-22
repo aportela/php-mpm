@@ -35,7 +35,8 @@ const TheAppLayoutHeader = (function () {
                                     <span>Administration menu</span>
                                 </a>
                                 <div class="navbar-dropdown">
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theUserList' })" v-bind:class="{ 'is-active': $route.name == 'theUserList' }"><span class="icon"><i class="fa fa-user"></i></span><label>Users</label></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theUserAddForm' })" v-bind:class="{ 'is-active': $route.name == 'theUserAddForm' }"><span class="icon"><i class="fa fa-plus"></i></span><label>Add user</label></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theUserList' })" v-bind:class="{ 'is-active': $route.name == 'theUserList' }"><span class="icon"><i class="fa fa-user"></i></span><label>User list</label></a>
                                     <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theGroupList' })" v-bind:class="{ 'is-active': $route.name == 'theGroupList' }"><span class="icon"><i class="fa fa-users"></i></span><label>Groups</label></a>
                                     <hr class="navbar-divider">
                                     <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theAttributeList' })" v-bind:class="{ 'is-active': $route.name == 'theAttributeList' }"><span class="icon"><i class="fa fa-object-group"></i></span><label>Attributes</label></a>
