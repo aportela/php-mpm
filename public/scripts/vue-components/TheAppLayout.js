@@ -7,9 +7,9 @@ const TheAppLayout = (function () {
                 <the-app-layout-header></the-app-layout-header>
                 <section class="section">
                     <div class="container-fluid">
-                        <keep-alive>
+                        <transition name="fade">
                             <router-view></router-view>
-                        </keep-alive>
+                        </transition>
                     </div>
                 </section>
             </div>
