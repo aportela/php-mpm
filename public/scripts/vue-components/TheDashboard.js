@@ -3,7 +3,7 @@ const TheDashboard = (function () {
 
     var template = function () {
         return `
-            <div class="container">
+            <div>
                 <div class="notification">
                     Welcome administrator
                 </div>
