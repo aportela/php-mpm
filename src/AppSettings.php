@@ -40,7 +40,8 @@
                 'level' => \Monolog\Logger::DEBUG
             ],
             'common' => [
-                'allowSignUp' => true
+                'allowSignUp' => false,
+                'defaultResultsPage' => 32
             ]
         ],
     ];
