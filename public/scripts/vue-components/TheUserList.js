@@ -160,17 +160,19 @@ const TheUserList = (function () {
         },
         methods: {
             toggleSort: function (field) {
-                if (field == this.sortBy) {
-                    if (this.sortOrder == "ASC") {
-                        this.sortOrder = "DESC";
+                if (!this.loading) {
+                    if (field == this.sortBy) {
+                        if (this.sortOrder == "ASC") {
+                            this.sortOrder = "DESC";
+                        } else {
+                            this.sortOrder = "ASC";
+                        }
                     } else {
+                        this.sortBy = field;
                         this.sortOrder = "ASC";
                     }
-                } else {
-                    this.sortBy = field;
-                    this.sortOrder = "ASC";
+                    this.search();
                 }
-                this.search();
             },
             search() {
                 var self = this;
