@@ -95,6 +95,7 @@ const TheAppLayoutHeader = (function () {
                 var self = this;
                 phpMPMApi.user.signOut(function (response) {
                     if (response.ok) {
+                        initialState.session = response.body.session;
                         self.$router.push({ name: 'auth' });
                     } else {
                         // TODO
