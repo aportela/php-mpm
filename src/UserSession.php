@@ -6,11 +6,12 @@
 
     class UserSession {
 
-        public static function set(string $userId = "", string $email = "", string $name = "", bool $isAdmin = false) {
+        public static function set(string $userId = "", string $email = "", string $name = "", string $accountType = "U") {
             $_SESSION["userId"] = $userId;
             $_SESSION["email"] = $email;
             $_SESSION["name"] = $name;
-            $_SESSION["isAdmin"] = $isAdmin;
+            $_SESSION["accounType"] = $accountType;
+            $_SESSION["isAdmin"] = $accountType == "A";
         }
 
         /**
