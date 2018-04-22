@@ -12,9 +12,18 @@
             'initialState' => json_encode(
                 array(
                     'upgradeAvailable' => $v->hasUpgradeAvailable(),
-                    'logged' => \PHP_MPM\UserSession::isLogged(),
                     'allowSignUp' => $this->get('settings')['common']['allowSignUp'],
                     'defaultResultsPage' => $this->get('settings')['common']['defaultResultsPage'],
+                    'session' => array(
+                        "logged" => \PHP_MPM\UserSession::isLogged(),
+                        "user" => \PHP_MPM\UserSession::isLogged() ? array(
+                            "id" => \PHP_MPM\UserSession::getUserId(),
+                            "name" => \PHP_MPM\UserSession::getName(),
+                            "email" => \PHP_MPM\UserSession::getEmail(),
+                            "accountType" => \PHP_MPM\UserSession::getAccountType(),
+                            "isAdmin" => \PHP_MPM\UserSession::isAdmin()
+                        ): array()
+                    )
                 )
             )
         ));
