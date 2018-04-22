@@ -17,7 +17,7 @@ const TheUserList = (function () {
                         <th>
                             <div class="control has-icons-left is-expanded">
                                 <div class="select is-fullwidth">
-                                    <select v-model="searchByAccountType">
+                                    <select v-model="searchByAccountType" v-bind:disabled="loading">
                                         <option value="">All types</option>
                                         <option value="A">Only administrators</option>
                                         <option value="U">Only normal users</option>
@@ -31,13 +31,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by name" v-model.trim="searchByName">
+                                    <input class="input" type="text" placeholder="search by name" v-bind:disabled="loading" v-model.trim="searchByName" v-on:keyup.enter.prevent="search();">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button" v-on:click.prevent="search();">
+                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search();">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -48,13 +48,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by email" v-model:trim="searchByEmail">
+                                    <input class="input" type="text" placeholder="search by email" v-bind:disabled="loading" v-model:trim="searchByEmail" v-on:keyup.enter.prevent="search();">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button" v-on:click.prevent="search();">
+                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search();">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -65,39 +65,14 @@ const TheUserList = (function () {
                         <th>
                         </th>
                         <th>
-                            <div class="control has-icons-left is-expanded">
-                                <div class="select is-fullwidth">
-                                    <select>
-                                        <option>Anytime</option>
-                                        <option>Today</option>
-                                        <option>Yesterday</option>
-                                        <option>Last week</option>
-                                        <option>Last month</option>
-                                        <option>Last Year</option>
-                                    </select>
-                                </div>
-                                <div class="icon is-small is-left">
-                                    <i class="fas fa-filter"></i>
-                                </div>
-                            </div>
                         </th>
                         <th>
-                            <div class="field has-addons">
-                                <p class="control">
-                                    <a class="button is-link" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
-                                        <span class="icon is-small"><i class="fas fa-plus"></i></span>
-                                        <span>Add</span>
-                                    </a>
-                                </p>
-                                <p class="control">
-                                    <a class="button is-info" v-bind:disabled="true">
-                                        <span class="icon is-small">
-                                        <i class="fas fa-table"></i>
-                                        </span>
-                                        <span>Export</span>
-                                    </a>
-                                </p>
-                            </div>
+                            <p class="control">
+                                <a class="button is-link is-fullwidth" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
+                                    <span class="icon is-small"><i class="fas fa-plus"></i></span>
+                                    <span>Add new user</span>
+                                </a>
+                            </p>
                         </th>
                     </tr>
                 </thead>
@@ -114,17 +89,17 @@ const TheUserList = (function () {
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.createdBy }}</td>
-                        <td>{{ user.createdOn }}</td>
-                        <td>
-                            <div class="field has-addons">
+                        <td>{{ user.created }}</td>
+                        <td class="has-text-centered">
+                            <div class="field is-grouped">
                                 <p class="control">
-                                    <a class="button is-link">
+                                    <a class="button is-info is-small">
                                         <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                         <span>Update</span>
                                     </a>
                                 </p>
                                 <p class="control">
-                                    <a class="button is-danger" v-bind:disabled="true">
+                                    <a class="button is-danger is-small" v-bind:disabled="true">
                                         <span class="icon is-small"><i class="fas fa-trash"></i></span>
                                         <span>Remove</span>
                                     </a>
