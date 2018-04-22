@@ -1,3 +1,9 @@
-.phpmpm-tabs-without-margin-bottom {
+.phpmpm-cursor-pointer
+{
+    cursor: pointer;
+}
+
+.phpmpm-tabs-without-margin-bottom
+{
     margin-bottom: 0 !important;
 }
