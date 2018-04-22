@@ -45,7 +45,9 @@ const phpMPMApi = {
         search: function (name, email, actualPage, resultsPage, order, callback) {
             var params = {
                 name: name,
-                email: email
+                email: email,
+                actualPage: actualPage,
+                resultsPage: resultsPage
             };
             Vue.http.post("api/users/", params).then(
                 response => {
