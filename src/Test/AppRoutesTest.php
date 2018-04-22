@@ -33,11 +33,5 @@
             $this->request('GET', "/");
             $this->assertThatResponseHasStatus(200);
         }
-
-        public function testPoll(): void {
-            $this->request('GET', "/api/poll");
-            $this->assertThatResponseHasStatus(200);
-            $this->assertThatResponseHasContentType("application/json;charset=utf-8");
-        }
     }
 ?>

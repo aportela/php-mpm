@@ -90,6 +90,5 @@
             $app = $this->app;
             $this->response = $app($request, new Response());
         }
-
     }
 ?>
