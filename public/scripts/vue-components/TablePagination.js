@@ -25,7 +25,7 @@ const TablePagination = (function () {
                 </ul>
                 <div class="control has-icons-left">
                     <div class="select">
-                    <select v-model.number="resultsPage">
+                    <select v-model.number="resultsPage" v-bind:disabled="loading">
                         <option value="16">16 results/page</option>
                         <option value="32">32 results/page</option>
                         <option value="64">64 results/page</option>
