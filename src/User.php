@@ -11,7 +11,7 @@
         public $name;
         public $password;
         public $passwordHash;
-        public $isAdmin;
+        public $accountType;
 
 	    public function __construct ($obj = null) {
             if ($obj) {
@@ -19,7 +19,7 @@
                 $this->email = isset($obj["email"]) ? $obj["email"]: null;
                 $this->name = isset($obj["name"]) ? $obj["name"]: null;
                 $this->password = isset($obj["password"]) ? $obj["password"]: null;
-                $this->isAdmin = isset($obj["isAdmin"]) ? $obj["isAdmin"]: false;
+                $this->accountType = isset($obj["accountType"]) ? $obj["accountType"]: false;
             }
         }
 
@@ -43,11 +43,11 @@
         public function get(\PHP_MPM\Database\DB $dbh) {
             $results = null;
             if (! empty($this->id)) {
-                $results = $dbh->query(" SELECT id, email, password_hash AS passwordHash, name, is_admin AS isAdmin FROM USER WHERE id = :id AND DELETED IS NULL ", array(
+                $results = $dbh->query(" SELECT id, email, password_hash AS passwordHash, name, account_type AS accountType FROM USER WHERE id = :id AND DELETED IS NULL ", array(
                     (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
                 ));
             } else if (! empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-                $results = $dbh->query(" SELECT id, email, password_hash AS passwordHash, name, is_admin AS isAdmin FROM USER WHERE email = :email AND DELETED IS NULL  ", array(
+                $results = $dbh->query(" SELECT id, email, password_hash AS passwordHash, name, account_type AS accountType FROM USER WHERE email = :email AND DELETED IS NULL  ", array(
                     (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email))
                 ));
             } else {
@@ -58,7 +58,7 @@
                 $this->email = $results[0]->email;
                 $this->passwordHash = $results[0]->passwordHash;
                 $this->name = $results[0]->name;
-                $this->isAdmin = $results[0]->isAdmin == 1;
+                $this->accountType = $results[0]->accountType;
             } else {
                 throw new \PHP_MPM\Exception\NotFoundException("");
             }
@@ -76,7 +76,7 @@
             if (! empty($this->password)) {
                 $this->get($dbh);
                 if (password_verify($this->password, $this->passwordHash)) {
-                    \PHP_MPM\UserSession::set($this->id, $this->email, $this->name, $this->isAdmin);
+                    \PHP_MPM\UserSession::set($this->id, $this->email, $this->name, $this->accountType);
                     return(true);
                 } else {
                     return(false);
@@ -101,9 +101,9 @@
             $whereCondition = "";
             if (isset($filter)) {
                 $conditions = array();
-                if (isset($filter["isAdmin"])) {
-                    $conditions[] = " U.is_addmin = :is_admin ";
-                    $params[] = (new \PHP_MPM\Database\DBParam())->bool(":is_admin", $filter["isAdmin"]);
+                if (isset($filter["accountType"]) && ! empty($filter["accountType"])) {
+                    $conditions[] = " U.account_type = :account_type ";
+                    $params[] = (new \PHP_MPM\Database\DBParam())->str(":account_type", $filter["accountType"]);
                 }
                 if (isset($filter["email"]) && ! empty($filter["email"])) {
                     $conditions[] = " U.email LIKE :email ";
@@ -144,7 +144,7 @@
                     U.id AS id,
                     U.email AS email,
                     U.name AS name,
-                    U.is_admin AS isAdmin,
+                    U.account_type AS accountType,
                     U.creator AS creator,
                     U.created AS created
                 FROM USER U
