@@ -42,13 +42,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by name" v-bind:disabled="loading" v-model.trim="searchByName" v-on:keyup.enter.prevent="search();">
+                                    <input class="input" type="text" placeholder="search by name" v-bind:disabled="loading" v-model.trim="searchByName" v-on:keyup.enter.prevent="search(true);">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search();">
+                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search(true);">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -59,13 +59,13 @@ const TheUserList = (function () {
                         <th>
                             <div class="field has-addons">
                                 <div class="control has-icons-left is-expanded">
-                                    <input class="input" type="text" placeholder="search by email" v-bind:disabled="loading" v-model:trim="searchByEmail" v-on:keyup.enter.prevent="search();">
+                                    <input class="input" type="text" placeholder="search by email" v-bind:disabled="loading" v-model:trim="searchByEmail" v-on:keyup.enter.prevent="search(true);">
                                     <span  class="icon is-small is-left">
                                         <i class="fas fa-filter"></i>
                                     </span >
                                 </div>
                                 <div class="control">
-                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search();">
+                                    <a class="button" v-bind:disabled="loading" v-on:click.prevent="search(true);">
                                         <span class="icon">
                                             <i class="fas fa-search"></i>
                                         </span>
@@ -142,15 +142,15 @@ const TheUserList = (function () {
             });
         },
         created: function () {
-            this.search();
+            this.search(true);
             var self = this;
             this.pager.refresh = function () {
-                self.search();
+                self.search(false);
             }
         },
         watch: {
             searchByAccountType: function () {
-                this.search();
+                this.search(true);
             }
         },
         filters: {
@@ -174,8 +174,11 @@ const TheUserList = (function () {
                     this.search();
                 }
             },
-            search() {
+            search(resetPager) {
                 var self = this;
+                if (resetPager) {
+                    this.pager.actualPage = 1;
+                }
                 self.loading = true;
                 phpMPMApi.user.search(this.searchByAccountType, this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, self.sortBy, self.sortOrder, function (response) {
                     self.loading = false;
