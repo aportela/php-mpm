@@ -85,7 +85,7 @@ const TheAuth = (function () {
                 self.errors = false;
                 self.invalidSignInUsername = false;
                 self.invalidSignInPassword = false;
-                phpMPMApi.signIn(this.signInEmail, this.signInPassword, function (response) {
+                phpMPMApi.user.signIn(this.signInEmail, this.signInPassword, function (response) {
                     if (response.ok) {
                         self.$router.push({ name: 'theDashboard' });
                     } else {
