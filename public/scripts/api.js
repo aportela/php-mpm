@@ -40,6 +40,19 @@ const phpMPMApi = {
             );
         },
         /**
+         * get user data
+         */
+        get: function(id, callback) {
+            Vue.http.get("api/users/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
          * search (list) users
          */
         search: function (accountType, name, email, actualPage, resultsPage, sortBy, sortOrder, callback) {
