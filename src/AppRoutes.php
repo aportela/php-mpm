@@ -50,6 +50,7 @@
                     $request->getParam("actualPage", 1),
                     $request->getParam("resultsPage", $this->get('settings')['common']['defaultResultsPage']),
                     array(
+                        "accountType" => $request->getParam("accountType", ""),
                         "email" => $request->getParam("email", ""),
                         "name" => $request->getParam("name", ""),
                     ),
