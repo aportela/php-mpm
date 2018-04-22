@@ -54,7 +54,8 @@
                         "email" => $request->getParam("email", ""),
                         "name" => $request->getParam("name", ""),
                     ),
-                    $request->getParam("orderBy", "")
+                    $request->getParam("sortBy", ""),
+                    $request->getParam("sortOrder", "ASC")
                 );
                 return $response->withJson([
                     'users' => $data->results,

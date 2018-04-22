@@ -3,14 +3,25 @@ const TheUserList = (function () {
 
     var template = function () {
         return `
-            <table class="table is-bordered is-striped is-narrow is-fullwidth">
+            <table class="table is-bordered is-striped is-narrow is-fullwidth is-unselectable">
                 <thead>
                     <tr>
-                        <th>Account type</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Created by</th>
-                        <th>Created on </th>
+                        <th class="phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('accountType');">
+                            <i v-if="sortBy == 'accountType'" class="fas" v-bind:class="{ 'fa-sort-alpha-up': sortOrder == 'ASC', 'fa-sort-alpha-down': sortOrder == 'DESC' }"></i>
+                            Account type
+                        </th>
+                        <th class="phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('name');">
+                            <i v-if="sortBy == 'name'" class="fas" v-bind:class="{ 'fa-sort-alpha-up': sortOrder == 'ASC', 'fa-sort-alpha-down': sortOrder == 'DESC' }"></i>
+                            Name
+                        </th>
+                        <th class="phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('email');">
+                            <i v-if="sortBy == 'email'" class="fas" v-bind:class="{ 'fa-sort-alpha-up': sortOrder == 'ASC', 'fa-sort-alpha-down': sortOrder == 'DESC' }"></i>
+                            Email
+                        </th>
+                        <th class="phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('created');">
+                            <i v-if="sortBy == 'created'" class="fas" v-bind:class="{ 'fa-sort-amount-up': sortOrder == 'ASC', 'fa-sort-amount-down': sortOrder == 'DESC' }"></i>
+                            Created
+                        </th>
                         <th>Operations</th>
                     </tr>
                     <tr>
@@ -65,8 +76,6 @@ const TheUserList = (function () {
                         <th>
                         </th>
                         <th>
-                        </th>
-                        <th>
                             <p class="control">
                                 <a class="button is-link is-fullwidth" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
                                     <span class="icon is-small"><i class="fas fa-plus"></i></span>
@@ -88,8 +97,7 @@ const TheUserList = (function () {
                         </td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.createdBy }}</td>
-                        <td>{{ user.created }}</td>
+                        <td>{{ user.created | jsonDate2Human }}</td>
                         <td class="has-text-centered">
                             <div class="field is-grouped">
                                 <p class="control">
@@ -110,7 +118,7 @@ const TheUserList = (function () {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6">
+                        <th colspan="5">
                             <table-pagination  v-bind:loading="loading" v-bind:data="pager"></table-pagination>
                         </th>
                     </tr>
@@ -127,6 +135,8 @@ const TheUserList = (function () {
                 pager: getPager(),
                 users: [],
                 searchByAccountType: "",
+                sortBy: "name",
+                sortOrder: "ASC",
                 searchByName: null,
                 searchByEmail: null,
             });
@@ -143,11 +153,29 @@ const TheUserList = (function () {
                 this.search();
             }
         },
+        filters: {
+            jsonDate2Human(jsonDate) {
+                return (moment(jsonDate, "YYYY-MM-DDTHH:mm:ss.SZ").fromNow());
+            }
+        },
         methods: {
+            toggleSort: function (field) {
+                if (field == this.sortBy) {
+                    if (this.sortOrder == "ASC") {
+                        this.sortOrder = "DESC";
+                    } else {
+                        this.sortOrder = "ASC";
+                    }
+                } else {
+                    this.sortBy = field;
+                    this.sortOrder = "ASC";
+                }
+                this.search();
+            },
             search() {
                 var self = this;
                 self.loading = true;
-                phpMPMApi.user.search(this.searchByAccountType, this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, "", function (response) {
+                phpMPMApi.user.search(this.searchByAccountType, this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, self.sortBy, self.sortOrder, function (response) {
                     self.loading = false;
                     if (response.ok) {
                         self.pager.actualPage = response.body.pagination.actualPage;

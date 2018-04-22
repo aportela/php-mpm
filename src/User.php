@@ -96,7 +96,7 @@
         /**
          * search (list) users
          */
-        public static function search(\PHP_MPM\Database\DB $dbh, int $page = 1, int $resultsPage = 16, array $filter = array(), string $order = "") {
+        public static function search(\PHP_MPM\Database\DB $dbh, int $page = 1, int $resultsPage = 16, array $filter = array(), string $sortBy = "", string $sortOrder = "ASC") {
             $params = array();
             $whereCondition = "";
             if (isset($filter)) {
@@ -133,11 +133,24 @@
                 $data->totalPages = $data->totalResults > 0 ? 1: 0;
                 $resultsPage = $data->totalResults;
             }
-            $sqlOrder = "";
-            if (! empty($order) && $order == "random") {
-                $sqlOrder = " ORDER BY RAND() ";
+            if (! empty($sortBy)) {
+                switch($sortBy) {
+                    case "accountType":
+                        $sqlOrder = " ORDER BY U.account_type ";
+                    break;
+                    case "email":
+                        $sqlOrder = " ORDER BY U.email ";
+                    break;
+                    case "created":
+                        $sqlOrder = " ORDER BY U.created ";
+                    break;
+                    case "name":
+                    default:
+                        $sqlOrder = " ORDER BY U.name ";
+                    break;
+                }
             } else {
-                $sqlOrder = " ORDER BY U.name ASC ";
+                $sqlOrder = " ORDER BY U.name ";
             }
             $query = sprintf('
                 SELECT
@@ -145,10 +158,10 @@
                     U.email AS email,
                     U.name AS name,
                     U.account_type AS accountType,
-                    U.creator AS creator,
                     DATE_FORMAT(CONVERT_TZ(U.created, @@session.time_zone, "+00:00"), "%s") AS created
                 FROM USER U
                 WHERE U.deleted IS NULL
+                %s
                 %s
                 %s
                 LIMIT %d OFFSET %d
@@ -156,6 +169,7 @@
                 \PHP_MPM\Database\DB::JSON_UTC_DATETIME_FORMAT,
                 $whereCondition,
                 $sqlOrder,
+                $sortOrder == "DESC" ? "DESC": "ASC",
                 $resultsPage,
                 $resultsPage * ($page - 1)
             );

@@ -42,13 +42,15 @@ const phpMPMApi = {
         /**
          * search (list) users
          */
-        search: function (accountType, name, email, actualPage, resultsPage, order, callback) {
+        search: function (accountType, name, email, actualPage, resultsPage, sortBy, sortOrder, callback) {
             var params = {
                 accountType: accountType,
                 name: name,
                 email: email,
                 actualPage: actualPage,
-                resultsPage: resultsPage
+                resultsPage: resultsPage,
+                sortBy: sortBy,
+                sortOrder: sortOrder
             };
             Vue.http.post("api/users/", params).then(
                 response => {
