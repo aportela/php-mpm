@@ -39,8 +39,48 @@
                 \PHP_MPM\User::signOut();
                 return $response->withJson(['logged' => false], 200);
             });
+        });
+
+        $this->group("/users", function() {
+
+            $this->post('/', function (Request $request, Response $response, array $args) {
+                $data = \PHP_MPM\User::search(
+                    new \PHP_MPM\Database\DB($this),
+                    $request->getParam("actualPage", 1),
+                    $request->getParam("resultsPage", $this->get('settings')['common']['defaultResultsPage']),
+                    array(
+                        "email" => $request->getParam("email", ""),
+                        "name" => $request->getParam("name", ""),
+                    ),
+                    $request->getParam("orderBy", "")
+                );
+                return $response->withJson(['users' => $data->results, 'totalResults' => $data->totalResults, 'actualPage' => $data->actualPage, 'resultsPage' => $data->resultsPage, 'totalPages' => $data->totalPages], 200);
+            });
+
+            $this->post('/{id}', function (Request $request, Response $response, array $args) {
+                $user = new \PHP_MPM\User($request->getParam("user", null));
+                $user->add(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->put('/{id}', function (Request $request, Response $response, array $args) {
+                $user = new \PHP_MPM\User($request->getParam("user", null));
+                $user->update(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->get('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $user = new \PHP_MPM\User();
+                $user->id = $route->getArgument("id");
+                $user->get(new \PHP_MPM\Database\DB($this));
+                unset($user->password);
+                unset($user->passwordHash);
+                return $response->withJson([ 'user' => $user ], 200);
+            });
 
         });
+
         /**
          * user api end
          */
