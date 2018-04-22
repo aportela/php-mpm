@@ -89,7 +89,7 @@ const TheAppLayoutHeader = (function () {
             },
             signOut: function () {
                 var self = this;
-                phpMPMApi.signOut(function (response) {
+                phpMPMApi.user.signOut(function (response) {
                     if (response.ok) {
                         self.$router.push({ name: 'auth' });
                     } else {
