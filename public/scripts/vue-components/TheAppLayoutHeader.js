@@ -54,13 +54,11 @@ const TheAppLayoutHeader = (function () {
             });
         }, methods: {
             search: function() {
-
             },
             signOut: function() {
                 var self = this;
                 phpMPMApi.signOut(function (response) {
                     if (response.ok) {
-                        console.log("si");
                         self.$router.push({ name: 'auth' });
                     } else {
                         // TODO
