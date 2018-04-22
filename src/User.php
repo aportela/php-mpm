@@ -92,6 +92,75 @@
         public static function signOut() {
             \PHP_MPM\UserSession::clear();
         }
+
+        /**
+         * search (list) users
+         */
+        public static function search(\PHP_MPM\Database\DB $dbh, int $page = 1, int $resultsPage = 16, array $filter = array(), string $order = "") {
+            $params = array();
+            $whereCondition = "";
+            if (isset($filter)) {
+                $conditions = array();
+                if (isset($filter["isAdmin"])) {
+                    $conditions[] = " U.is_addmin = :is_admin ";
+                    $params[] = (new \PHP_MPM\Database\DBParam())->bool(":is_admin", $filter["isAdmin"]);
+                }
+                if (isset($filter["email"]) && ! empty($filter["email"])) {
+                    $conditions[] = " U.email LIKE :email ";
+                    $params[] = (new \PHP_MPM\Database\DBParam())->str(":email", "%" . $filter["email"] . "%");
+                }
+                if (isset($filter["name"]) && ! empty($filter["name"])) {
+                    $conditions[] = " U.name LIKE :name ";
+                    $params[] = (new \PHP_MPM\Database\DBParam())->str(":name", "%" . $filter["name"] . "%");
+                }
+                $whereCondition = count($conditions) > 0 ? " AND " .  implode(" AND ", $conditions) : "";
+            }
+            $queryCount = '
+                SELECT
+                    COUNT(U.id) AS total
+                FROM USER U
+                WHERE U.deleted IS NULL
+                ' . $whereCondition . '
+            ';
+            $result = $dbh->query($queryCount, $params);
+            $data = new \stdClass();
+            $data->actualPage = $page;
+            $data->resultsPage = $resultsPage;
+            $data->totalResults = $result[0]->total;
+            if ($resultsPage > 0) {
+                $data->totalPages = ceil($data->totalResults / $resultsPage);
+            } else {
+                $data->totalPages = $data->totalResults > 0 ? 1: 0;
+                $resultsPage = $data->totalResults;
+            }
+            $sqlOrder = "";
+            if (! empty($order) && $order == "random") {
+                $sqlOrder = " ORDER BY RAND() ";
+            } else {
+                $sqlOrder = " ORDER BY U.created DESC ";
+            }
+            $query = sprintf('
+                SELECT
+                    U.id AS id,
+                    U.email AS email,
+                    U.name AS name,
+                    U.is_admin AS isAdmin,
+                    U.creator AS creator,
+                    U.created AS created
+                FROM USER U
+                WHERE U.deleted IS NULL
+                %s
+                %s
+                LIMIT %d OFFSET %d
+                ',
+                $whereCondition,
+                $sqlOrder,
+                $resultsPage,
+                $resultsPage * ($page - 1)
+            );
+            $data->results = $dbh->query($query, $params);
+            return($data);
+        }
     }
 
 ?>
