@@ -146,13 +146,14 @@
                     U.name AS name,
                     U.account_type AS accountType,
                     U.creator AS creator,
-                    U.created AS created
+                    DATE_FORMAT(CONVERT_TZ(U.created, @@session.time_zone, "+00:00"), "%s") AS created
                 FROM USER U
                 WHERE U.deleted IS NULL
                 %s
                 %s
                 LIMIT %d OFFSET %d
                 ',
+                \PHP_MPM\Database\DB::JSON_UTC_DATETIME_FORMAT,
                 $whereCondition,
                 $sqlOrder,
                 $resultsPage,
