@@ -30,6 +30,16 @@ const routes = [
                 component: TheUserList
             },
             {
+                path: 'add_user',
+                name: 'theUserAddForm',
+                component: TheUserAddForm
+            },
+            {
+                path: 'update_user',
+                name: 'theUserUpdateForm',
+                component: TheUserUpdateForm
+            },
+            {
                 path: 'groups',
                 name: 'theGroupList',
                 component: TheGroupList
@@ -60,8 +70,18 @@ const routes = [
                 component: TheErrorList
             }
         ]
+    },
+    {
+        path: '/404',
+        name: 'the404',
+        component: The404
+    },
+    {
+        path: "*",
+        redirect: {
+            name: 'the404'
+        }
     }
-
 ];
 
 /**
@@ -85,7 +105,10 @@ const app = new Vue({
         if (!initialState.logged) {
             this.$router.push({ name: 'auth' });
         } else {
-            this.$router.push({ name: 'theDashboard' });
+            if (!this.$route.name) {
+                this.$router.push({ name: 'theDashboard' });
+            } else {
+            }
         }
     }
 }).$mount('#app');
