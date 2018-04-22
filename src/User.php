@@ -137,7 +137,7 @@
             if (! empty($order) && $order == "random") {
                 $sqlOrder = " ORDER BY RAND() ";
             } else {
-                $sqlOrder = " ORDER BY U.created DESC ";
+                $sqlOrder = " ORDER BY U.name ASC ";
             }
             $query = sprintf('
                 SELECT
