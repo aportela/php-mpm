@@ -77,7 +77,7 @@ const TheUserList = (function () {
                         </th>
                         <th>
                             <p class="control">
-                                <a class="button is-link is-fullwidth" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
+                                <a class="button is-link is-fullwidth" v-bind:disabled="loading" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
                                     <span class="icon is-small"><i class="fas fa-plus"></i></span>
                                     <span>Add new user</span>
                                 </a>
@@ -98,10 +98,10 @@ const TheUserList = (function () {
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.created | jsonDate2Human }}</td>
-                        <td class="has-text-centered">
+                        <td>
                             <div class="field is-grouped">
                                 <p class="control">
-                                    <a class="button is-info is-small">
+                                    <a class="button is-info is-small" v-bind:disabled="loading">
                                         <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                         <span>Update</span>
                                     </a>
