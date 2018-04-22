@@ -10,7 +10,7 @@
             $_SESSION["userId"] = $userId;
             $_SESSION["email"] = $email;
             $_SESSION["name"] = $name;
-            $_SESSION["accounType"] = $accountType;
+            $_SESSION["accountType"] = $accountType;
             $_SESSION["isAdmin"] = $accountType == "A";
         }
 
@@ -66,6 +66,13 @@
 
         /**
          * return logged user account type
+         */
+        public static function getAccountType() {
+            return(isset($_SESSION["accountType"]) ? $_SESSION["accountType"]: null);
+        }
+
+        /**
+         * return logged user account privilege
          */
         public static function isAdmin() {
             return(isset($_SESSION["isAdmin"]) ? $_SESSION["isAdmin"]: false);
