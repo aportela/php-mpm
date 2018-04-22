@@ -11,6 +11,7 @@
         private $dbh = null;
         private $container = null;
         private $queryParams = array();
+        const JSON_UTC_DATETIME_FORMAT = "%Y%m%dT%H:%i:%s.000Z";
 
 	    public function __construct (\Slim\Container $container) {
             $this->container = $container;
