@@ -17,10 +17,10 @@ const TheUserList = (function () {
                         <th>
                             <div class="control has-icons-left is-expanded">
                                 <div class="select is-fullwidth">
-                                    <select>
-                                        <option>All types</option>
-                                        <option>Only administrators</option>
-                                        <option>Only normal users</option>
+                                    <select v-model="searchByAccountType">
+                                        <option value="">All types</option>
+                                        <option value="A">Only administrators</option>
+                                        <option value="U">Only normal users</option>
                                     </select>
                                 </div>
                                 <div class="icon is-small is-left">
@@ -103,7 +103,7 @@ const TheUserList = (function () {
                 </thead>
                 <tbody>
                     <tr v-for="user in users">
-                        <td v-if="user.isAdmin">
+                        <td v-if="user.accountType == 'A'">
                             <span class="icon"><i class="fas fa-user"></i></span>
                             <span>administrator</span>
                         </td>
@@ -151,6 +151,7 @@ const TheUserList = (function () {
                 loading: false,
                 pager: getPager(),
                 users: [],
+                searchByAccountType: "",
                 searchByName: null,
                 searchByEmail: null,
             });
@@ -162,11 +163,16 @@ const TheUserList = (function () {
                 self.search();
             }
         },
+        watch: {
+            searchByAccountType: function () {
+                this.search();
+            }
+        },
         methods: {
             search() {
                 var self = this;
                 self.loading = true;
-                phpMPMApi.user.search(this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, "", function (response) {
+                phpMPMApi.user.search(this.searchByAccountType, this.searchByName, this.searchByEmail, self.pager.actualPage, self.pager.resultsPage, "", function (response) {
                     self.loading = false;
                     if (response.ok) {
                         self.pager.actualPage = response.body.pagination.actualPage;
