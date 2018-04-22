@@ -42,8 +42,9 @@ const phpMPMApi = {
         /**
          * search (list) users
          */
-        search: function (name, email, actualPage, resultsPage, order, callback) {
+        search: function (accountType, name, email, actualPage, resultsPage, order, callback) {
             var params = {
+                accountType: accountType,
                 name: name,
                 email: email,
                 actualPage: actualPage,
