@@ -62,7 +62,8 @@ const TheUserList = (function () {
                                 </div>
                             </div>
                         </th>
-                        <th></th>
+                        <th>
+                        </th>
                         <th>
                             <div class="control has-icons-left is-expanded">
                                 <div class="select is-fullwidth">
@@ -80,7 +81,24 @@ const TheUserList = (function () {
                                 </div>
                             </div>
                         </th>
-                        <th></th>
+                        <th>
+                            <div class="field has-addons">
+                                <p class="control">
+                                    <a class="button is-link" v-on:click.prevent="$router.push({ name: 'theUserAddForm' });">
+                                        <span class="icon is-small"><i class="fas fa-plus"></i></span>
+                                        <span>Add</span>
+                                    </a>
+                                </p>
+                                <p class="control">
+                                    <a class="button is-info" v-bind:disabled="true">
+                                        <span class="icon is-small">
+                                        <i class="fas fa-table"></i>
+                                        </span>
+                                        <span>Export</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,20 +116,16 @@ const TheUserList = (function () {
                         <td>{{ user.createdBy }}</td>
                         <td>{{ user.createdOn }}</td>
                         <td>
-                            <div class="field has-addons has-text-centered">
+                            <div class="field has-addons">
                                 <p class="control">
-                                    <a class="button is-info is-small">
-                                        <span class="icon is-small">
-                                        <i class="fas fa-edit"></i>
-                                        </span>
+                                    <a class="button is-link">
+                                        <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                         <span>Update</span>
                                     </a>
                                 </p>
                                 <p class="control">
-                                    <a class="button is-danger is-small" v-bind:disabled="true">
-                                        <span class="icon is-small">
-                                        <i class="fas fa-trash"></i>
-                                        </span>
+                                    <a class="button is-danger" v-bind:disabled="true">
+                                        <span class="icon is-small"><i class="fas fa-trash"></i></span>
                                         <span>Remove</span>
                                     </a>
                                 </p>
@@ -119,6 +133,13 @@ const TheUserList = (function () {
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6">
+                            <table-pagination></table-pagination>
+                        </th>
+                    </tr>
+                </tfoot>
             </table>
         `;
     };
