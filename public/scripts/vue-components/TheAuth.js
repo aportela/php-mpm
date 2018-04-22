@@ -40,8 +40,8 @@ const TheAuth = (function () {
                                             <p class="help is-danger" v-show="invalidSignInPassword">Invalid password</p>
                                         </p>
                                         <hr>
-                                        <p class="control">
-                                            <button type="submit" class="button is-primary" v-bind:class="{ 'is-loading': loading }" v-bind:disabled="loading ? true: false">
+                                        <p class="control has-text-right	">
+                                            <button type="submit" class="button is-link" v-bind:class="{ 'is-loading': loading }" v-bind:disabled="loading ? true: false">
                                                 <span class="icon"><i class="fas fa-lock"></i></span>
                                                 <span>Sign in</span>
                                             </button>
