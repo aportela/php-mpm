@@ -72,7 +72,7 @@ const TheAuth = (function () {
             });
         },
         created: function () {
-            if (! initialState.logged) {
+            if (!initialState.session.logged) {
                 this.$nextTick(() => this.$refs.signInEmail.focus());
             } else {
                 this.$router.push({ name: 'theDashboard' });
@@ -87,16 +87,17 @@ const TheAuth = (function () {
                 self.invalidSignInPassword = false;
                 phpMPMApi.user.signIn(this.signInEmail, this.signInPassword, function (response) {
                     if (response.ok) {
+                        initialState.session = response.body.session;
                         self.$router.push({ name: 'theDashboard' });
                     } else {
                         switch (response.status) {
                             case 404:
                                 self.invalidSignInUsername = true;
                                 break;
-                                case 401:
+                            case 401:
                                 self.invalidSignInPassword = true;
                                 break;
-                                default:
+                            default:
                                 // TODO
                                 break;
                         }

@@ -115,14 +115,12 @@ const app = new Vue({
         });
     },
     created: function () {
-        if (!initialState.logged) {
+        if (!initialState.session.logged) {
             this.$router.push({ name: 'auth' });
         } else {
             if (!this.$route.name) {
                 this.$router.push({ name: 'theDashboard' });
-            } else {
             }
         }
     }
 }).$mount('#app');
-

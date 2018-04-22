@@ -39,15 +39,40 @@
             $this->post('/signin', function (Request $request, Response $response, array $args) {
                 $user = new \PHP_MPM\User($request->getParam("user", null));
                 if ($user->signIn(new \PHP_MPM\Database\DB($this))) {
-                    return $response->withJson(['logged' => true], 200);
+                    return $response->withJson(
+                        [
+                            'session' => array(
+                                "logged" => \PHP_MPM\UserSession::isLogged(),
+                                "user" => \PHP_MPM\UserSession::isLogged() ? array(
+                                    "id" => \PHP_MPM\UserSession::getUserId(),
+                                    "name" => \PHP_MPM\UserSession::getName(),
+                                    "email" => \PHP_MPM\UserSession::getEmail(),
+                                    "accountType" => \PHP_MPM\UserSession::getAccountType(),
+                                    "isAdmin" => \PHP_MPM\UserSession::isAdmin()
+                                ): array()
+                            )
+                        ]
+                    , 200);
                 } else {
-                    return $response->withJson(['logged' => false], 401);
+                    return $response->withJson(
+                        [
+                            'session' => array(
+                                "logged" => false
+                            )
+                        ]
+                    , 401);
                 }
             });
 
             $this->get('/signout', function (Request $request, Response $response, array $args) {
                 \PHP_MPM\User::signOut();
-                return $response->withJson(['logged' => false], 200);
+                return $response->withJson(
+                    [
+                        'session' => array(
+                            "logged" => false
+                        )
+                    ]
+                , 200);
             });
         });
 

@@ -5,7 +5,7 @@ const TheDashboard = (function () {
         return `
             <div>
                 <div class="notification">
-                    Welcome administrator
+                    Welcome {{ signedAs }}
                 </div>
                 <div class="columns">
                     <div class="column">
@@ -65,7 +65,11 @@ const TheDashboard = (function () {
         template: template(),
         data: function () {
             return ({
+                signedAs: null
             });
+        },
+        created: function () {
+            this.signedAs = initialState.session.user.name;
         }
     });
 

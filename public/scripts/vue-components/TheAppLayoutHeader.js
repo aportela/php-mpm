@@ -63,7 +63,7 @@ const TheAppLayoutHeader = (function () {
                             <div class="navbar-item has-dropdown is-hoverable">
                                 <a class="navbar-link">
                                     <span class="icon"><i class="far fa-user"></i></span>
-                                    <span>Signed as administrator</span>
+                                    <span>Signed as <strong>{{ signedAs }}</strong></span>
                                 </a>
                                 <div class="navbar-dropdown">
                                     <a class="navbar-item"><span class="icon"><i class="fas fa-user"></i></span><span>My Profile</span></a>
@@ -82,8 +82,12 @@ const TheAppLayoutHeader = (function () {
         data: function () {
             return ({
                 searchText: null,
-                isSearching: false
+                isSearching: false,
+                signedAs: null
             });
+        },
+        created: function () {
+            this.signedAs = initialState.session.user.name;
         }, methods: {
             search: function () {
             },
