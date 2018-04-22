@@ -49,6 +49,10 @@ const TheAuth = (function () {
                                     </div>
                                 </form>
 
+                                <p class="has-text-centered phpmpm-margin-top-1rem">
+                                    <a href="https://github.com/aportela/php-mpm" target="_blank"><span class="icon is-small"><i class="fab fa-github"></i></span>Project page</a> | <a href="https://github.com/aportela" target="_blank">by alex</a>
+                                </p>
+
                             </div>
                         </div>
                     </div>

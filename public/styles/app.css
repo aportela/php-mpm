@@ -3,6 +3,11 @@
     cursor: pointer;
 }
 
+.phpmpm-margin-top-1rem
+{
+    margin-top: 1rem;
+}
+
 .phpmpm-tabs-without-margin-bottom
 {
     margin-bottom: 0 !important;
