@@ -12,7 +12,6 @@
             'initialState' => json_encode(
                 array(
                     'upgradeAvailable' => $v->hasUpgradeAvailable(),
-                    'allowSignUp' => $this->get('settings')['common']['allowSignUp'],
                     'defaultResultsPage' => $this->get('settings')['common']['defaultResultsPage'],
                     'session' => array(
                         "logged" => \PHP_MPM\UserSession::isLogged(),
