@@ -89,20 +89,43 @@
         /**
          * sign out
          */
-        public static function signOut() {
+        public static function signOut(): void {
             \PHP_MPM\UserSession::clear();
+        }
+
+        private function validate(): void {
         }
 
         /**
          * save new user
          */
-        public function add(\PHP_MPM\Database\DB $dbh) {
+        public function add(\PHP_MPM\Database\DB $dbh): bool {
+            $this->validate();
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
+                (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
+                (new \PHP_MPM\Database\DBParam())->str(":password_hash", mb_strtolower($this->passwordHash($this->password))),
+                (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
+                (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType),
+                (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
+            );
+            $success = false;
+            try {
+                $success = $dbh->execute(" INSERT INTO USER (id, email, password_hash, name, account_type, creator, created, deleted) VALUES(:id, :email, :password_hash, :name, :account_type, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
+            } catch (\PDOException $e) {
+                if ($e->errorInfo[1] == 1062) {
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("id");
+                } else {
+                    throw $e;
+                }
+            }
+            return($success);
         }
 
         /**
          * save existent user
          */
-        public function update(\PHP_MPM\Database\DB $dbh) {
+        public function update(\PHP_MPM\Database\DB $dbh): bool {
         }
 
         /**

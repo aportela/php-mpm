@@ -31,6 +31,9 @@
             } catch (\PHP_MPM\Exception\InvalidParamsException $e) {
                 $this->container["apiLogger"]->debug("Exception caught: " . $e->getMessage());
                 return $response->withJson(['invalidOrMissingParams' => explode(",", $e->getMessage())], 400);
+            } catch (\PHP_MPM\Exception\ElementAlreadyExistsException $e) {
+                $this->container["apiLogger"]->debug("Exception caught: " . $e->getMessage());
+                return $response->withJson(['invalidOrMissingParams' => explode(",", $e->getMessage())], 409);
             } catch (\PHP_MPM\Exception\NotFoundException $e) {
                 $this->container["apiLogger"]->debug("Exception caught: " . $e->getMessage());
                 return $response->withJson(['keyNotFound' => $e->getMessage()], 404);
