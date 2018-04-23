@@ -52,7 +52,7 @@ const TheUserForm = (function () {
                             <label for="accountType" class="label">Account type</label>
                             <div class="control">
                                 <div class="select" name="accountType">
-                                    <select v-bind:disabled="loading" v-model="user.accountType">
+                                    <select v-bind:disabled="isAccountTypeDisabled" v-model="user.accountType">
                                         <option value="U" selected>Normal user</option>
                                         <option value="A" >Administrator</option>
                                     </select>
@@ -107,6 +107,9 @@ const TheUserForm = (function () {
             }
         },
         computed: {
+            isAccountTypeDisabled: function () {
+                return (initialState.session.user.isAdmin && initialState.session.user.id == this.user.id);
+            },
             isSaveDisabled: function () {
                 if (this.isNew) {
                     return (!(this.user && this.user.id && this.user.name && this.user.email && this.user.password && this.user.accountType) || this.loading);
@@ -147,7 +150,7 @@ const TheUserForm = (function () {
                 if (this.user.password && this.user.password != this.confirmedPassword) {
                     this.validator.setInvalid("confirmedPassword", "Passwords do not match");
                 }
-                return (! this.validator.hasInvalidFields());
+                return (!this.validator.hasInvalidFields());
             },
             save: function () {
                 if (this.validate()) {
@@ -162,22 +165,48 @@ const TheUserForm = (function () {
                 var self = this;
                 self.loading = true;
                 phpMPMApi.user.add(self.user, function (response) {
-                    self.loading = false;
                     if (response.ok) {
+                        self.$router.go(-1);
                     } else {
-                        self.$router.push({ name: 'the500' });
+                        switch (response.status) {
+                            case 409:
+                                if (response.isFieldInvalid("email")) {
+                                    self.validator.setInvalid("email", "Selected email is used (choose another)");
+                                }
+                                if (!self.validator.hasInvalidFields()) {
+                                    self.$router.push({ name: 'the500' });
+                                }
+                                break;
+                            default:
+                                self.$router.push({ name: 'the500' });
+                                break;
+                        }
                     }
+                    self.loading = false;
                 });
             },
             update: function () {
                 var self = this;
                 self.loading = true;
                 phpMPMApi.user.update(self.user, function (response) {
-                    self.loading = false;
                     if (response.ok) {
+                        self.$router.go(-1);
                     } else {
-                        self.$router.push({ name: 'the500' });
+                        switch (response.status) {
+                            case 409:
+                                if (response.isFieldInvalid("email")) {
+                                    self.validator.setInvalid("email", "Selected email is used (choose another)");
+                                }
+                                if (!self.validator.hasInvalidFields()) {
+                                    self.$router.push({ name: 'the500' });
+                                }
+                                break;
+                            default:
+                                self.$router.push({ name: 'the500' });
+                                break;
+                        }
                     }
+                    self.loading = false;
                 });
             }
         }
