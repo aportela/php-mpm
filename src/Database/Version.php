@@ -41,7 +41,7 @@
                             `name` VARCHAR(254) NULL DEFAULT NULL,
                             `account_type` VARCHAR(1) NOT NULL DEFAULT "U",
                             `creator` VARCHAR(36) NOT NULL,
-                            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             `deleted` TIMESTAMP NULL DEFAULT NULL,
                             PRIMARY KEY (`id`),
                             INDEX `email` (`email`(191)),
