@@ -42,7 +42,7 @@ const phpMPMApi = {
         /**
          * get user data
          */
-        get: function(id, callback) {
+        get: function (id, callback) {
             Vue.http.get("api/users/" + id).then(
                 response => {
                     callback(response);
@@ -55,8 +55,11 @@ const phpMPMApi = {
         /**
          * save new user
          */
-        add: function(user, callback) {
-            Vue.http.post("api/users/" + user.id, user).then(
+        add: function (user, callback) {
+            var params = {
+                user: user
+            }
+            Vue.http.post("api/users/" + user.id, params).then(
                 response => {
                     callback(response);
                 },
@@ -68,8 +71,11 @@ const phpMPMApi = {
         /**
          * save existing user
          */
-        update: function(user, callback) {
-            Vue.http.put("api/users/" + user.id, user).then(
+        update: function (user, callback) {
+            var params = {
+                user: user
+            }
+            Vue.http.put("api/users/" + user.id, params).then(
                 response => {
                     callback(response);
                 },
