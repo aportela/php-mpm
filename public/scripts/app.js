@@ -38,19 +38,19 @@ const routes = [
                 component: TheDashboard
             },
             {
+                path: 'add_user',
+                name: 'theUserAddForm',
+                component: TheUserUpdateForm
+            },
+            {
+                path: 'user/:id',
+                name: 'theUserUpdateForm',
+                component: TheUserUpdateForm
+            },
+            {
                 path: 'users',
                 name: 'theUserList',
                 component: TheUserList
-            },
-            {
-                path: 'add_user',
-                name: 'theUserAddForm',
-                component: TheUserAddForm
-            },
-            {
-                path: 'update_user',
-                name: 'theUserUpdateForm',
-                component: TheUserUpdateForm
             },
             {
                 path: 'groups',
