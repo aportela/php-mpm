@@ -10,8 +10,13 @@ const validator = (function () {
         module.invalidFields = [];
     }
 
+
     module.setInvalid = function (field, message) {
         module.invalidFields.push({ field: field, message: message });
+    }
+
+    module.hasInvalidFields = function () {
+        return (module.invalidFields.length > 0);
     }
 
     module.hasInvalidField = function (field) {
