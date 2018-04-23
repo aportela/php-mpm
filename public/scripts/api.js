@@ -53,6 +53,32 @@ const phpMPMApi = {
             );
         },
         /**
+         * save new user
+         */
+        add: function(user, callback) {
+            Vue.http.post("api/users/" + user.id, user).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * save existing user
+         */
+        update: function(user, callback) {
+            Vue.http.put("api/users/" + user.id, user).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
          * search (list) users
          */
         search: function (accountType, name, email, actualPage, resultsPage, sortBy, sortOrder, callback) {

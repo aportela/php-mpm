@@ -94,6 +94,18 @@
         }
 
         /**
+         * save new user
+         */
+        public function add(\PHP_MPM\Database\DB $dbh) {
+        }
+
+        /**
+         * save existent user
+         */
+        public function update(\PHP_MPM\Database\DB $dbh) {
+        }
+
+        /**
          * search (list) users
          */
         public static function search(\PHP_MPM\Database\DB $dbh, int $page = 1, int $resultsPage = 16, array $filter = array(), string $sortBy = "", string $sortOrder = "ASC") {
