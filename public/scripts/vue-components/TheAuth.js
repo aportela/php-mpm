@@ -95,7 +95,6 @@ const TheAuth = (function () {
                     } else {
                         switch (response.status) {
                             case 400:
-
                                 if (response.isFieldInvalid("email")) {
                                     self.validator.setInvalid("email", "API ERROR: invalid param");
                                 }
@@ -110,7 +109,7 @@ const TheAuth = (function () {
                                 self.validator.setInvalid("password", "Incorrect password");
                                 break;
                             default:
-                                // TODO
+                                self.$router.push({ name: 'the500' });
                                 break;
                         }
                     }
