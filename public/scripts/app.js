@@ -90,6 +90,11 @@ const routes = [
         component: The404
     },
     {
+        path: '/500',
+        name: 'the500',
+        component: The500
+    },
+    {
         path: "*",
         redirect: {
             name: 'the404'
