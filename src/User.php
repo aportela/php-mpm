@@ -114,7 +114,7 @@
                 $success = $dbh->execute(" INSERT INTO USER (id, email, password_hash, name, account_type, creator, created, deleted) VALUES(:id, :email, :password_hash, :name, :account_type, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
-                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("id");
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
                 } else {
                     throw $e;
                 }
@@ -126,6 +126,24 @@
          * save existent user
          */
         public function update(\PHP_MPM\Database\DB $dbh): bool {
+            $this->validate();
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
+                (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
+                (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
+                (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType)
+            );
+            $success = false;
+            try {
+                $success = $dbh->execute(" UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ", $params);
+            } catch (\PDOException $e) {
+                if ($e->errorInfo[1] == 1062) {
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
+                } else {
+                    throw $e;
+                }
+            }
+            return($success);
         }
 
         /**
