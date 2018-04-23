@@ -101,7 +101,7 @@ const TheUserList = (function () {
                         <td>
                             <div class="field is-grouped">
                                 <p class="control">
-                                    <a class="button is-info is-small" v-bind:disabled="loading" v-on:click.prevent="$router.push({ name: 'theUserUpdateForm', params: { id: user.id} });">
+                                    <a class="button is-info is-small" v-bind:disabled="loading" v-on:click.prevent="$router.push({ name: 'theUserForm', params: { id: user.id} });">
                                         <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                         <span>Update</span>
                                     </a>
