@@ -14,8 +14,8 @@ const TheAuth = (function () {
 
                                 <div class="tabs is-toggle is-radiusless phpmpm-tabs-without-margin-bottom">
                                     <ul>
-                                        <li v-bind:class="tab == 'signin' ? 'is-active': ''">
-                                            <a v-on:click.prevent="tab = 'signin';">
+                                        <li class="is-active">
+                                            <a>
                                                 <span class="icon is-small"><i class="fas fa-user"></i></span>
                                                 <span>Sign in</span>
                                             </a>
@@ -23,25 +23,25 @@ const TheAuth = (function () {
                                     </ul>
                                 </div>
 
-                                <form v-on:submit.prevent="submitSignIn" v-if="tab == 'signin'">
+                                <form v-on:submit.prevent="submitSignIn">
                                     <div class="box is-radiusless">
-                                        <label class="label">Email</label>
-                                        <p class="control has-icons-left" id="login-container" v-bind:class="{ 'has-icons-right' : invalidSignInUsername }">
-                                            <input class="input" type="email" ref="signInEmail" name="email" maxlength="255" required v-bind:class="{ 'is-danger': invalidSignInUsername }" v-bind:disabled="loading ? true: false" v-model.trim="signInEmail">
+                                        <label for="email" class="label">Email</label>
+                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : invalidSignInEmail }">
+                                            <input class="input" type="email" ref="signInEmail" name="email" maxlength="255" required v-bind:class="{ 'is-danger': invalidSignInEmail }" v-bind:disabled="loading ? true: false" v-model.trim="signInEmail">
                                             <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
-                                            <span class="icon is-small is-right" v-show="invalidSignInUsername"><i class="fas fa-warning"></i></span>
-                                            <p class="help is-danger" v-show="invalidSignInUsername">Invalid email</p>
+                                            <span class="icon is-small is-right" v-show="invalidSignInEmail"><i class="fas fa-warning"></i></span>
+                                            <p class="help is-danger" v-show="invalidSignInEmail">Invalid email</p>
                                         </p>
-                                        <label class="label">Password</label>
-                                        <p class="control has-icons-left" id="password-container" v-bind:class="{ 'has-icons-right' : invalidSignInPassword }">
+                                        <label for="password" class="label">Password</label>
+                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : invalidSignInPassword }">
                                             <input class="input" type="password" name="password" required v-bind:class="{ 'is-danger': invalidSignInPassword }" v-bind:disabled="loading ? true: false" v-model.trim="signInPassword">
                                             <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
                                             <span class="icon is-small is-right" v-show="invalidSignInPassword"><i class="fas fa-warning"></i></span>
                                             <p class="help is-danger" v-show="invalidSignInPassword">Invalid password</p>
                                         </p>
                                         <hr>
-                                        <p class="control has-text-right	">
-                                            <button type="submit" class="button is-link" v-bind:class="{ 'is-loading': loading }" v-bind:disabled="loading ? true: false">
+                                        <p class="control has-text-right">
+                                            <button type="submit" class="button is-link" v-bind:class="{ 'is-loading': loading }" v-bind:disabled="isSigInSubmitDisabled">
                                                 <span class="icon"><i class="fas fa-lock"></i></span>
                                                 <span>Sign in</span>
                                             </button>
@@ -66,11 +66,9 @@ const TheAuth = (function () {
         data: function () {
             return ({
                 loading: false,
-                tab: 'signin',
                 signInEmail: "admin@localhost.localnet",
                 signInPassword: "secret",
-                errors: false,
-                invalidSignInUsername: false,
+                invalidSignInEmail: false,
                 invalidSignInPassword: false
             });
         },
@@ -81,12 +79,16 @@ const TheAuth = (function () {
                 this.$router.push({ name: 'theDashboard' });
             }
         },
+        computed:{
+            isSigInSubmitDisabled: function() {
+                return(! (this.signInEmail && this.signInPassword && ! this.loading));
+            }
+        },
         methods: {
             submitSignIn: function () {
                 var self = this;
                 self.loading = true;
-                self.errors = false;
-                self.invalidSignInUsername = false;
+                self.invalidSignInEmail = false;
                 self.invalidSignInPassword = false;
                 phpMPMApi.user.signIn(this.signInEmail, this.signInPassword, function (response) {
                     if (response.ok) {
@@ -94,8 +96,12 @@ const TheAuth = (function () {
                         self.$router.push({ name: 'theDashboard' });
                     } else {
                         switch (response.status) {
+                            case 400:
+                                self.invalidSignInEmail = response.isFieldInvalid("email");
+                                self.invalidSignInPassword = response.isFieldInvalid("password");
+                            break;
                             case 404:
-                                self.invalidSignInUsername = true;
+                                self.invalidSignInEmail = true;
                                 break;
                             case 401:
                                 self.invalidSignInPassword = true;
