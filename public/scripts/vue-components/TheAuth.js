@@ -26,18 +26,18 @@ const TheAuth = (function () {
                                 <form v-on:submit.prevent="submitSignIn">
                                     <div class="box is-radiusless">
                                         <label for="email" class="label">Email</label>
-                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : invalidSignInEmail }">
-                                            <input class="input" type="email" ref="signInEmail" name="email" maxlength="255" required v-bind:class="{ 'is-danger': invalidSignInEmail }" v-bind:disabled="loading ? true: false" v-model.trim="signInEmail">
+                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : validator.hasInvalidField('email') }">
+                                            <input class="input" type="email" ref="signInEmail" name="email" maxlength="255" required v-bind:class="{ 'is-danger': validator.hasInvalidField('email') }" v-bind:disabled="loading ? true: false" v-model.trim="signInEmail">
                                             <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
-                                            <span class="icon is-small is-right" v-show="invalidSignInEmail"><i class="fas fa-warning"></i></span>
-                                            <p class="help is-danger" v-show="invalidSignInEmail">Invalid email</p>
+                                            <span class="icon is-small is-right" v-show="validator.hasInvalidField('email')"><i class="fas fa-warning"></i></span>
+                                            <p class="help is-danger" v-show="validator.hasInvalidField('email')">{{ validator.getInvalidFieldMessage('email') }}</p>
                                         </p>
                                         <label for="password" class="label">Password</label>
-                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : invalidSignInPassword }">
-                                            <input class="input" type="password" name="password" required v-bind:class="{ 'is-danger': invalidSignInPassword }" v-bind:disabled="loading ? true: false" v-model.trim="signInPassword">
+                                        <p class="control has-icons-left" v-bind:class="{ 'has-icons-right' : validator.hasInvalidField('password') }">
+                                            <input class="input" type="password" name="password" required v-bind:class="{ 'is-danger': validator.hasInvalidField('password') }" v-bind:disabled="loading ? true: false" v-model.trim="signInPassword">
                                             <span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-                                            <span class="icon is-small is-right" v-show="invalidSignInPassword"><i class="fas fa-warning"></i></span>
-                                            <p class="help is-danger" v-show="invalidSignInPassword">Invalid password</p>
+                                            <span class="icon is-small is-right" v-show="validator.hasInvalidField('password')"><i class="fas fa-warning"></i></span>
+                                            <p class="help is-danger" v-show="validator.hasInvalidField('password')">{{ validator.getInvalidFieldMessage('password') }}</p>
                                         </p>
                                         <hr>
                                         <p class="control has-text-right">
@@ -65,11 +65,10 @@ const TheAuth = (function () {
         template: template(),
         data: function () {
             return ({
+                validator: validator,
                 loading: false,
                 signInEmail: "admin@localhost.localnet",
                 signInPassword: "secret",
-                invalidSignInEmail: false,
-                invalidSignInPassword: false
             });
         },
         created: function () {
@@ -79,17 +78,16 @@ const TheAuth = (function () {
                 this.$router.push({ name: 'theDashboard' });
             }
         },
-        computed:{
-            isSigInSubmitDisabled: function() {
-                return(! (this.signInEmail && this.signInPassword && ! this.loading));
+        computed: {
+            isSigInSubmitDisabled: function () {
+                return (!(this.signInEmail && this.signInPassword && !this.loading));
             }
         },
         methods: {
             submitSignIn: function () {
                 var self = this;
                 self.loading = true;
-                self.invalidSignInEmail = false;
-                self.invalidSignInPassword = false;
+                self.validator.clear();
                 phpMPMApi.user.signIn(this.signInEmail, this.signInPassword, function (response) {
                     if (response.ok) {
                         initialState.session = response.body.session;
@@ -97,14 +95,19 @@ const TheAuth = (function () {
                     } else {
                         switch (response.status) {
                             case 400:
-                                self.invalidSignInEmail = response.isFieldInvalid("email");
-                                self.invalidSignInPassword = response.isFieldInvalid("password");
-                            break;
+
+                                if (response.isFieldInvalid("email")) {
+                                    self.validator.setInvalid("email", "API ERROR: invalid param");
+                                }
+                                if (response.isFieldInvalid("password")) {
+                                    self.validator.setInvalid("password", "API ERROR: invalid param");
+                                }
+                                break;
                             case 404:
-                                self.invalidSignInEmail = true;
+                                self.validator.setInvalid("email", "No account found with this email");
                                 break;
                             case 401:
-                                self.invalidSignInPassword = true;
+                                self.validator.setInvalid("password", "Incorrect password");
                                 break;
                             default:
                                 // TODO
