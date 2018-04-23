@@ -66,7 +66,6 @@ const TheAuth = (function () {
         data: function () {
             return ({
                 loading: false,
-                allowSignUp: initialState.allowSignUp,
                 tab: 'signin',
                 signInEmail: "admin@localhost.localnet",
                 signInPassword: "secret",
