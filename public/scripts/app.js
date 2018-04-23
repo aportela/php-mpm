@@ -40,12 +40,12 @@ const routes = [
             {
                 path: 'add_user',
                 name: 'theUserAddForm',
-                component: TheUserUpdateForm
+                component: TheUserForm
             },
             {
                 path: 'user/:id',
-                name: 'theUserUpdateForm',
-                component: TheUserUpdateForm
+                name: 'theUserForm',
+                component: TheUserForm
             },
             {
                 path: 'users',
@@ -96,6 +96,23 @@ const routes = [
         }
     }
 ];
+
+/**
+ * vue-resource interceptor for adding (on errors) custom get data function (used in api-error component) into response
+ */
+Vue.http.interceptors.push((request, next) => {
+    next((response) => {
+        if (!response.ok) {
+            if (response.status == 400) {
+                // helper for find invalid fields on api response
+                response.isFieldInvalid = function(fieldName) {
+                    return (response.body.invalidOrMissingParams.indexOf(fieldName) > -1);
+                }
+            }
+        }
+        return (response);
+    });
+});
 
 /**
  * main vue-router component inicialization
