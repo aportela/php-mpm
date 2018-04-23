@@ -30,7 +30,7 @@
                 return $response;
             } catch (\PHP_MPM\Exception\InvalidParamsException $e) {
                 $this->container["apiLogger"]->debug("Exception caught: " . $e->getMessage());
-                return $response->withJson(['invalidOrMissingParams' => array($e->getMessage())], 400);
+                return $response->withJson(['invalidOrMissingParams' => explode(",", $e->getMessage())], 400);
             } catch (\PHP_MPM\Exception\NotFoundException $e) {
                 $this->container["apiLogger"]->debug("Exception caught: " . $e->getMessage());
                 return $response->withJson(['keyNotFound' => $e->getMessage()], 404);
