@@ -86,7 +86,7 @@ const TheUserList = (function () {
                     </tr>
                 </thead>
                 <tbody>
-                    <the-user-list-item v-for="user in users" v-bind:user="user" v-bind:loading="loading"></the-user-list-item>
+                    <the-user-list-item v-for="user in users" v-bind:key="user.id" v-bind:user="user" v-bind:loading="loading"></the-user-list-item>
                 </tbody>
                 <tfoot>
                     <tr>
