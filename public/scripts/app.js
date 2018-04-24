@@ -38,16 +38,6 @@ const routes = [
                 component: TheDashboard
             },
             {
-                path: 'add_user',
-                name: 'theUserAddForm',
-                component: TheUserForm
-            },
-            {
-                path: 'user/:id',
-                name: 'theUserForm',
-                component: TheUserForm
-            },
-            {
                 path: 'users',
                 name: 'theUserList',
                 component: TheUserList
