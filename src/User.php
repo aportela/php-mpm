@@ -125,15 +125,26 @@
         /**
          * save existent user
          */
-        public function update(\PHP_MPM\Database\DB $dbh): bool {
+        public function update(\PHP_MPM\Database\DB $dbh): void {
             $this->validate();
+            try {
+                // get user data with this email
+                $u = new \PHP_MPM\User();
+                $u->email = $this->email;
+                $u->get($dbh);
+                // if same user, allow update (email not changed)
+                if ($u->id != $this->id) {
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
+                }
+            } catch (\PHP_MPM\Exception\NotFoundException $e) {
+                // no user found with this (changed) email -> allow update
+            }
             $params = array(
                 (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
                 (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
                 (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
                 (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType)
             );
-            $success = false;
             try {
                 $success = $dbh->execute(" UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ", $params);
             } catch (\PDOException $e) {
@@ -143,7 +154,6 @@
                     throw $e;
                 }
             }
-            return($success);
         }
 
         /**
