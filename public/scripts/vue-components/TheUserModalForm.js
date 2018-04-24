@@ -9,15 +9,15 @@ const TheUserModalForm = (function () {
                 <div class="modal-card">
                     <form v-on:submit.prevent="save();">
                         <header class="modal-card-head">
-                            <p class="modal-card-title" v-if="isNew">Add new user</p>
-                            <p class="modal-card-title" v-else>Update existing user</p>
-                            <button class="delete" aria-label="close" v-on:click.prevent="closeModal();"></button>
+                            <p class="modal-card-title" v-if="isAddForm">Add new user</p>
+                            <p class="modal-card-title" v-if="isUpdateForm">Update existing user</p>
+                            <button class="delete" aria-label="close" v-on:click.prevent="closeModal(false);"></button>
                         </header>
                         <section class="modal-card-body">
                             <div class="field">
                                 <label for="name" class="label">Full user name/surname</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" name="name" type="text" placeholder="Type complete user name" pattern=".{3,254}" title="format: 3 to 254 characters" required required v-bind:class="{ 'is-danger': validator.hasInvalidField('name') }" v-bind:disabled="loading" v-model.trim="user.name">
+                                    <input class="input" name="name" ref="name" type="text" placeholder="Type complete user name" required v-bind:class="{ 'is-danger': validator.hasInvalidField('name') }" v-bind:disabled="loading" v-model.trim="user.name">
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                     </span>
@@ -27,7 +27,7 @@ const TheUserModalForm = (function () {
                             <div class="field">
                                 <label for="email" class="label">Email</label>
                                 <div class="control has-icons-left">
-                                    <input type="email" name="email" class="input" placeholder="User email (will be used for sign in)" pattern=".{3,254}" title="format: valid email with 3 to 254 characters" required v-bind:class="{ 'is-danger': validator.hasInvalidField('email') }" v-bind:disabled="loading" v-model.trim="user.email">
+                                    <input type="email" name="email" class="input" placeholder="User email (will be used for sign in)" required v-bind:class="{ 'is-danger': validator.hasInvalidField('email') }" v-bind:disabled="loading" v-model.trim="user.email">
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-envelope"></i>
                                     </span>
@@ -75,7 +75,7 @@ const TheUserModalForm = (function () {
                                     </button>
                                 </div>
                                 <div class="control">
-                                    <button class="button is-default" type="button" v-bind:disabled="isCancelDisabled" v-on:click.prevent="closeModal();">
+                                    <button class="button is-default" type="button" v-bind:disabled="isCancelDisabled" v-on:click.prevent="closeModal(false);">
                                         <span class="icon"><i class="fa fa-ban"></i></span>
                                         <span>Cancel</span>
                                     </button>
@@ -97,7 +97,6 @@ const TheUserModalForm = (function () {
             return ({
                 validator: getValidator(),
                 loading: false,
-                isNew: true,
                 confirmedPassword: null,
                 user: {
                     id: null,
@@ -109,27 +108,32 @@ const TheUserModalForm = (function () {
             });
         },
         props: [
-            'active'
+            'opts'
         ],
         created: function () {
-            if (this.$route.params.id) {
-                this.isNew = false;
-                this.get(this.$route.params.id);
-            } else {
-                this.isNew = true;
+            if (this.opts.type == "add") {
                 this.user.id = phpMPM.util.uuid();
+                this.$nextTick(() => this.$refs.name.focus());
+            } else if (this.opts.type == "update") {
+                this.user.id = this.opts.userId;
+                this.get(this.user.id);
+            } else {
+                this.$router.push({ name: 'the500' });
             }
         },
         computed: {
-            show: function() {
-                return(this.active);
+            isAddForm: function () {
+                return (this.opts.type == "add");
+            },
+            isUpdateForm: function () {
+                return (this.opts.type == "update");
             },
             isAccountTypeDisabled: function () {
                 return (initialState.session.user.isAdmin && initialState.session.user.id == this.user.id);
             },
             isSaveDisabled: function () {
-                if (this.isNew) {
-                    return (!(this.user && this.user.id && this.user.name && this.user.email && this.user.password && this.user.accountType) || this.loading);
+                if (this.isAddForm) {
+                    return (!(this.user && this.user.id && this.user.name && this.user.email && this.user.password && this.confirmedPassword && this.user.accountType) || this.loading);
                 } else {
                     return (!(this.user && this.user.id && this.user.name && this.user.email && this.user.accountType) || this.loading);
                 }
@@ -139,8 +143,8 @@ const TheUserModalForm = (function () {
             },
         },
         methods: {
-            closeModal: function() {
-                this.$emit("closeModal");
+            closeModal: function (withChanges) {
+                this.$emit("close-user-modal", withChanges);
             },
             get: function (id) {
                 var self = this;
@@ -162,7 +166,7 @@ const TheUserModalForm = (function () {
                 if (!this.user.email) {
                     this.validator.setInvalid("email", "Invalid email");
                 }
-                if (this.isNew) {
+                if (this.isAddForm) {
                     if (!this.user.password) {
                         this.validator.setInvalid("password", "Invalid password");
                     }
@@ -174,7 +178,7 @@ const TheUserModalForm = (function () {
             },
             save: function () {
                 if (this.validate()) {
-                    if (this.isNew) {
+                    if (this.isAddForm) {
                         this.add();
                     } else {
                         this.update();
@@ -186,7 +190,7 @@ const TheUserModalForm = (function () {
                 self.loading = true;
                 phpMPMApi.user.add(self.user, function (response) {
                     if (response.ok) {
-                        self.$router.go(-1);
+                        self.closeModal(true);
                     } else {
                         switch (response.status) {
                             case 409:
@@ -210,7 +214,7 @@ const TheUserModalForm = (function () {
                 self.loading = true;
                 phpMPMApi.user.update(self.user, function (response) {
                     if (response.ok) {
-                        self.$router.go(-1);
+                        self.closeModal(true);
                     } else {
                         switch (response.status) {
                             case 409:

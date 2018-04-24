@@ -78,7 +78,7 @@ const TheUserList = (function () {
                             </th>
                             <th>
                                 <p class="control">
-                                    <a class="button is-link is-fullwidth" v-bind:disabled="loading" v-on:click.prevent="showModal = true;">
+                                    <a class="button is-link is-fullwidth" v-bind:disabled="loading" v-on:click.prevent="onShowAddUserModal();">
                                         <span class="icon is-small"><i class="fas fa-plus"></i></span>
                                         <span>Add new user</span>
                                     </a>
@@ -87,7 +87,7 @@ const TheUserList = (function () {
                         </tr>
                     </thead>
                     <tbody>
-                        <the-user-list-item v-for="user in users" v-bind:key="user.id" v-bind:user="user" v-bind:loading="loading"></the-user-list-item>
+                        <the-user-list-item v-for="user in users" v-bind:key="user.id" v-bind:user="user" v-bind:loading="loading" v-on:show-update-user-modal="onShowUpdateUserModal" v-on:show-delete-user-modal="onShowDeleteUserModal"></the-user-list-item>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -98,7 +98,8 @@ const TheUserList = (function () {
                     </tfoot>
                 </table>
 
-                <the-user-modal-form v-if="showModal" v-on:closeModal="showModal = false;"></the-user-modal-form>
+                <the-user-modal-form v-if="userModalOpts.show" v-bind:opts="userModalOpts" v-on:close-user-modal="onCloseUserModal"></the-user-modal-form>
+                <the-delete-confirmation-modal v-bind:id="deleteUserId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
 
             </div>
         `;
@@ -108,7 +109,7 @@ const TheUserList = (function () {
         template: template(),
         data: function () {
             return ({
-                showModal: false,
+                operationType: null,
                 loading: false,
                 pager: getPager(),
                 users: [],
@@ -117,6 +118,13 @@ const TheUserList = (function () {
                 sortOrder: "ASC",
                 searchByName: null,
                 searchByEmail: null,
+                userModalOpts: {
+                    show: false,
+                    type: null,
+                    userId: null
+                },
+                deleteUserId: null,
+                showDeleteConfirmationModal: false
             });
         },
         created: function () {
@@ -132,6 +140,37 @@ const TheUserList = (function () {
             }
         },
         methods: {
+            onShowAddUserModal: function () {
+                this.userModalOpts.type = "add";
+                this.userModalOpts.show = true;
+            },
+            onShowUpdateUserModal: function (userId) {
+                console.log(userId);
+                this.userModalOpts.type = "update";
+                this.userModalOpts.userId = userId;
+                this.userModalOpts.show = true;
+            },
+            onShowDeleteUserModal: function (userId) {
+                this.deleteUserId = userId;
+                this.showDeleteConfirmationModal = true;
+            },
+            onCloseUserModal: function (withChanges) {
+                this.userModalOpts = {
+                    show: false,
+                    type: null,
+                    id: null
+                };
+                if (withChanges) {
+                    this.search(false);
+                }
+            },
+            onConfirmDelete: function (userId) {
+                this.delete(userId);
+            },
+            onCancelDelete: function () {
+                this.showDeleteConfirmationModal = false;
+                this.deleteUserId = null;
+            },
             toggleSort: function (field) {
                 if (!this.loading) {
                     if (field == this.sortBy) {
@@ -161,6 +200,20 @@ const TheUserList = (function () {
                         self.pager.totalResults = response.body.pagination.totalResults;
                         self.users = response.body.users;
                     } else {
+                        self.$router.push({ name: 'the500' });
+                    }
+                });
+            },
+            delete(userId) {
+                var self = this;
+                self.loading = true;
+                phpMPMApi.user.delete(userId, function (response) {
+                    if (response.ok) {
+                        self.showDeleteConfirmationModal = false;
+                        self.deleteUserId = null;
+                        self.search(false);
+                    } else {
+                        self.$router.push({ name: 'the500' });
                     }
                 });
             }
