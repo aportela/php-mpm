@@ -85,6 +85,19 @@ const phpMPMApi = {
             );
         },
         /**
+         * delete existing user
+         */
+        delete: function (id, callback) {
+            Vue.http.delete("api/users/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
          * search (list) users
          */
         search: function (accountType, name, email, actualPage, resultsPage, sortBy, sortOrder, callback) {

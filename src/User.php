@@ -156,7 +156,7 @@
                 (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType)
             );
             try {
-                $success = $dbh->execute(" UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ", $params);
+                $dbh->execute(" UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ", $params);
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
@@ -164,6 +164,18 @@
                     throw $e;
                 }
             }
+        }
+
+        /**
+         * delete (set deleted flag) user
+         */
+        public function delete(\PHP_MPM\Database\DB $dbh): void {
+            // check existence
+            $this->get($dbh);
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
+            );
+            $dbh->execute(" UPDATE USER SET deleted = UTC_TIMESTAMP(3) WHERE id = :id ", $params);
         }
 
         /**
