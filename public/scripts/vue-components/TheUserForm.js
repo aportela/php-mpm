@@ -64,13 +64,13 @@ const TheUserForm = (function () {
                             <div class="control">
                                 <button class="button is-link" type="submit" v-bind:disabled="isSaveDisabled">
                                     <span class="icon"><i class="fa fa-check-circle"></i></span>
-                                    <label>Save changes</label>
+                                    <span>Save changes</span>
                                 </button>
                             </div>
                             <div class="control">
                                 <button class="button is-default" type="button" v-bind:disabled="isCancelDisabled" v-on:click.prevent="$router.go(-1);">
                                     <span class="icon"><i class="fa fa-ban"></i></span>
-                                    <label>Cancel</label>
+                                    <span>Cancel</span>
                                 </button>
                             </div>
                         </div>
