@@ -18,15 +18,24 @@ const TheAppLayoutHeader = (function () {
                     </div>
                     <div class="navbar-menu">
                         <div class="navbar-start">
-                            <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theDashboard' })" v-bind:class="{ 'is-active': $route.name == 'theDashboard' }"><span class="icon"><i class="fa fa-home"></i></span> <label>Home</label></a>
+                            <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theDashboard' })" v-bind:class="{ 'is-active': $route.name == 'theDashboard' }">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span>Home</span>
+                            </a>
                             <div class="navbar-item has-dropdown is-hoverable">
                                 <a class="navbar-link">
-                                    <span class="icon"><i class="fa fa-archive"></i></span>
-                                    <label>Actions</label>
+                                    <span class="span"><i class="fa fa-archive"></i></span>
+                                    <span>Actions</span>
                                 </a>
                                 <div class="navbar-dropdown">
-                                    <a class="navbar-item"><span class="icon"><i class="fa fa-plus"></i></span><label>Add new element</label></a>
-                                    <a class="navbar-item"><span class="icon"><i class="fa fa-calendar"></i></span><label>Recent elements</label></a>
+                                    <a class="navbar-item">
+                                        <span class="icon"><i class="fa fa-plus"></i></span>
+                                        <span>Add new element</span>
+                                    </a>
+                                    <a class="navbar-item">
+                                        <span class="icon"><i class="fa fa-calendar"></i></span>
+                                        <span>Recent elements</span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="navbar-item has-dropdown is-hoverable">
@@ -35,16 +44,37 @@ const TheAppLayoutHeader = (function () {
                                     <span>Administration menu</span>
                                 </a>
                                 <div class="navbar-dropdown">
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theUserList' })" v-bind:class="{ 'is-active': $route.name == 'theUserList' }"><span class="icon"><i class="fa fa-user"></i></span><span>Manage users</span></a>
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theGroupList' })" v-bind:class="{ 'is-active': $route.name == 'theGroupList' }"><span class="icon"><i class="fa fa-users"></i></span><span>Manage groups</span></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theUserList' })" v-bind:class="{ 'is-active': $route.name == 'theUserList' }">
+                                        <span class="icon"><i class="fa fa-user"></i></span>
+                                        <span>Manage users</span>
+                                    </a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theGroupList' })" v-bind:class="{ 'is-active': $route.name == 'theGroupList' }">
+                                        <span class="icon"><i class="fa fa-users"></i></span>
+                                        <span>Manage groups</span>
+                                    </a>
                                     <hr class="navbar-divider">
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theAttributeList' })" v-bind:class="{ 'is-active': $route.name == 'theAttributeList' }"><span class="icon"><i class="fa fa-object-group"></i></span><span>Manage attributes</span></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theAttributeList' })" v-bind:class="{ 'is-active': $route.name == 'theAttributeList' }">
+                                        <span class="icon"><i class="fa fa-object-group"></i></span>
+                                        <span>Manage attributes</span>
+                                    </a>
                                     <hr class="navbar-divider">
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theTemplateList' })" v-bind:class="{ 'is-active': $route.name == 'theTemplateList' }"><span class="icon"><i class="fa fa-file"></i></span><span>Manage templates</span></a>
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theSearchTemplateList' })" v-bind:class="{ 'is-active': $route.name == 'theSearchTemplateList' }"><span class="icon"><i class="fa fa-search"></i></span><span>Manage search templates</span></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theTemplateList' })" v-bind:class="{ 'is-active': $route.name == 'theTemplateList' }">
+                                        <span class="icon"><i class="fa fa-file"></i></span>
+                                        <span>Manage templates</span>
+                                    </a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theSearchTemplateList' })" v-bind:class="{ 'is-active': $route.name == 'theSearchTemplateList' }">
+                                        <span class="icon"><i class="fa fa-search"></i></span>
+                                        <span>Manage search templates</span>
+                                    </a>
                                     <hr class="navbar-divider">
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theLogList' })" v-bind:class="{ 'is-active': $route.name == 'theLogList' }"><span class="icon"><i class="fa fa-list-alt"></i></span><span>Browse user event log</span></a>
-                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theErrorList' })" v-bind:class="{ 'is-active': $route.name == 'theErrorList' }"><span class="icon"><i class="fa fa-bomb"></i></span><span>Browse saved errors</span></a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theLogList' })" v-bind:class="{ 'is-active': $route.name == 'theLogList' }">
+                                        <span class="icon"><i class="fa fa-user-secret"></i></span>
+                                        <span>Browse user event log</span>
+                                    </a>
+                                    <a class="navbar-item" v-on:click.prevent="$router.push({ name: 'theErrorList' })" v-bind:class="{ 'is-active': $route.name == 'theErrorList' }">
+                                        <span class="icon"><i class="fa fa-bomb"></i></span>
+                                        <span>Browse saved errors</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
