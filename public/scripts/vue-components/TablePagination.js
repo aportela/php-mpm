@@ -3,7 +3,7 @@ const TablePagination = (function () {
 
     var template = function () {
         return `
-            <nav class="pagination is-right" role="navigation" aria-label="pagination">
+            <nav class="pagination is-right has-text-weight-normal" role="navigation" aria-label="pagination">
                 <a class="pagination-previous" v-bind:disabled="loading || this.data.actualPage <= 1" v-on:click.prevent="previous">Previous page</a>
                 <a class="pagination-next" v-bind:disabled="loading || this.data.actualPage >= this.data.totalPages" v-on:click.prevent="next">Next page</a>
                 <ul class="pagination-list">
