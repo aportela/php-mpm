@@ -113,6 +113,14 @@
                 return $response->withJson([], 200);
             });
 
+            $this->delete('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $user = new \PHP_MPM\User();
+                $user->id = $route->getArgument("id");
+                $user->delete(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
             $this->get('/{id}', function (Request $request, Response $response, array $args) {
                 $route = $request->getAttribute('route');
                 $user = new \PHP_MPM\User();
