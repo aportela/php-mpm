@@ -21,6 +21,8 @@ const TablePagination = (function () {
                                 <option value="64">64 results/page</option>
                                 <option value="128">128 results/page</option>
                                 <option value="256">256 results/page</option>
+                                <option value="256">512 results/page</option>
+                                <option value="0">All results (disable pagination)</option>
                             </select>
                         </div>
                         <span class="icon is-medium is-left">
