@@ -1,4 +1,4 @@
-const validator = (function () {
+const getValidator = function () {
     "use strict";
 
 
@@ -33,4 +33,4 @@ const validator = (function () {
     }
 
     return (module);
-})();
+};

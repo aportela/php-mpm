@@ -65,7 +65,7 @@ const TheAuth = (function () {
         template: template(),
         data: function () {
             return ({
-                validator: validator,
+                validator: getValidator(),
                 loading: false,
                 signInEmail: "admin@localhost.localnet",
                 signInPassword: "secret",

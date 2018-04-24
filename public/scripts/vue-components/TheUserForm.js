@@ -84,7 +84,7 @@ const TheUserForm = (function () {
         template: template(),
         data: function () {
             return ({
-                validator: validator,
+                validator: getValidator(),
                 loading: false,
                 isNew: true,
                 confirmedPassword: null,
