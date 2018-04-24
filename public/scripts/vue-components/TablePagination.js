@@ -12,22 +12,24 @@ const TablePagination = (function () {
                         <a href="#" v-bind:disabled="loading" v-on:click.prevent="navigateTo(pageNumber)" class="pagination-link" v-bind:class="{ 'is-current': data.actualPage === pageNumber }">{{ pageNumber }}</a>
                     </li>
                 </ul>
-                <div class="control">
-                    <span class="button is-static">Page {{ data.actualPage }} of {{ data.totalPages }} ({{ data.totalResults }} total result/s)</span>
-                </div>
-                <div class="control has-icons-left">
-                    <div class="select">
-                        <select v-model.number="resultsPage" v-bind:disabled="loading">
-                            <option value="16">16 results/page</option>
-                            <option value="32">32 results/page</option>
-                            <option value="64">64 results/page</option>
-                            <option value="128">128 results/page</option>
-                            <option value="256">256 results/page</option>
-                        </select>
+                <div class="field has-addons">
+                    <div class="control has-icons-left">
+                        <div class="select">
+                            <select v-model.number="resultsPage" v-bind:disabled="loading">
+                                <option value="16">16 results/page</option>
+                                <option value="32">32 results/page</option>
+                                <option value="64">64 results/page</option>
+                                <option value="128">128 results/page</option>
+                                <option value="256">256 results/page</option>
+                            </select>
+                        </div>
+                        <span class="icon is-medium is-left">
+                            <i class="fas fa-list-ol"></i>
+                        </span>
                     </div>
-                    <span class="icon is-medium is-left">
-                        <i class="fas fa-list-ol"></i>
-                    </span>
+                    <div class="control">
+                        <span class="button is-static">Page {{ data.actualPage }} of {{ data.totalPages }} ({{ data.totalResults }} total result/s)</span>
+                    </div>
                 </div>
             </nav>
         `;
