@@ -47,10 +47,9 @@ phpMPM.util.export = function (name, elements, opts) {
             }
             return (value);
         };
-        let data = '<xml><' + name + '>';
+        let data = "";
         let fields = [];
         for (let j = 0; j < opts.fields.length; j++) {
-            var row = '<element>';
             fields.push(escapeValue(opts.fields[j]));
         }
         data += fields.join(", ") + "\n";
@@ -58,7 +57,7 @@ phpMPM.util.export = function (name, elements, opts) {
         for (let i = 0; i < elements.length; i++) {
             fields = [];
             for (let j = 0; j < opts.fields.length; j++) {
-                fields.push(elements[i][opts.fields[j]]);
+                fields.push(escapeValue(elements[i][opts.fields[j]]));
             }
             data += fields.join(", ") + "\n";
         }
