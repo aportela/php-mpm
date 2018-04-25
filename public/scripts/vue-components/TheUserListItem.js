@@ -24,7 +24,7 @@ const TheUserListItem = (function () {
                             </a>
                         </p>
                         <p class="control is-expanded">
-                            <a class="button is-small is-fullwidth is-outlined is-danger" v-bind:disabled="disableRemove"  v-on:click.prevent="deleteUser(user.id);">
+                            <a class="button is-small is-fullwidth is-outlined is-danger" v-bind:disabled="disableRemove" v-on:click.prevent="deleteUser(user.id);">
                                 <span class="icon is-small"><i class="fas fa-trash"></i></span>
                                 <span>Remove</span>
                             </a>
@@ -56,7 +56,9 @@ const TheUserListItem = (function () {
                 this.$emit('show-update-user-modal', id);
             },
             deleteUser: function (id) {
-                this.$emit('show-delete-user-modal', id);
+                if (! this.disableRemove) {
+                    this.$emit('show-delete-user-modal', id);
+                }
             }
         }
     });
