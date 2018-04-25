@@ -159,7 +159,6 @@ const TheUserList = (function () {
                 this.userModalOpts.show = true;
             },
             onShowUpdateUserModal: function (userId) {
-                console.log(userId);
                 this.userModalOpts.type = "update";
                 this.userModalOpts.userId = userId;
                 this.userModalOpts.show = true;
