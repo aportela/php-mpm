@@ -56,7 +56,7 @@ const TheUserListItem = (function () {
                 this.$emit('show-update-user-modal', id);
             },
             deleteUser: function (id) {
-                if (! this.disableRemove) {
+                if (!this.disableRemove) {
                     this.$emit('show-delete-user-modal', id);
                 }
             }

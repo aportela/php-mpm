@@ -84,12 +84,7 @@ const TheUserList = (function () {
                                             <span>Add</span>
                                         </a>
                                     </p>
-                                    <p class="control is-expanded">
-                                        <a class="button is-small is-fullwidth is-warning" v-bind:disabled="loading" v-on:click.prevent="onShowAddUserModal();">
-                                            <span class="icon is-small"><i class="fas fa-database"></i></span>
-                                            <span>Export</span>
-                                        </a>
-                                    </p>
+                                    <table-export-button v-bind:loading="loading" v-bind:configuration="exportOptions"></table-export-button>
                                 </div>
                             </th>
                         </tr>
@@ -145,6 +140,17 @@ const TheUserList = (function () {
         watch: {
             searchByAccountType: function () {
                 this.search(true);
+            }
+        },
+        computed: {
+            exportOptions: function () {
+                return (
+                    {
+                        name: 'users',
+                        elements: this.users,
+                        fields: ['id', 'name', 'email', 'created']
+                    }
+                );
             }
         },
         methods: {
