@@ -17,14 +17,14 @@ const TheUserListItem = (function () {
                 <td>{{ user.created | jsonDate2Human }}</td>
                 <td>
                     <div class="field is-grouped">
-                        <p class="control">
-                            <a class="button is-info is-small" v-bind:disabled="loading" v-on:click.prevent="updateUser(user.id);">
+                        <p class="control is-expanded">
+                            <a class="button is-small is-fullwidth is-outlined is-info" v-bind:disabled="loading" v-on:click.prevent="updateUser(user.id);">
                                 <span class="icon is-small"><i class="fas fa-edit"></i></span>
                                 <span>Update</span>
                             </a>
                         </p>
-                        <p class="control">
-                            <a class="button is-danger is-small" v-bind:disabled="disableRemove"  v-on:click.prevent="deleteUser(user.id);">
+                        <p class="control is-expanded">
+                            <a class="button is-small is-fullwidth is-outlined is-danger" v-bind:disabled="disableRemove"  v-on:click.prevent="deleteUser(user.id);">
                                 <span class="icon is-small"><i class="fas fa-trash"></i></span>
                                 <span>Remove</span>
                             </a>

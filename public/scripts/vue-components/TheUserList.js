@@ -77,12 +77,20 @@ const TheUserList = (function () {
                             <th>
                             </th>
                             <th>
-                                <p class="control">
-                                    <a class="button is-link is-fullwidth" v-bind:disabled="loading" v-on:click.prevent="onShowAddUserModal();">
-                                        <span class="icon is-small"><i class="fas fa-plus"></i></span>
-                                        <span>Add new user</span>
-                                    </a>
-                                </p>
+                                <div class="field is-grouped">
+                                    <p class="control is-expanded">
+                                        <a class="button is-small is-fullwidth is-link" v-bind:disabled="loading" v-on:click.prevent="onShowAddUserModal();">
+                                            <span class="icon is-small"><i class="fas fa-plus"></i></span>
+                                            <span>Add</span>
+                                        </a>
+                                    </p>
+                                    <p class="control is-expanded">
+                                        <a class="button is-small is-fullwidth is-warning" v-bind:disabled="loading" v-on:click.prevent="onShowAddUserModal();">
+                                            <span class="icon is-small"><i class="fas fa-database"></i></span>
+                                            <span>Export</span>
+                                        </a>
+                                    </p>
+                                </div>
                             </th>
                         </tr>
                     </thead>
