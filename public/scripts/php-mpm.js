@@ -26,16 +26,16 @@ phpMPM.util.uuid = function () {
  */
 phpMPM.util.export = function (name, elements, opts) {
     if (opts.format == "json") {
-        let data = [];
-        data.push(opts.fields);
+        let tmp = {};
+        tmp.fields = opts.fields;
         for (let i = 0; i < elements.length; i++) {
             let o = {};
             for (let j = 0; j < opts.fields.length; j++) {
                 o[opts.fields[j]] = elements[i][opts.fields[j]];
             }
-            data.push(o);
+            tmp.data = o;
         }
-        saveAs(new Blob([JSON.stringify(data)], { type: "application/json; charset=utf-8" }), name + ".json");
+        saveAs(new Blob([JSON.stringify(tmp)], { type: "application/json; charset=utf-8" }), name + ".json");
         return (true);
     } else if (opts.format == "csv") {
         let escapeValue = function (value) {
