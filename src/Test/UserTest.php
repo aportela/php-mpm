@@ -11,6 +11,14 @@
         static private $container = null;
         static private $dbh = null;
 
+        const VALID_USER_ID = "00000000-0000-0000-0000-000000000000";
+        const INVALID_USER_ID = "00000000-1111-1111-1111-000000000000";
+        const VALID_USER_EMAIL = "admin@localhost.localnet";
+        const INVALID_USER_EMAIL = "notfound@localhost.localnet";
+        const BAD_USER_EMAIL = "000";
+        const VALID_USER_PASSWORD = "secret";
+        const INVALID_USER_PASSWORD = "nope";
+
         /**
          * Called once just like normal constructor
          */
@@ -42,6 +50,130 @@
             self::$dbh = null;
             self::$container = null;
             self::$app = null;
+        }
+
+        public function testGetWithoutIdOrEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("id,email");
+            $u = new \PHP_MPM\User();
+            $u->get(self::$dbh);
+        }
+
+        public function testGetWithNonExistentId(): void {
+            $this->expectException(\PHP_MPM\Exception\NotFoundException::class);
+            $u = new \PHP_MPM\User();
+            $u->id = self::INVALID_USER_ID;
+            $u->get(self::$dbh);
+        }
+
+        public function testGetWithInvalidEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("id,email");
+            $u = new \PHP_MPM\User();
+            $u->email = self::BAD_USER_EMAIL;
+            $u->get(self::$dbh);
+        }
+
+        public function testGetWithNonExistentEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\NotFoundException::class);
+            $u = new \PHP_MPM\User();
+            $u->email = self::INVALID_USER_EMAIL;
+            $u->get(self::$dbh);
+        }
+
+        public function testGetWithExistentId(): void {
+            $u = new \PHP_MPM\User();
+            $u->id = self::VALID_USER_ID;
+            $u->get(self::$dbh);
+            $this->assertTrue($u->email == self::VALID_USER_EMAIL);
+        }
+
+        public function testGetWithExistentEmail(): void {
+            $u = new \PHP_MPM\User();
+            $u->email = self::VALID_USER_EMAIL;
+            $u->get(self::$dbh);
+            $this->assertTrue($u->id == self::VALID_USER_ID);
+        }
+
+        public function testSignInWithEmptyPassword(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("password");
+            $u = new \PHP_MPM\User();
+            $u->email = self::VALID_USER_EMAIL;
+            $u->signIn(self::$dbh);
+        }
+
+        public function testSignInWithoutIdOrEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("id,email");
+            $u = new \PHP_MPM\User();
+            $u->password = self::VALID_USER_PASSWORD;
+            $u->signIn(self::$dbh);
+        }
+
+        public function testSignInWithNonExistentId(): void {
+            $this->expectException(\PHP_MPM\Exception\NotFoundException::class);
+            $u = new \PHP_MPM\User();
+            $u->id = self::INVALID_USER_ID;
+            $u->password = self::VALID_USER_PASSWORD;
+            $u->signIn(self::$dbh);
+        }
+
+        public function testSignInWithInvalidEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("id,email");
+            $u = new \PHP_MPM\User();
+            $u->email = self::BAD_USER_EMAIL;
+            $u->password = self::VALID_USER_PASSWORD;
+            $u->signIn(self::$dbh);
+        }
+
+        public function testSignInWithNonExistentEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\NotFoundException::class);
+            $u = new \PHP_MPM\User();
+            $u->email = self::INVALID_USER_EMAIL;
+            $u->password = self::VALID_USER_PASSWORD;
+            $u->signIn(self::$dbh);
+        }
+
+        public function testSignInWithInvalidPassword(): void {
+            $u = new \PHP_MPM\User();
+            $u->email = self::VALID_USER_EMAIL;
+            $u->password = self::INVALID_USER_PASSWORD;
+            $this->assertFalse($u->signIn(self::$dbh));
+        }
+
+        public function testSignInWithValidPassword(): void {
+            $u = new \PHP_MPM\User();
+            $u->email = self::VALID_USER_EMAIL;
+            $u->password = self::VALID_USER_PASSWORD;
+            $this->assertTrue($u->signIn(self::$dbh));
+        }
+
+        public function testAddWithoutPassword(): void {
+            $this->expectException(\PHP_MPM\Exception\InvalidParamsException::class);
+            $this->expectExceptionMessage("password");
+            $u = new \PHP_MPM\User();
+            $u->email = self::INVALID_USER_EMAIL;
+            $u->add(self::$dbh);
+        }
+
+        public function testAddWithExistentEmail(): void {
+            $this->expectException(\PHP_MPM\Exception\ElementAlreadyExistsException::class);
+            $this->expectExceptionMessage("email");
+            $u = new \PHP_MPM\User();
+            $u->email = self::VALID_USER_EMAIL;
+            $u->password = self::INVALID_USER_PASSWORD;
+            $u->add(self::$dbh);
+        }
+
+        public function testAdd(): void {
+            $u = new \PHP_MPM\User();
+            $u->id = self::INVALID_USER_ID;
+            $u->email = self::INVALID_USER_EMAIL;
+            $u->password = self::INVALID_USER_PASSWORD;
+            $u->accountType = "U";
+            $this->assertTrue($u->add(self::$dbh));
         }
     }
 ?>
