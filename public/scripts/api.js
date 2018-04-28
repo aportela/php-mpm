@@ -123,6 +123,64 @@ const phpMPMApi = {
     },
     group: {
         /**
+         * get group data
+         */
+        get: function (id, callback) {
+            Vue.http.get("api/groups/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * save new group
+         */
+        add: function (group, callback) {
+            var params = {
+                group: group
+            }
+            Vue.http.post("api/groups/" + group.id, params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * save existing group
+         */
+        update: function (group, callback) {
+            var params = {
+                group: group
+            }
+            Vue.http.put("api/groups/" + group.id, params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * delete existing group
+         */
+        delete: function (id, callback) {
+            Vue.http.delete("api/groups/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
          * search (list) groups
          */
         search: function (name, description, actualPage, resultsPage, sortBy, sortOrder, callback) {

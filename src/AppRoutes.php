@@ -167,6 +167,34 @@
                 ], 200);
             });
 
+            $this->post('/{id}', function (Request $request, Response $response, array $args) {
+                $group = new \PHP_MPM\Group($request->getParam("group", null));
+                $group->add(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->put('/{id}', function (Request $request, Response $response, array $args) {
+                $group = new \PHP_MPM\Group($request->getParam("group", null));
+                $group->update(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->delete('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $group = new \PHP_MPM\Group();
+                $group->id = $route->getArgument("id");
+                $group->delete(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->get('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $group = new \PHP_MPM\Group();
+                $group->id = $route->getArgument("id");
+                $group->get(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([ 'group' => $group ], 200);
+            });
+
         })->add(new \PHP_MPM\Middleware\APIAdminPrivilegesRequired($this->getContainer()));
 
         /**

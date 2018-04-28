@@ -21,6 +21,92 @@
         public function __destruct() { }
 
         /**
+         * get group data
+         * id must be set
+         *
+         * @param \PHP_MPM\Database\DB $dbh database handler
+         */
+        public function get(\PHP_MPM\Database\DB $dbh) {
+            $results = null;
+            if (! empty($this->id)) {
+                $results = $dbh->query(" SELECT id, name, description, 0 AS userCount FROM `GROUP` WHERE id = :id AND DELETED IS NULL ", array(
+                    (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
+                ));
+                if (count($results) == 1) {
+                    $this->id = $results[0]->id;
+                    $this->name = $results[0]->name;
+                    $this->description = $results[0]->description;
+                    $this->userCount = $results[0]->userCount;
+                } else {
+                    throw new \PHP_MPM\Exception\NotFoundException("");
+                }
+            } else {
+                throw new \PHP_MPM\Exception\InvalidParamsException("id");
+            }
+        }
+
+        private function validate(): void {
+        }
+
+        /**
+         * save new group
+         */
+        public function add(\PHP_MPM\Database\DB $dbh): bool {
+            $this->validate();
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
+                (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
+                (new \PHP_MPM\Database\DBParam())->str(":description", $this->description),
+                (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
+            );
+            $success = false;
+            try {
+                $success = $dbh->execute(" INSERT INTO `GROUP` (id, name, description, creator, created, deleted) VALUES(:id, :name, :description, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
+            } catch (\PDOException $e) {
+                if ($e->errorInfo[1] == 1062) {
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");
+                } else {
+                    throw $e;
+                }
+            }
+            return($success);
+        }
+
+        /**
+         * save existent group
+         */
+        public function update(\PHP_MPM\Database\DB $dbh): void {
+            $this->validate();
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
+                (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
+                (new \PHP_MPM\Database\DBParam())->str(":description", $this->description)
+            );
+            $query = " UPDATE `GROUP` SET name = :name, description = :description WHERE id = :id ";
+            try {
+                $dbh->execute($query, $params);
+            } catch (\PDOException $e) {
+                if ($e->errorInfo[1] == 1062) {
+                    throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");
+                } else {
+                    throw $e;
+                }
+            }
+        }
+
+        /**
+         * delete (set deleted flag) group
+         */
+        public function delete(\PHP_MPM\Database\DB $dbh): void {
+            // check existence
+            $this->get($dbh);
+            $params = array(
+                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
+            );
+            $dbh->execute(" UPDATE `GROUP` SET deleted = UTC_TIMESTAMP(3) WHERE id = :id ", $params);
+        }
+
+        /**
          * search (list) groups
          */
         public static function search(\PHP_MPM\Database\DB $dbh, int $page = 1, int $resultsPage = 16, array $filter = array(), string $sortBy = "", string $sortOrder = "ASC") {
