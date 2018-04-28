@@ -62,7 +62,7 @@
                         CREATE TABLE `GROUP` (
                             `id` VARCHAR(36) NOT NULL,
                             `name` VARCHAR(64) NOT NULL,
-                            `description` VARCHAR(254) NOT NULL,
+                            `description` VARCHAR(254) NULL,
                             `creator` VARCHAR(36) NOT NULL,
                             `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             `deleted` TIMESTAMP NULL DEFAULT NULL,
