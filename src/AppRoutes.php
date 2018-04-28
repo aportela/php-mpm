@@ -150,7 +150,7 @@
                     $request->getParam("actualPage", 1),
                     $request->getParam("resultsPage", $this->get('settings')['common']['defaultResultsPage']),
                     array(
-                        "email" => $request->getParam("email", ""),
+                        "name" => $request->getParam("name", ""),
                         "description" => $request->getParam("description", "")
                     ),
                     $request->getParam("sortBy", ""),
