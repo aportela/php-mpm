@@ -33,6 +33,7 @@
         /**
          * user api start
          */
+
         $this->group("/user", function() {
 
             $this->post('/signin', function (Request $request, Response $response, array $args) {
@@ -85,7 +86,7 @@
                     array(
                         "accountType" => $request->getParam("accountType", ""),
                         "email" => $request->getParam("email", ""),
-                        "name" => $request->getParam("name", ""),
+                        "name" => $request->getParam("name", "")
                     ),
                     $request->getParam("sortBy", ""),
                     $request->getParam("sortOrder", "ASC")
@@ -135,6 +136,41 @@
 
         /**
          * user api end
+         */
+
+        /**
+         * group api start
+         */
+
+        $this->group("/groups", function() {
+
+            $this->post('/', function (Request $request, Response $response, array $args) {
+                $data = \PHP_MPM\Group::search(
+                    new \PHP_MPM\Database\DB($this),
+                    $request->getParam("actualPage", 1),
+                    $request->getParam("resultsPage", $this->get('settings')['common']['defaultResultsPage']),
+                    array(
+                        "email" => $request->getParam("email", ""),
+                        "description" => $request->getParam("description", "")
+                    ),
+                    $request->getParam("sortBy", ""),
+                    $request->getParam("sortOrder", "ASC")
+                );
+                return $response->withJson([
+                    'groups' => $data->results,
+                    "pagination" => array(
+                        'totalResults' => $data->totalResults,
+                        'actualPage' => $data->actualPage,
+                        'resultsPage' => $data->resultsPage,
+                        'totalPages' => $data->totalPages
+                    )
+                ], 200);
+            });
+
+        })->add(new \PHP_MPM\Middleware\APIAdminPrivilegesRequired($this->getContainer()));
+
+        /**
+         * group api end
          */
 
     })->add(new \PHP_MPM\Middleware\APIExceptionCatcher($this->app->getContainer()));
