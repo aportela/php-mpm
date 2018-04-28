@@ -29,7 +29,7 @@
         public function get(\PHP_MPM\Database\DB $dbh) {
             $results = null;
             if (! empty($this->id)) {
-                $results = $dbh->query(" SELECT id, name, description, 0 AS userCount FROM `GROUP` WHERE id = :id AND DELETED IS NULL ", array(
+                $results = $dbh->query(" SELECT id, name, description FROM `GROUP` WHERE id = :id AND DELETED IS NULL ", array(
                     (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
                 ));
                 if (count($results) == 1) {
@@ -163,6 +163,7 @@
                     G.id AS id,
                     G.name AS name,
                     G.description AS description,
+                    0 AS userCount,
                     DATE_FORMAT(CONVERT_TZ(G.created, @@session.time_zone, "+00:00"), "%s") AS created
                 FROM `GROUP` G
                 WHERE G.deleted IS NULL
