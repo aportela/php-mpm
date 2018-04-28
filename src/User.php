@@ -115,7 +115,7 @@
                 $params = array(
                     (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
                     (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
-                    (new \PHP_MPM\Database\DBParam())->str(":password_hash", mb_strtolower($this->passwordHash($this->password))),
+                    (new \PHP_MPM\Database\DBParam())->str(":password_hash", $this->passwordHash($this->password)),
                     (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
                     (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType),
                     (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
@@ -159,8 +159,13 @@
                 (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
                 (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType)
             );
+            $query = " UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ";
+            if (! empty($email)) {
+                $params[] = (new \PHP_MPM\Database\DBParam())->str(":password_hash", $this->passwordHash($this->password));
+                $query = " UPDATE USER SET email = :email, name = :name, account_type = :account_type, password_hash = :password_hash WHERE id = :id ";
+            }
             try {
-                $dbh->execute(" UPDATE USER SET email = :email, name = :name, account_type = :account_type WHERE id = :id ", $params);
+                $dbh->execute($query, $params);
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
