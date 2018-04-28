@@ -101,35 +101,39 @@
          */
         public function add(\PHP_MPM\Database\DB $dbh): bool {
             $this->validate();
-            try {
-                // get user data with this email
-                $u = new \PHP_MPM\User();
-                $u->email = $this->email;
-                $u->get($dbh);
-                // another registered user has this email -> deny creation
-                throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
-            } catch (\PHP_MPM\Exception\NotFoundException $e) {
-                // no user found with this email -> allow create
-            }
-            $params = array(
-                (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
-                (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
-                (new \PHP_MPM\Database\DBParam())->str(":password_hash", mb_strtolower($this->passwordHash($this->password))),
-                (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
-                (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType),
-                (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
-            );
-            $success = false;
-            try {
-                $success = $dbh->execute(" INSERT INTO USER (id, email, password_hash, name, account_type, creator, created, deleted) VALUES(:id, :email, :password_hash, :name, :account_type, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
-            } catch (\PDOException $e) {
-                if ($e->errorInfo[1] == 1062) {
+            if (! empty($this->password)) {
+                try {
+                    // get user data with this email
+                    $u = new \PHP_MPM\User();
+                    $u->email = $this->email;
+                    $u->get($dbh);
+                    // another registered user has this email -> deny creation
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
-                } else {
-                    throw $e;
+                } catch (\PHP_MPM\Exception\NotFoundException $e) {
+                    // no user found with this email -> allow create
                 }
+                $params = array(
+                    (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
+                    (new \PHP_MPM\Database\DBParam())->str(":email", mb_strtolower($this->email)),
+                    (new \PHP_MPM\Database\DBParam())->str(":password_hash", mb_strtolower($this->passwordHash($this->password))),
+                    (new \PHP_MPM\Database\DBParam())->str(":name", $this->name),
+                    (new \PHP_MPM\Database\DBParam())->str(":account_type", $this->accountType),
+                    (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
+                );
+                $success = false;
+                try {
+                    $success = $dbh->execute(" INSERT INTO USER (id, email, password_hash, name, account_type, creator, created, deleted) VALUES(:id, :email, :password_hash, :name, :account_type, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
+                } catch (\PDOException $e) {
+                    if ($e->errorInfo[1] == 1062) {
+                        throw new \PHP_MPM\Exception\ElementAlreadyExistsException("email");
+                    } else {
+                        throw $e;
+                    }
+                }
+                return($success);
+            } else {
+                throw new \PHP_MPM\Exception\InvalidParamsException("password");
             }
-            return($success);
         }
 
         /**
