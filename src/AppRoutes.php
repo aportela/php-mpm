@@ -131,14 +131,14 @@
                 return $response->withJson([ 'user' => $user ], 200);
             });
 
-        });
+        })->add(new \PHP_MPM\Middleware\APIAdminPrivilegesRequired($this->getContainer()));
 
         /**
          * user api end
          */
 
-
     })->add(new \PHP_MPM\Middleware\APIExceptionCatcher($this->app->getContainer()));
+
 
     $this->app->get('/api/poll', function (Request $request, Response $response, array $args) {
         return $response->withJson(['success' => true], 200);
