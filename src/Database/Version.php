@@ -31,7 +31,7 @@
             "PDO_MARIADB" => array(
                 "1.01" => array(
                     '
-                        DROP TABLE IF EXISTS USER;
+                        DROP TABLE IF EXISTS `USER`;
                     ',
                     '
                         CREATE TABLE `USER` (
@@ -52,6 +52,29 @@
                     ',
                     '
                         INSERT INTO `USER` VALUES ("00000000-0000-0000-0000-000000000000", "admin@localhost.localnet", "$2y$12$wbhHTy2TRI5vSgrzwLvdd.0iaskb8Dh.vzKhTojxnn.2MGDqpxX6y", "Administrator", "A", "00000000-0000-0000-0000-000000000000", UTC_TIMESTAMP(3), NULL);
+                    '
+                ),
+                "1.02" => array(
+                    '
+                        DROP TABLE IF EXISTS `GROUP`;
+                    ',
+                    '
+                        CREATE TABLE `GROUP` (
+                            `id` VARCHAR(36) NOT NULL,
+                            `name` VARCHAR(64) NOT NULL,
+                            `description` VARCHAR(254) NOT NULL,
+                            `creator` VARCHAR(36) NOT NULL,
+                            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            `deleted` TIMESTAMP NULL DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            INDEX `name` (`name`),
+                            INDEX `description` (`description`),
+                            INDEX `creator` (`creator`),
+                            INDEX `deleted` (`deleted`)
+                        );
+                    ',
+                    '
+                        INSERT INTO `GROUP` VALUES ("11111111-1111-1111-1111-111111111111", "Administrators", "All users contained in this group will have administrative privileges", "00000000-0000-0000-0000-000000000000", "2018-04-28 20:32:01", NULL);
                     '
                 )
             )
