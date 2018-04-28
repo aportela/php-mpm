@@ -120,5 +120,29 @@ const phpMPMApi = {
             );
 
         }
+    },
+    group: {
+        /**
+         * search (list) groups
+         */
+        search: function (name, description, actualPage, resultsPage, sortBy, sortOrder, callback) {
+            var params = {
+                name: name,
+                description: description,
+                actualPage: actualPage,
+                resultsPage: resultsPage,
+                sortBy: sortBy,
+                sortOrder: sortOrder
+            };
+            Vue.http.post("api/groups/", params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+
+        }
     }
 };
