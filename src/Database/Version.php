@@ -79,15 +79,13 @@
                 ),
                 "1.03" => array(
                     '
-                        DROP TABLE IF EXISTS `USER_GROUP_PERMISSION`;
+                        DROP TABLE IF EXISTS `USER_GROUP`;
                     ',
 
                     '
-                        CREATE TABLE `USER_GROUP_PERMISSION` (
+                        CREATE TABLE `USER_GROUP` (
                             `user_id` VARCHAR(36) NOT NULL,
                             `group_id` VARCHAR(36) NOT NULL,
-                            `allow_view` CHAR(1) NOT NULL,
-                            `allow_modify` CHAR(1) NOT NULL,
                             PRIMARY KEY (`user_id`, `group_id`),
                             INDEX `user_id` (`user_id`),
                             INDEX `group_id` (`group_id`),
@@ -96,7 +94,7 @@
                         );
                     ',
                     '
-                        INSERT INTO `USER_GROUP_PERMISSION` VALUES ("00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111", "Y", "Y");
+                        INSERT INTO `USER_GROUP` VALUES ("00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111");
                     '
                 )
             )

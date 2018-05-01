@@ -18,7 +18,7 @@ const TheGroupModalForm = (function () {
                             <div class="tabs">
                                 <ul>
                                     <li v-bind:class="{ 'is-active': isMetadataTabActive }"><a v-on:click.prevent="changeTab('metadata');">Metadata</a></li>
-                                    <li v-bind:class="{ 'is-active': isUserPermissionsTabActive }"><a v-on:click.prevent="changeTab('userPermissions');">User permissions ({{userPermissionCount}})</a></li>
+                                    <li v-bind:class="{ 'is-active': isUsersTabActive }"><a v-on:click.prevent="changeTab('users');">Users ({{ userCount }})</a></li>
                                 </ul>
                             </div>
                             <div v-show="isMetadataTabActive">
@@ -43,11 +43,11 @@ const TheGroupModalForm = (function () {
                                     <p class="help is-danger" v-if="validator.hasInvalidField('description')">{{ validator.getInvalidFieldMessage('description') }}</p>
                                 </div>
                             </div>
-                            <div v-show="isUserPermissionsTabActive">
+                            <div v-show="isUsersTabActive">
                                 <table class="table is-bordered is-striped is-narrow is-fullwidth is-unselectable">
                                     <thead>
                                         <tr>
-                                            <th colspan="4">
+                                            <th colspan="2">
                                                 <div class="field has-addons">
                                                     <p class="control">
                                                         <a class="button is-static">Choose user</a>
@@ -68,32 +68,20 @@ const TheGroupModalForm = (function () {
                                         </tr>
                                         <tr>
                                             <th>Name</th>
-                                            <th class="has-text-centered">Allow view</th>
-                                            <th class="has-text-centered">Allow modify</th>
                                             <th class="has-text-centered">Operations</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(userPermission, index) in group.userPermissions" v-bind:key="userPermission.user.id">
-                                            <th>{{ userPermission.user.name }}</th>
-                                            <th class="has-text-centered">
-                                                <label class="checkbox">
-                                                    <input type="checkbox" v-model="userPermission.privileges.allowView" disabled>
-                                                </label>
-                                            </th>
-                                            <th class="has-text-centered">
-                                                <label class="checkbox">
-                                                    <input type="checkbox" v-model="userPermission.privileges.allowModify">
-                                                </label>
-                                            </th>
-                                            <th>
+                                        <tr v-for="(user, index) in group.users" v-bind:key="user.id">
+                                            <td>{{ user.name }}</td>
+                                            <td>
                                                 <p class="control is-expanded">
                                                     <a class="button is-small is-fullwidth is-outlined is-danger" v-bind:disabled="isRemoveDisabled" v-on:click.prevent="removeUserGroup(index);">
                                                         <span class="icon is-small"><i class="fas fa-trash"></i></span>
                                                         <span>Remove</span>
                                                     </a>
                                                 </p>
-                                            </th>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -138,7 +126,7 @@ const TheGroupModalForm = (function () {
                     id: null,
                     name: null,
                     description: null,
-                    userPermissions: []
+                    users: []
                 }
             });
         },
@@ -161,8 +149,8 @@ const TheGroupModalForm = (function () {
             isMetadataTabActive: function () {
                 return (this.tab == 'metadata');
             },
-            isUserPermissionsTabActive: function () {
-                return (this.tab == 'userPermissions');
+            isUsersTabActive: function () {
+                return (this.tab == 'users');
             },
             isAddForm: function () {
                 return (this.opts.type == "add");
@@ -178,7 +166,7 @@ const TheGroupModalForm = (function () {
             },
             isAddUserPermissionDisabled: function() {
                 if (this.selectedUser) {
-                    return(this.group.userPermissions.findIndex(permission => permission.user.id == this.selectedUser.id) >= 0);
+                    return(this.group.users.findIndex(user => user.id == this.selectedUser.id) >= 0);
                 } else {
                     return(true);
                 }
@@ -186,8 +174,8 @@ const TheGroupModalForm = (function () {
             isRemoveDisabled: function () {
                 return (this.loading);
             },
-            userPermissionCount: function () {
-                return (this.group.userPermissions ? this.group.userPermissions.length : 0);
+            userCount: function () {
+                return (this.group.users ? this.group.users.length : 0);
             }
         },
         methods: {
@@ -218,24 +206,17 @@ const TheGroupModalForm = (function () {
                     self.loading = false;
                     if (response.ok) {
                         self.group = response.body.group;
+                        console.log(self.group);
                     } else {
                         self.$router.push({ name: 'the500' });
                     }
                 });
             },
             addUserGroup: function () {
-                this.group.userPermissions.push(
-                    {
-                        user: this.selectedUser,
-                        privileges: {
-                            allowView: true,
-                            allowModify: true
-                        }
-                    }
-                );
+                this.group.users.push(this.selectedUser);
             },
             removeUserGroup: function (index) {
-                this.group.userPermissions.splice(index, 1);
+                this.group.users.splice(index, 1);
             },
             validate: function () {
                 this.validator.clear();
