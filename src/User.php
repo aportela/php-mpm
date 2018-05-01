@@ -217,16 +217,7 @@
                 ' . $whereCondition . '
             ';
             $result = $dbh->query($queryCount, $params);
-            $data = new \stdClass();
-            $data->actualPage = $page;
-            $data->resultsPage = $resultsPage;
-            $data->totalResults = $result[0]->total;
-            if ($resultsPage > 0) {
-                $data->totalPages = ceil($data->totalResults / $resultsPage);
-            } else {
-                $data->totalPages = $data->totalResults > 0 ? 1: 0;
-                $resultsPage = $data->totalResults;
-            }
+            $data = new \PHP_MPM\SearchResult($page, $resultsPage, intval($result[0]->total));
             if (! empty($sortBy)) {
                 switch($sortBy) {
                     case "accountType":
@@ -264,8 +255,8 @@
                 $whereCondition,
                 $sqlOrder,
                 $sortOrder == "DESC" ? "DESC": "ASC",
-                $resultsPage,
-                $resultsPage * ($page - 1)
+                $data->resultsPage,
+                $data->getSQLPageOffset()
             );
             $data->results = $dbh->query($query, $params);
             return($data);
