@@ -6,7 +6,7 @@ const TheGroupListItem = (function () {
             <tr>
                 <td>{{ group.name }}</td>
                 <td>{{ group.description }}</td>
-                <td class="has-text-right">{{ group.userCount }}</td>
+                <td class="has-text-right">{{ group.userPermissionsCount }}</td>
                 <td>{{ group.created | jsonDate2Human }}</td>
                 <td>
                     <div class="field is-grouped">

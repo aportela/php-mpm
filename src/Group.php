@@ -9,12 +9,24 @@
         public $id;
         public $name;
         public $description;
+        public $userPermissions;
 
 	    public function __construct ($obj = null) {
             if ($obj) {
                 $this->id = isset($obj["id"]) ? $obj["id"]: null;
                 $this->name = isset($obj["name"]) ? $obj["name"]: null;
                 $this->description = isset($obj["description"]) ? $obj["description"]: null;
+                $this->userPermissions = array();
+                if (isset($obj["userPermissions"])) {
+                    foreach($obj["userPermissions"] as $objPerm) {
+                        $userPermission = new \stdClass();
+                        $userPermission->user = isset($objPerm["user"]) ? new \PHP_MPM\User($objPerm["user"]): null;
+                        $userPermission->privileges = new \stdClass();
+                        $userPermission->privileges->allowView = isset($objPerm["privileges"]) && isset($objPerm["privileges"]["allowView"]) && $objPerm["privileges"]["allowView"] == "Y";
+                        $userPermission->privileges->allowModify = isset($objPerm["privileges"]) && isset($objPerm["privileges"]["allowModify"]) && $objPerm["privileges"]["allowModify"] == "Y";
+                        array_push($this->userPermissions, $userPermission);
+                    }
+                }
             }
         }
 
@@ -29,14 +41,19 @@
         public function get(\PHP_MPM\Database\DB $dbh) {
             $results = null;
             if (! empty($this->id)) {
-                $results = $dbh->query(" SELECT id, name, description FROM `GROUP` WHERE id = :id AND DELETED IS NULL ", array(
+                $results = $dbh->query("
+                    SELECT G.id, G.name, G.description
+                    FROM `GROUP` G
+                    WHERE G.id = :id AND G.deleted IS NULL ",
+                    array(
                     (new \PHP_MPM\Database\DBParam())->str(":id", $this->id)
-                ));
+                    )
+                );
                 if (count($results) == 1) {
                     $this->id = $results[0]->id;
                     $this->name = $results[0]->name;
                     $this->description = $results[0]->description;
-                    $this->userCount = $results[0]->userCount;
+                    $this->getPermissions($dbh);
                 } else {
                     throw new \PHP_MPM\Exception\NotFoundException("");
                 }
@@ -49,9 +66,64 @@
         }
 
         /**
+         * save group user permissions
+         */
+        private function setPermissions(\PHP_MPM\Database\DB $dbh) {
+            $dbh->execute(
+                " DELETE FROM USER_GROUP_PERMISSION WHERE group_id = :group_id ",
+                array(
+                    (new \PHP_MPM\Database\DBParam())->str(":group_id", $this->id),
+                )
+            );
+            foreach($this->userPermissions as $userPermission) {
+                $dbh->execute(
+                    " INSERT INTO USER_GROUP_PERMISSION (user_id, group_id, allow_view, allow_modify) VALUES (:user_id, :group_id, :allow_view, :allow_modify) ",
+                    array(
+                        (new \PHP_MPM\Database\DBParam())->str(":user_id", $userPermission->user->id),
+                        (new \PHP_MPM\Database\DBParam())->str(":group_id", $this->id),
+                        (new \PHP_MPM\Database\DBParam())->str(":allow_view", $userPermission->privileges->allowView ? "Y": "N"),
+                        (new \PHP_MPM\Database\DBParam())->str(":allow_modify", $userPermission->privileges->allowModify ? "Y": "N")
+                    )
+                );
+            }
+        }
+
+        /**
+         * get group user permissions
+         */
+        private function getPermissions(\PHP_MPM\Database\DB $dbh) {
+            $this->userPermissions = array();
+            $data = $dbh->query(
+                "
+                    SELECT U.id AS userId, U.name AS userName, UGP.allow_view AS allowView, UGP.allow_modify AS allowModify
+                    FROM USER_GROUP_PERMISSION UGP
+                    LEFT JOIN USER U ON U.id = UGP.user_id
+                    WHERE group_id = :group_id
+                    AND U.deleted IS NULL
+                    ORDER BY U.name
+                ",
+                array(
+                    (new \PHP_MPM\Database\DBParam())->str(":group_id", $this->id)
+                )
+            );
+            foreach($data as $d) {
+                $this->userPermissions[] = array(
+                    "user" => array(
+                        "id" => $d->userId,
+                        "name" => $d->userName
+                    ),
+                    "privileges" => array(
+                        "allowView" => $d->allowView == "Y",
+                        "allowModify" => $d->allowModify == "Y"
+                    )
+                );
+            }
+        }
+
+        /**
          * save new group
          */
-        public function add(\PHP_MPM\Database\DB $dbh): bool {
+        public function add(\PHP_MPM\Database\DB $dbh): void {
             $this->validate();
             $params = array(
                 (new \PHP_MPM\Database\DBParam())->str(":id", $this->id),
@@ -59,9 +131,10 @@
                 (new \PHP_MPM\Database\DBParam())->str(":description", $this->description),
                 (new \PHP_MPM\Database\DBParam())->str(":creator", \PHP_MPM\UserSession::getUserId())
             );
-            $success = false;
             try {
-                $success = $dbh->execute(" INSERT INTO `GROUP` (id, name, description, creator, created, deleted) VALUES(:id, :name, :description, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
+                if ($dbh->execute(" INSERT INTO `GROUP` (id, name, description, creator, created, deleted) VALUES(:id, :name, :description, :creator, UTC_TIMESTAMP(3), NULL) ", $params)) {
+                    $this->setPermissions($dbh);
+                }
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");
@@ -69,7 +142,6 @@
                     throw $e;
                 }
             }
-            return($success);
         }
 
         /**
@@ -85,6 +157,7 @@
             $query = " UPDATE `GROUP` SET name = :name, description = :description WHERE id = :id ";
             try {
                 $dbh->execute($query, $params);
+                $this->setPermissions($dbh);
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");
@@ -163,9 +236,14 @@
                     G.id AS id,
                     G.name AS name,
                     G.description AS description,
-                    0 AS userCount,
+                    COALESCE(TMP.userCount, 0) AS userPermissionsCount,
                     DATE_FORMAT(CONVERT_TZ(G.created, @@session.time_zone, "+00:00"), "%s") AS created
                 FROM `GROUP` G
+                LEFT JOIN (
+                    SELECT COUNT(user_id) AS userCount, group_id
+                    FROM USER_GROUP_PERMISSION
+                    GROUP BY group_id
+                ) TMP ON TMP.group_id = G.id
                 WHERE G.deleted IS NULL
                 %s
                 %s

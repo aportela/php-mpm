@@ -76,6 +76,28 @@
                     '
                         INSERT INTO `GROUP` VALUES ("11111111-1111-1111-1111-111111111111", "Administrators", "All users contained in this group will have administrative privileges", "00000000-0000-0000-0000-000000000000", "2018-04-28 20:32:01", NULL);
                     '
+                ),
+                "1.03" => array(
+                    '
+                        DROP TABLE IF EXISTS `USER_GROUP_PERMISSION`;
+                    ',
+
+                    '
+                        CREATE TABLE `USER_GROUP_PERMISSION` (
+                            `user_id` VARCHAR(36) NOT NULL,
+                            `group_id` VARCHAR(36) NOT NULL,
+                            `allow_view` CHAR(1) NOT NULL,
+                            `allow_modify` CHAR(1) NOT NULL,
+                            PRIMARY KEY (`user_id`, `group_id`),
+                            INDEX `user_id` (`user_id`),
+                            INDEX `group_id` (`group_id`),
+                            CONSTRAINT `FK_USER_GROUP_PERMISSION_GROUP` FOREIGN KEY (`group_id`) REFERENCES `GROUP` (`id`),
+                            CONSTRAINT `FK_USER_GROUP_PERMISSION_USER` FOREIGN KEY (`user_id`) REFERENCES `USER` (`id`)
+                        );
+                    ',
+                    '
+                        INSERT INTO `USER_GROUP_PERMISSION` VALUES ("00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111", "Y", "Y");
+                    '
                 )
             )
         );

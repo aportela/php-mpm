@@ -15,9 +15,9 @@ const TheGroupList = (function () {
                                 <i v-if="sortBy == 'description'" class="fas" v-bind:class="{ 'fa-sort-alpha-up': sortOrder == 'ASC', 'fa-sort-alpha-down': sortOrder == 'DESC' }"></i>
                                 Description
                             </th>
-                            <th class="has-text-right phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('userCount');">
-                                <i v-if="sortBy == 'userCount'" class="fas" v-bind:class="{ 'fa-sort-amount-up': sortOrder == 'ASC', 'fa-sort-amount-down': sortOrder == 'DESC' }"></i>
-                                User count
+                            <th class="has-text-right phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('userPermissionsCount');">
+                                <i v-if="sortBy == 'userPermissionsCount'" class="fas" v-bind:class="{ 'fa-sort-amount-up': sortOrder == 'ASC', 'fa-sort-amount-down': sortOrder == 'DESC' }"></i>
+                                User permissions count
                             </th>
                             <th class="phpmpm-cursor-pointer" v-on:click.prevent="toggleSort('created');">
                                 <i v-if="sortBy == 'created'" class="fas" v-bind:class="{ 'fa-sort-amount-up': sortOrder == 'ASC', 'fa-sort-amount-down': sortOrder == 'DESC' }"></i>
@@ -63,10 +63,10 @@ const TheGroupList = (function () {
                             <th>
                                 <div class="control has-icons-left is-expanded">
                                     <div class="select is-fullwidth">
-                                        <select v-model="searchByUserCount" v-bind:disabled="loading">
+                                        <select v-model="searchByUserPermissionsCount" v-bind:disabled="loading">
                                             <option value="">Any</option>
-                                            <option value="A">With users</option>
-                                            <option value="U">Without users</option>
+                                            <option value="F">With users</option>
+                                            <option value="E">Without users</option>
                                         </select>
                                     </div>
                                     <div class="icon is-small is-left">
@@ -116,7 +116,7 @@ const TheGroupList = (function () {
                 loading: false,
                 pager: getPager(),
                 groups: [],
-                searchByUserCount: "",
+                searchByUserPermissionsCount: "",
                 sortBy: "name",
                 sortOrder: "ASC",
                 searchByName: null,
@@ -138,7 +138,7 @@ const TheGroupList = (function () {
             }
         },
         watch: {
-            searchByUserCount: function () {
+            searchByUserPermissionsCount: function () {
                 this.search(true);
             }
         },
