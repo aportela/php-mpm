@@ -61,7 +61,7 @@ const TheGroupModalForm = (function () {
                                                         </div>
                                                     </div>
                                                     <div class="control">
-                                                        <button type="submit" class="button is-info" v-bind:disabled="isAddUserPermissionDisabled" v-on:click.prevent="addUserGroup">Add to list</button>
+                                                        <button type="submit" class="button is-info" v-bind:disabled="isAddUserDisabled" v-on:click.prevent="addUserGroup">Add to list</button>
                                                     </div>
                                                 </div>
                                             </th>
@@ -164,7 +164,7 @@ const TheGroupModalForm = (function () {
             isCancelDisabled: function () {
                 return (this.loading);
             },
-            isAddUserPermissionDisabled: function() {
+            isAddUserDisabled: function() {
                 if (this.selectedUser) {
                     return(this.group.users.findIndex(user => user.id == this.selectedUser.id) >= 0);
                 } else {
