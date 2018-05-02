@@ -78,7 +78,6 @@ const TheAttributeModalForm = (function () {
                 validator: getValidator(),
                 loading: false,
                 confirmedPassword: null,
-                types: [],
                 attribute: {
                     id: null,
                     name: null,
@@ -88,10 +87,9 @@ const TheAttributeModalForm = (function () {
             });
         },
         props: [
-            'opts'
+            'opts', 'types'
         ],
         created: function () {
-            this.getTypes();
             if (this.opts.type == "add") {
                 this.attribute.id = phpMPM.util.uuid();
                 this.$nextTick(() => this.$refs.name.focus());
@@ -113,7 +111,7 @@ const TheAttributeModalForm = (function () {
                 return (this.opts.type == "update");
             },
             isSaveDisabled: function () {
-                return (!(this.attribute && this.attribute.id && this.attribute.name && this.attribute.type) || this.loading);
+                return (!(this.attribute && this.attribute.id && this.attribute.name && this.attribute.type != 0) || this.loading);
             },
             isCancelDisabled: function () {
                 return (this.loading);
@@ -122,18 +120,6 @@ const TheAttributeModalForm = (function () {
         methods: {
             closeModal: function (withChanges) {
                 this.$emit("close-attribute-modal", withChanges);
-            },
-            getTypes: function() {
-                var self = this;
-                self.loading = true;
-                phpMPMApi.attribute.getTypes(function (response) {
-                    self.loading = false;
-                    if (response.ok) {
-                        self.types = response.body.types;
-                    } else {
-                        self.$router.push({ name: 'the500' });
-                    }
-                });
             },
             get: function (id) {
                 var self = this;

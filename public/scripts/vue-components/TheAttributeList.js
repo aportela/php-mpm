@@ -100,7 +100,7 @@ const TheAttributeList = (function () {
                     </tfoot>
                 </table>
 
-                <the-attribute-modal-form v-if="attributeModalOpts.show" v-bind:opts="attributeModalOpts" v-on:close-attribute-modal="onCloseAttributeModal"></the-attribute-modal-form>
+                <the-attribute-modal-form v-if="attributeModalOpts.show" v-bind:opts="attributeModalOpts" v-bind:types="types" v-on:close-attribute-modal="onCloseAttributeModal"></the-attribute-modal-form>
                 <the-delete-confirmation-modal v-bind:id="deleteAttributeId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
 
             </div>
