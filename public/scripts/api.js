@@ -202,5 +202,101 @@ const phpMPMApi = {
             );
 
         }
+    },
+    attribute: {
+        /**
+         * get attribute data
+         */
+        get: function (id, callback) {
+            Vue.http.get("api/attributes/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * get attribute definition types
+         */
+        getTypes: function (callback) {
+            Vue.http.get("api/attribute_types").then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * save new attribute
+         */
+        add: function (attribute, callback) {
+            var params = {
+                attribute: attribute
+            }
+            Vue.http.post("api/attributes/" + attribute.id, params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * save existing attribute
+         */
+        update: function (attribute, callback) {
+            var params = {
+                attribute: attribute
+            }
+            Vue.http.put("api/attributes/" + attribute.id, params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * delete existing attribute
+         */
+        delete: function (id, callback) {
+            Vue.http.delete("api/attributes/" + id).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+        },
+        /**
+         * search (list) users
+         */
+        search: function (type, name, description, actualPage, resultsPage, sortBy, sortOrder, callback) {
+            var params = {
+                type: type,
+                name: name,
+                description: description,
+                actualPage: actualPage,
+                resultsPage: resultsPage,
+                sortBy: sortBy,
+                sortOrder: sortOrder
+            };
+            Vue.http.post("api/attributes/", params).then(
+                response => {
+                    callback(response);
+                },
+                response => {
+                    callback(response);
+                }
+            );
+
+        }
     }
 };

@@ -96,6 +96,45 @@
                     '
                         INSERT INTO `USER_GROUP` VALUES ("00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111");
                     '
+                ),
+                "1.04" => array(
+                    '
+                        DROP TABLE IF EXISTS `ATTRIBUTE_TYPE`;
+                    ',
+                    '
+                        CREATE TABLE `ATTRIBUTE_TYPE` (
+                            `id` TINYINT(3) UNSIGNED NOT NULL,
+                            `name` VARCHAR(32) NOT NULL,
+                            PRIMARY KEY (`id`),
+                            UNIQUE INDEX `name` (`name`)
+                        );
+                    ',
+                    '
+                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (1, "Short text (0-1024 chars)");
+                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (2, "Long text (memo)");
+                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (3, "Integer number");
+                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (4, "Decimal number");
+                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (5, "Date");
+                    ',
+                    '
+                        DROP TABLE IF EXISTS `ATTRIBUTE`;
+                    ',
+                    '
+                        CREATE TABLE `ATTRIBUTE` (
+                            `id` VARCHAR(36) NOT NULL,
+                            `name` VARCHAR(64) NOT NULL,
+                            `description` VARCHAR(254) NULL DEFAULT NULL,
+                            `type` TINYINT(3) UNSIGNED NOT NULL,
+                            `creator` VARCHAR(36) NOT NULL,
+                            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            `deleted` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+                            PRIMARY KEY (`id`),
+                            INDEX `FK_ATTRIBUTE_ATTRIBUTE_TYPE` (`type`),
+                            INDEX `name` (`name`),
+                            INDEX `description` (`description`(191)),
+                            CONSTRAINT `FK_ATTRIBUTE_ATTRIBUTE_TYPE` FOREIGN KEY (`type`) REFERENCES `ATTRIBUTE_TYPE` (`id`)
+                        );
+                    '
                 )
             )
         );

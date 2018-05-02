@@ -201,6 +201,76 @@
          * group api end
          */
 
+        /**
+         * attribute api start
+         */
+
+        $this->group("/attributes", function() {
+
+            $this->post('/', function (Request $request, Response $response, array $args) {
+                $data = \PHP_MPM\Attribute::search(
+                    new \PHP_MPM\Database\DB($this),
+                    $request->getParam("actualPage", 1),
+                    $request->getParam("resultsPage", $this->get('settings')['common']['defaultResultsPage']),
+                    array(
+                        "name" => $request->getParam("name", ""),
+                        "description" => $request->getParam("description", ""),
+                        "type" => $request->getParam("type", ""),
+                    ),
+                    $request->getParam("sortBy", ""),
+                    $request->getParam("sortOrder", "ASC")
+                );
+                return $response->withJson([
+                    'attributes' => $data->results,
+                    "pagination" => array(
+                        'totalResults' => $data->totalResults,
+                        'actualPage' => $data->actualPage,
+                        'resultsPage' => $data->resultsPage,
+                        'totalPages' => $data->totalPages
+                    )
+                ], 200);
+            });
+
+            $this->post('/{id}', function (Request $request, Response $response, array $args) {
+                $attribute = new \PHP_MPM\Attribute($request->getParam("attribute", null));
+                $attribute->add(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->put('/{id}', function (Request $request, Response $response, array $args) {
+                $attribute = new \PHP_MPM\Attribute($request->getParam("attribute", null));
+                $attribute->update(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->delete('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $attribute = new \PHP_MPM\Attribute();
+                $attribute->id = $route->getArgument("id");
+                $attribute->delete(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([], 200);
+            });
+
+            $this->get('/{id}', function (Request $request, Response $response, array $args) {
+                $route = $request->getAttribute('route');
+                $attribute = new \PHP_MPM\Attribute();
+                $attribute->id = $route->getArgument("id");
+                $attribute->get(new \PHP_MPM\Database\DB($this));
+                return $response->withJson([ 'attribute' => $attribute ], 200);
+            });
+
+
+        })->add(new \PHP_MPM\Middleware\APIAdminPrivilegesRequired($this->getContainer()));
+
+        $this->get("/attribute_types", function (Request $request, Response $response, array $args) {
+            $types = \PHP_MPM\Attribute::getTypes(new \PHP_MPM\Database\DB($this));
+            return $response->withJson([ 'types' => $types ], 200);
+        })->add(new \PHP_MPM\Middleware\APIAdminPrivilegesRequired($this->getContainer()));
+
+        /**
+         * attribute api end
+         */
+
     })->add(new \PHP_MPM\Middleware\APIExceptionCatcher($this->app->getContainer()));
 
 
