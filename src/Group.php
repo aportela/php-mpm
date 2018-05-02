@@ -219,14 +219,13 @@
                 %s
                 %s
                 %s
-                LIMIT %d OFFSET %d
+                %s
                 ',
                 \PHP_MPM\Database\DB::JSON_UTC_DATETIME_FORMAT,
                 $whereCondition,
                 $sqlOrder,
                 $sortOrder == "DESC" ? "DESC": "ASC",
-                $data->resultsPage,
-                $data->getSQLPageOffset()
+                $data->isPaginationEnabled() ? sprintf("LIMIT %d OFFSET %d", $data->resultsPage, $data->getSQLPageOffset()) : null
             );
             $data->results = $dbh->query($query, $params);
             return($data);

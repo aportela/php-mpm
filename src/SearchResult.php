@@ -29,5 +29,9 @@
             return($this->resultsPage * ($this->actualPage - 1));
         }
 
+        public function isPaginationEnabled() {
+            return($this->resultsPage != 0);
+        }
+
     }
 ?>
