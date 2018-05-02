@@ -278,9 +278,9 @@ const phpMPMApi = {
         /**
          * search (list) users
          */
-        search: function (type, name, description, actualPage, resultsPage, sortBy, sortOrder, callback) {
+        search: function (typeId, name, description, actualPage, resultsPage, sortBy, sortOrder, callback) {
             var params = {
-                type: type,
+                typeId: typeId,
                 name: name,
                 description: description,
                 actualPage: actualPage,

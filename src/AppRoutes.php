@@ -215,7 +215,8 @@
                     array(
                         "name" => $request->getParam("name", ""),
                         "description" => $request->getParam("description", ""),
-                        "type" => $request->getParam("type", ""),
+                        "typeId" => $request->getParam("typeId", ""),
+                        "typeName" => $request->getParam("typeName", "")
                     ),
                     $request->getParam("sortBy", ""),
                     $request->getParam("sortOrder", "ASC")

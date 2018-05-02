@@ -65,6 +65,7 @@ const TheAttributeList = (function () {
                                     <div class="select is-fullwidth">
                                         <select v-model="searchByType" v-bind:disabled="loading">
                                             <option value="">All types</option>
+                                            <option v-for="type in types" v-bind:key="type.id" v-bind:value="type.id">{{ type.name }}</option>
                                         </select>
                                     </div>
                                     <div class="icon is-small is-left">
@@ -123,15 +124,22 @@ const TheAttributeList = (function () {
                     type: null,
                     attributeId: null
                 },
+                types: [],
                 deleteAttributeId: null,
                 showDeleteConfirmationModal: false
             });
         },
         created: function () {
+            this.getTypes();
             this.search(true);
             var self = this;
             this.pager.refresh = function () {
                 self.search(false);
+            }
+        },
+        watch: {
+            searchByType: function () {
+                this.search(true);
             }
         },
         computed: {
@@ -217,6 +225,18 @@ const TheAttributeList = (function () {
                         self.showDeleteConfirmationModal = false;
                         self.deleteAttributeId = null;
                         self.search(false);
+                    } else {
+                        self.$router.push({ name: 'the500' });
+                    }
+                });
+            },
+            getTypes: function() {
+                var self = this;
+                self.loading = true;
+                phpMPMApi.attribute.getTypes(function (response) {
+                    self.loading = false;
+                    if (response.ok) {
+                        self.types = response.body.types;
                     } else {
                         self.$router.push({ name: 'the500' });
                     }

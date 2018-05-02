@@ -130,11 +130,11 @@
                 }
                 if (isset($filter["typeId"]) && ! empty($filter["typeId"])) {
                     $conditions[] = " A.type = :type_id ";
-                    $params[] = (new \PHP_MPM\Database\DBParam())->int(":type_id");
+                    $params[] = (new \PHP_MPM\Database\DBParam())->int(":type_id", intval($filter["typeId"]));
                 }
                 if (isset($filter["typeName"]) && ! empty($filter["typeName"])) {
                     $conditions[] = " AT.name = :type_name ";
-                    $params[] = (new \PHP_MPM\Database\DBParam())->str(":type_name");
+                    $params[] = (new \PHP_MPM\Database\DBParam())->str(":type_name", $filter["typeName"]);
                 }
                 $whereCondition = count($conditions) > 0 ? " AND " .  implode(" AND ", $conditions) : "";
             }
