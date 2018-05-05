@@ -100,7 +100,7 @@ Vue.http.interceptors.push((request, next) => {
         if (!response.ok) {
             if (response.status == 400 || response.status == 409) {
                 // helper for find invalid fields on api response
-                response.isFieldInvalid = function(fieldName) {
+                response.isFieldInvalid = function (fieldName) {
                     return (response.body.invalidOrMissingParams.indexOf(fieldName) > -1);
                 }
             }
@@ -121,11 +121,6 @@ const router = new VueRouter({
  */
 const app = new Vue({
     router,
-    data: function () {
-        return ({
-            loading: false,
-        });
-    },
     created: function () {
         if (!initialState.session.logged) {
             this.$router.push({ name: 'auth' });
