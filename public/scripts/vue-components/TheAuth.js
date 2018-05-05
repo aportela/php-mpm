@@ -95,10 +95,10 @@ const TheAuth = (function () {
                     } else {
                         switch (response.status) {
                             case 400:
-                                if (response.isFieldInvalid("email1")) {
+                                if (response.isFieldInvalid("email")) {
                                     self.validator.setInvalid("email", "API ERROR: invalid param");
                                 }
-                                if (response.isFieldInvalid("password2")) {
+                                if (response.isFieldInvalid("password")) {
                                     self.validator.setInvalid("password", "API ERROR: invalid param");
                                 }
                                 if (! self.validator.hasInvalidFields()) {
