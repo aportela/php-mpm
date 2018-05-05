@@ -112,7 +112,6 @@ const TheUserList = (function () {
         template: template(),
         data: function () {
             return ({
-                operationType: null,
                 loading: false,
                 pager: getPager(),
                 users: [],
