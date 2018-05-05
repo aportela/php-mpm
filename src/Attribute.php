@@ -10,13 +10,23 @@
         public $name;
         public $description;
         public $type;
+        public $listOfValues;
 
 	    public function __construct ($obj = null) {
+            $this->listOfValues = array();
             if ($obj) {
                 $this->id = isset($obj["id"]) ? $obj["id"]: null;
                 $this->name = isset($obj["name"]) ? $obj["name"]: null;
                 $this->description = isset($obj["description"]) ? $obj["description"]: null;
                 $this->type = isset($obj["type"]) ? intval($obj["type"]): 0;
+                if (isset($obj["listOfValues"])) {
+                    $i = 0;
+                    foreach ($obj["listOfValues"] as $listValue) {
+                        $lv = new \PHP_MPM\AttributeListValue($listValue);
+                        $lv->index = $i++;
+                        array_push($this->listOfValues, $lv);
+                    }
+                }
             }
         }
 
@@ -47,6 +57,9 @@
                     $this->name = $results[0]->name;
                     $this->description = $results[0]->description;
                     $this->type = intval($results[0]->type);
+                    if ($this->type == \PHP_MPM\AttributeType::LIST_OF_VALUES) {
+                        $this->listOfValues = \PHP_MPM\AttributeListValue::getCollection($dbh, $this->id);
+                    }
                 } else {
                     throw new \PHP_MPM\Exception\NotFoundException("");
                 }
@@ -69,6 +82,9 @@
             );
             try {
                 $dbh->execute(" INSERT INTO ATTRIBUTE (id, name, description, type, creator, created, deleted) VALUES(:id, :name, :description, :type, :creator, UTC_TIMESTAMP(3), NULL) ", $params);
+                if ($this->type == \PHP_MPM\AttributeType::LIST_OF_VALUES) {
+                    \PHP_MPM\AttributeListValue::setCollection($dbh, $this->listOfValues, $this->id);
+                }
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");
@@ -91,6 +107,9 @@
             $query = " UPDATE ATTRIBUTE SET name = :name, description = :description WHERE id = :id ";
             try {
                 $dbh->execute($query, $params);
+                if ($this->type == \PHP_MPM\AttributeType::LIST_OF_VALUES) {
+                    \PHP_MPM\AttributeListValue::setCollection($dbh, $this->listOfValues, $this->id);
+                }
             } catch (\PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     throw new \PHP_MPM\Exception\ElementAlreadyExistsException("name");

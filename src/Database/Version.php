@@ -110,11 +110,11 @@
                         );
                     ',
                     '
-                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (1, "Short text (0-1024 chars)");
-                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (2, "Long text (memo)");
-                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (3, "Integer number");
-                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (4, "Decimal number");
-                        INSERT INTO `ATTRIBUTE_TYPE` VALUES (5, "Date");
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (1, "Short text (0-1024 chars)");
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (2, "Long text (memo)");
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (3, "Integer number");
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (4, "Decimal number");
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (5, "Date");
                     ',
                     '
                         DROP TABLE IF EXISTS `ATTRIBUTE`;
@@ -134,6 +134,25 @@
                             INDEX `description` (`description`(191)),
                             CONSTRAINT `FK_ATTRIBUTE_ATTRIBUTE_TYPE` FOREIGN KEY (`type`) REFERENCES `ATTRIBUTE_TYPE` (`id`)
                         );
+                    '
+                ),
+                "1.05" => array(
+                    '
+                    DROP TABLE IF EXISTS `ATTRIBUTE_LIST_VALUE`;
+                    ',
+                    '
+                        CREATE TABLE `ATTRIBUTE_LIST_VALUE` (
+                            `id` VARCHAR(36) NOT NULL,
+                            `attribute_id` VARCHAR(36) NOT NULL,
+                            `idx` TINYINT(4) NOT NULL,
+                            `label` VARCHAR(64) NOT NULL,
+                            PRIMARY KEY (`id`),
+                            INDEX `FK_ATTRIBUTE_LIST_VALUE_ATTRIBUTE` (`attribute_id`),
+                            CONSTRAINT `FK_ATTRIBUTE_LIST_VALUE_ATTRIBUTE` FOREIGN KEY (`attribute_id`) REFERENCES `ATTRIBUTE` (`id`)
+                        );
+                    ',
+                    '
+                        REPLACE INTO `ATTRIBUTE_TYPE` VALUES (6, "List of values");
                     '
                 )
             )
