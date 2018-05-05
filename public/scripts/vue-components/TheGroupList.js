@@ -79,7 +79,7 @@ const TheGroupList = (function () {
                             <th>
                                 <div class="field is-grouped">
                                     <p class="control is-expanded">
-                                        <a class="button is-small is-fullwidth is-link" v-bind:disabled="loading" v-on:click.prevent="onShowAddGroupModal();">
+                                        <a class="button is-small is-fullwidth is-link" v-bind:disabled="loading" v-on:click.prevent="onShowAddModal();">
                                             <span class="icon is-small"><i class="fas fa-plus"></i></span>
                                             <span>Add</span>
                                         </a>
@@ -90,7 +90,7 @@ const TheGroupList = (function () {
                         </tr>
                     </thead>
                     <tbody>
-                        <the-group-list-item v-for="group in groups" v-bind:key="group.id" v-bind:group="group" v-bind:loading="loading" v-on:show-update-group-modal="onShowUpdateGroupModal" v-on:show-delete-group-modal="onShowDeleteGroupModal"></the-group-list-item>
+                        <the-group-list-item v-for="group in items" v-bind:key="group.id" v-bind:group="group" v-bind:loading="loading" v-on:show-update-group-modal="onShowUpdateModal" v-on:show-delete-group-modal="onShowDeleteModal"></the-group-list-item>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -101,8 +101,8 @@ const TheGroupList = (function () {
                     </tfoot>
                 </table>
 
-                <the-group-modal-form v-if="groupModalOpts.show" v-bind:opts="groupModalOpts" v-on:close-group-modal="onCloseGroupModal"></the-group-modal-form>
-                <the-delete-confirmation-modal v-bind:id="deleteGroupId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
+                <the-group-modal-form v-if="itemModalOpts.show" v-bind:opts="itemModalOpts" v-on:close-item-modal="onCloseItemModal"></the-group-modal-form>
+                <the-delete-confirmation-modal v-bind:id="deleteItemId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
 
             </div>
         `;
@@ -110,31 +110,15 @@ const TheGroupList = (function () {
 
     var module = Vue.component('the-group-list', {
         template: template(),
+        mixins: [mixinManageAdminEntities],
         data: function () {
             return ({
                 loading: false,
-                pager: getPager(),
-                groups: [],
                 searchByUserCount: "",
-                sortBy: "name",
-                sortOrder: "ASC",
                 searchByName: null,
                 searchByDescription: null,
-                groupModalOpts: {
-                    show: false,
-                    type: null,
-                    groupId: null
-                },
-                deleteGroupId: null,
-                showDeleteConfirmationModal: false
+                sortBy: "name"
             });
-        },
-        created: function () {
-            this.search(true);
-            var self = this;
-            this.pager.refresh = function () {
-                self.search(false);
-            }
         },
         watch: {
             searchByUserCount: function () {
@@ -146,58 +130,13 @@ const TheGroupList = (function () {
                 return (
                     {
                         name: 'groups',
-                        elements: this.groups,
+                        elements: this.items,
                         fields: ['id', 'name', 'description', 'created']
                     }
                 );
             }
         },
         methods: {
-            onShowAddGroupModal: function () {
-                this.groupModalOpts.type = "add";
-                this.groupModalOpts.show = true;
-            },
-            onShowUpdateGroupModal: function (groupId) {
-                this.groupModalOpts.type = "update";
-                this.groupModalOpts.groupId = groupId;
-                this.groupModalOpts.show = true;
-            },
-            onShowDeleteGroupModal: function (groupId) {
-                this.deleteGroupId = groupId;
-                this.showDeleteConfirmationModal = true;
-            },
-            onCloseGroupModal: function (withChanges) {
-                this.groupModalOpts = {
-                    show: false,
-                    type: null,
-                    id: null
-                };
-                if (withChanges) {
-                    this.search(false);
-                }
-            },
-            onConfirmDelete: function (groupId) {
-                this.delete(groupId);
-            },
-            onCancelDelete: function () {
-                this.showDeleteConfirmationModal = false;
-                this.deleteGroupId = null;
-            },
-            toggleSort: function (field) {
-                if (!this.loading) {
-                    if (field == this.sortBy) {
-                        if (this.sortOrder == "ASC") {
-                            this.sortOrder = "DESC";
-                        } else {
-                            this.sortOrder = "ASC";
-                        }
-                    } else {
-                        this.sortBy = field;
-                        this.sortOrder = "ASC";
-                    }
-                    this.search();
-                }
-            },
             search(resetPager) {
                 var self = this;
                 if (resetPager) {
@@ -210,7 +149,7 @@ const TheGroupList = (function () {
                         self.pager.actualPage = response.body.pagination.actualPage;
                         self.pager.totalPages = response.body.pagination.totalPages;
                         self.pager.totalResults = response.body.pagination.totalResults;
-                        self.groups = response.body.groups;
+                        self.items = response.body.groups;
                     } else {
                         self.$router.push({ name: 'the500' });
                     }
@@ -222,7 +161,7 @@ const TheGroupList = (function () {
                 phpMPMApi.group.delete(groupId, function (response) {
                     if (response.ok) {
                         self.showDeleteConfirmationModal = false;
-                        self.deleteGroupId = null;
+                        self.deleteItemId = null;
                         self.search(false);
                     } else {
                         self.$router.push({ name: 'the500' });

@@ -93,9 +93,9 @@ const TheUserModalForm = (function () {
 
     var module = Vue.component('the-user-modal-form', {
         template: template(),
+        mixins: [ mixinModalAdminEntities],
         data: function () {
             return ({
-                validator: getValidator(),
                 loading: false,
                 confirmedPassword: null,
                 user: {
@@ -107,27 +107,18 @@ const TheUserModalForm = (function () {
                 }
             });
         },
-        props: [
-            'opts'
-        ],
         created: function () {
             if (this.opts.type == "add") {
                 this.user.id = phpMPM.util.uuid();
                 this.$nextTick(() => this.$refs.name.focus());
             } else if (this.opts.type == "update") {
-                this.user.id = this.opts.userId;
+                this.user.id = this.opts.id;
                 this.get(this.user.id);
             } else {
                 this.$router.push({ name: 'the500' });
             }
         },
         computed: {
-            isAddForm: function () {
-                return (this.opts.type == "add");
-            },
-            isUpdateForm: function () {
-                return (this.opts.type == "update");
-            },
             isAccountTypeDisabled: function () {
                 return (initialState.session.user.isAdmin && initialState.session.user.id == this.user.id);
             },
@@ -143,9 +134,6 @@ const TheUserModalForm = (function () {
             },
         },
         methods: {
-            closeModal: function (withChanges) {
-                this.$emit("close-user-modal", withChanges);
-            },
             get: function (id) {
                 var self = this;
                 self.loading = true;
@@ -175,15 +163,6 @@ const TheUserModalForm = (function () {
                     this.validator.setInvalid("confirmedPassword", "Passwords do not match");
                 }
                 return (!this.validator.hasInvalidFields());
-            },
-            save: function () {
-                if (this.validate()) {
-                    if (this.isAddForm) {
-                        this.add();
-                    } else {
-                        this.update();
-                    }
-                }
             },
             add: function () {
                 var self = this;

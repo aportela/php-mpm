@@ -24,9 +24,7 @@ const TheDeleteConfirmationModal = (function () {
 
     var module = Vue.component('the-delete-confirmation-modal', {
         template: template(),
-        props: [
-            'id'
-        ],
+        props: ['id'],
         methods: {
             confirmDelete: function () {
                 this.$emit('confirm-delete', this.id);

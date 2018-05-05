@@ -114,9 +114,9 @@ const TheGroupModalForm = (function () {
 
     var module = Vue.component('the-group-modal-form', {
         template: template(),
+        mixins: [ mixinModalAdminEntities],
         data: function () {
             return ({
-                validator: getValidator(),
                 loading: false,
                 tab: 'metadata',
                 isUserListLoading: false,
@@ -130,16 +130,13 @@ const TheGroupModalForm = (function () {
                 }
             });
         },
-        props: [
-            'opts'
-        ],
         created: function () {
             this.getAvailableUsers();
             if (this.opts.type == "add") {
                 this.group.id = phpMPM.util.uuid();
                 this.$nextTick(() => this.$refs.name.focus());
             } else if (this.opts.type == "update") {
-                this.group.id = this.opts.groupId;
+                this.group.id = this.opts.id;
                 this.get(this.group.id);
             } else {
                 this.$router.push({ name: 'the500' });
@@ -152,23 +149,17 @@ const TheGroupModalForm = (function () {
             isUsersTabActive: function () {
                 return (this.tab == 'users');
             },
-            isAddForm: function () {
-                return (this.opts.type == "add");
-            },
-            isUpdateForm: function () {
-                return (this.opts.type == "update");
-            },
             isSaveDisabled: function () {
                 return (!(this.group && this.group.id && this.group.name) || this.loading);
             },
             isCancelDisabled: function () {
                 return (this.loading);
             },
-            isAddUserDisabled: function() {
+            isAddUserDisabled: function () {
                 if (this.selectedUser) {
-                    return(this.group.users.findIndex(user => user.id == this.selectedUser.id) >= 0);
+                    return (this.group.users.findIndex(user => user.id == this.selectedUser.id) >= 0);
                 } else {
-                    return(true);
+                    return (true);
                 }
             },
             isRemoveDisabled: function () {
@@ -183,9 +174,6 @@ const TheGroupModalForm = (function () {
                 if (this.tab != name) {
                     this.tab = name;
                 }
-            },
-            closeModal: function (withChanges) {
-                this.$emit("close-group-modal", withChanges);
             },
             getAvailableUsers: function () {
                 var self = this;
@@ -206,7 +194,6 @@ const TheGroupModalForm = (function () {
                     self.loading = false;
                     if (response.ok) {
                         self.group = response.body.group;
-                        console.log(self.group);
                     } else {
                         self.$router.push({ name: 'the500' });
                     }
@@ -224,15 +211,6 @@ const TheGroupModalForm = (function () {
                     this.validator.setInvalid("name", "Invalid name");
                 }
                 return (!this.validator.hasInvalidFields());
-            },
-            save: function () {
-                if (this.validate()) {
-                    if (this.isAddForm) {
-                        this.add();
-                    } else {
-                        this.update();
-                    }
-                }
             },
             add: function () {
                 var self = this;

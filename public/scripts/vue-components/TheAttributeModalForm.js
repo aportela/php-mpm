@@ -122,50 +122,43 @@ const TheAttributeModalForm = (function () {
 
     var module = Vue.component('the-attribute-modal-form', {
         template: template(),
+        mixins: [ mixinModalAdminEntities],
         data: function () {
             return ({
-                validator: getValidator(),
                 loading: false,
-                confirmedPassword: null,
                 tab: 'metadata',
                 attribute: {
                     id: null,
                     name: null,
                     description: null,
-                    type: 6,
+                    type: 0,
                     listOfValues: []
                 }
             });
         },
         props: [
-            'opts', 'types'
+            'types'
         ],
         created: function () {
             if (this.opts.type == "add") {
                 this.attribute.id = phpMPM.util.uuid();
                 this.$nextTick(() => this.$refs.name.focus());
             } else if (this.opts.type == "update") {
-                this.attribute.id = this.opts.attributeId;
+                this.attribute.id = this.opts.id;
                 this.get(this.attribute.id);
             } else {
                 this.$router.push({ name: 'the500' });
             }
         },
         computed: {
-            isAddForm: function () {
-                return (this.opts.type == "add");
-            },
-            isUpdateForm: function () {
-                return (this.opts.type == "update");
-            },
             isAttributeTypeDisabled: function () {
                 return (this.opts.type == "update");
             },
-            isListOfValuesValid: function() {
+            isListOfValuesValid: function () {
                 if (this.attribute.type == 6) {
 
                 } else {
-                    return(true);
+                    return (true);
                 }
             },
             isSaveDisabled: function () {
@@ -183,24 +176,21 @@ const TheAttributeModalForm = (function () {
             }
         },
         methods: {
-            closeModal: function (withChanges) {
-                this.$emit("close-attribute-modal", withChanges);
-            },
             changeTab: function (tab) {
                 if (this.tab != tab) {
                     this.tab = tab;
                 }
             },
-            removeListValueAtIndex: function(idx) {
+            removeListValueAtIndex: function (idx) {
                 this.attribute.listOfValues.splice(idx, 1);
             },
-            moveListValueIndexUp: function(idx) {
+            moveListValueIndexUp: function (idx) {
                 if (idx > 0) {
                     this.attribute.listOfValues.splice(idx - 1, 0, this.attribute.listOfValues.splice(idx, 1)[0]);
                 }
             },
-            moveListValueIndexDown: function(idx) {
-                if (idx < this.attribute.listOfValues.length - 1)  {
+            moveListValueIndexDown: function (idx) {
+                if (idx < this.attribute.listOfValues.length - 1) {
                     this.attribute.listOfValues.splice(idx + 1, 0, this.attribute.listOfValues.splice(idx, 1)[0]);
                 }
             },
@@ -230,15 +220,6 @@ const TheAttributeModalForm = (function () {
                     this.validator.setInvalid("name", "Invalid name");
                 }
                 return (!this.validator.hasInvalidFields());
-            },
-            save: function () {
-                if (this.validate()) {
-                    if (this.isAddForm) {
-                        this.add();
-                    } else {
-                        this.update();
-                    }
-                }
             },
             add: function () {
                 var self = this;

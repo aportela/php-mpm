@@ -78,7 +78,7 @@ const TheAttributeList = (function () {
                             <th>
                                 <div class="field is-grouped">
                                     <p class="control is-expanded">
-                                        <a class="button is-small is-fullwidth is-link" v-bind:disabled="loading" v-on:click.prevent="onShowAddAttributeModal();">
+                                        <a class="button is-small is-fullwidth is-link" v-bind:disabled="loading" v-on:click.prevent="onShowAddModal();">
                                             <span class="icon is-small"><i class="fas fa-plus"></i></span>
                                             <span>Add</span>
                                         </a>
@@ -89,7 +89,7 @@ const TheAttributeList = (function () {
                         </tr>
                     </thead>
                     <tbody>
-                        <the-attribute-list-item v-for="attribute in attributes" v-bind:key="attribute.id" v-bind:attribute="attribute" v-bind:loading="loading" v-on:show-update-attribute-modal="onShowUpdateAttributeModal" v-on:show-delete-attribute-modal="onShowDeleteAttributeModal"></the-attribute-list-item>
+                        <the-attribute-list-item v-for="attribute in items" v-bind:key="attribute.id" v-bind:attribute="attribute" v-bind:loading="loading" v-on:show-update-attribute-modal="onShowUpdateModal" v-on:show-delete-attribute-modal="onShowDeleteModal"></the-attribute-list-item>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -100,8 +100,8 @@ const TheAttributeList = (function () {
                     </tfoot>
                 </table>
 
-                <the-attribute-modal-form v-if="attributeModalOpts.show" v-bind:opts="attributeModalOpts" v-bind:types="types" v-on:close-attribute-modal="onCloseAttributeModal"></the-attribute-modal-form>
-                <the-delete-confirmation-modal v-bind:id="deleteAttributeId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
+                <the-attribute-modal-form v-if="itemModalOpts.show" v-bind:opts="itemModalOpts" v-bind:types="types" v-on:close-item-modal="onCloseItemModal"></the-attribute-modal-form>
+                <the-delete-confirmation-modal v-bind:id="deleteItemId" v-if="showDeleteConfirmationModal" v-on:confirm-delete="onConfirmDelete" v-on:cancel-delete="onCancelDelete"></the-delete-confirmation-modal>
 
             </div>
         `;
@@ -109,33 +109,19 @@ const TheAttributeList = (function () {
 
     var module = Vue.component('the-attribute-list', {
         template: template(),
+        mixins: [mixinManageAdminEntities],
         data: function () {
             return ({
                 loading: false,
-                pager: getPager(),
-                attributes: [],
-                sortBy: "name",
-                sortOrder: "ASC",
                 searchByName: null,
                 searchByDescription: null,
                 searchByType: "",
-                attributeModalOpts: {
-                    show: false,
-                    type: null,
-                    attributeId: null
-                },
-                types: [],
-                deleteAttributeId: null,
-                showDeleteConfirmationModal: false
+                sortBy: "name",
+                types: []
             });
         },
         created: function () {
             this.getTypes();
-            this.search(true);
-            var self = this;
-            this.pager.refresh = function () {
-                self.search(false);
-            }
         },
         watch: {
             searchByType: function () {
@@ -147,58 +133,13 @@ const TheAttributeList = (function () {
                 return (
                     {
                         name: 'attributes',
-                        elements: this.attributes,
+                        elements: this.items,
                         fields: ['id', 'name', 'description', 'typeId', 'typeName']
                     }
                 );
             }
         },
         methods: {
-            onShowAddAttributeModal: function () {
-                this.attributeModalOpts.type = "add";
-                this.attributeModalOpts.show = true;
-            },
-            onShowUpdateAttributeModal: function (attributeId) {
-                this.attributeModalOpts.type = "update";
-                this.attributeModalOpts.attributeId = attributeId;
-                this.attributeModalOpts.show = true;
-            },
-            onShowDeleteAttributeModal: function (attributeId) {
-                this.deleteAttributeId = attributeId;
-                this.showDeleteConfirmationModal = true;
-            },
-            onCloseAttributeModal: function (withChanges) {
-                this.attributeModalOpts = {
-                    show: false,
-                    type: null,
-                    id: null
-                };
-                if (withChanges) {
-                    this.search(false);
-                }
-            },
-            onConfirmDelete: function (attributeId) {
-                this.delete(attributeId);
-            },
-            onCancelDelete: function () {
-                this.showDeleteConfirmationModal = false;
-                this.deleteAttributeId = null;
-            },
-            toggleSort: function (field) {
-                if (!this.loading) {
-                    if (field == this.sortBy) {
-                        if (this.sortOrder == "ASC") {
-                            this.sortOrder = "DESC";
-                        } else {
-                            this.sortOrder = "ASC";
-                        }
-                    } else {
-                        this.sortBy = field;
-                        this.sortOrder = "ASC";
-                    }
-                    this.search();
-                }
-            },
             search(resetPager) {
                 var self = this;
                 if (resetPager) {
@@ -211,7 +152,7 @@ const TheAttributeList = (function () {
                         self.pager.actualPage = response.body.pagination.actualPage;
                         self.pager.totalPages = response.body.pagination.totalPages;
                         self.pager.totalResults = response.body.pagination.totalResults;
-                        self.attributes = response.body.attributes;
+                        self.items = response.body.attributes;
                     } else {
                         self.$router.push({ name: 'the500' });
                     }
@@ -223,14 +164,14 @@ const TheAttributeList = (function () {
                 phpMPMApi.attribute.delete(attributeId, function (response) {
                     if (response.ok) {
                         self.showDeleteConfirmationModal = false;
-                        self.deleteAttributeId = null;
+                        self.deleteItemId = null;
                         self.search(false);
                     } else {
                         self.$router.push({ name: 'the500' });
                     }
                 });
             },
-            getTypes: function() {
+            getTypes: function () {
                 var self = this;
                 self.loading = true;
                 phpMPMApi.attribute.getTypes(function (response) {
