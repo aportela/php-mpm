@@ -30,15 +30,11 @@ const TheAttributeListItem = (function () {
 
     var module = Vue.component('the-attribute-list-item', {
         template: template(),
+        mixins: [ mixinDateTime ],
         props: [
             'loading',
             'attribute'
         ],
-        filters: {
-            jsonDate2Human(jsonDate) {
-                return (moment(jsonDate, "YYYY-MM-DDTHH:mm:ss.SZ").fromNow());
-            }
-        },
         computed: {
             disableRemove: function () {
                 return(false);

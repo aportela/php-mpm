@@ -37,15 +37,11 @@ const TheUserListItem = (function () {
 
     var module = Vue.component('the-user-list-item', {
         template: template(),
+        mixins: [ mixinDateTime ],
         props: [
             'loading',
             'user'
         ],
-        filters: {
-            jsonDate2Human(jsonDate) {
-                return (moment(jsonDate, "YYYY-MM-DDTHH:mm:ss.SZ").fromNow());
-            }
-        },
         computed: {
             disableRemove: function () {
                 return (initialState.session.user.id == this.user.id);

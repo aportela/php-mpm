@@ -30,15 +30,11 @@ const TheGroupListItem = (function () {
 
     var module = Vue.component('the-group-list-item', {
         template: template(),
+        mixins: [ mixinDateTime ],
         props: [
             'loading',
             'group'
         ],
-        filters: {
-            jsonDate2Human(jsonDate) {
-                return (moment(jsonDate, "YYYY-MM-DDTHH:mm:ss.SZ").fromNow());
-            }
-        },
         computed: {
             disableRemove: function () {
                 return(false);
