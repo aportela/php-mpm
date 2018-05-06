@@ -19,10 +19,14 @@ const phpMPMApi = {
             };
             Vue.http.post("api/user/signin", params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -32,10 +36,14 @@ const phpMPMApi = {
         signOut: function (callback) {
             Vue.http.get("api/user/signout").then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -45,10 +53,14 @@ const phpMPMApi = {
         get: function (id, callback) {
             Vue.http.get("api/users/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -61,10 +73,14 @@ const phpMPMApi = {
             }
             Vue.http.post("api/users/" + user.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -77,10 +93,14 @@ const phpMPMApi = {
             }
             Vue.http.put("api/users/" + user.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -90,10 +110,14 @@ const phpMPMApi = {
         delete: function (id, callback) {
             Vue.http.delete("api/users/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -112,10 +136,14 @@ const phpMPMApi = {
             };
             Vue.http.post("api/users/", params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
 
@@ -128,10 +156,14 @@ const phpMPMApi = {
         get: function (id, callback) {
             Vue.http.get("api/groups/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -144,10 +176,14 @@ const phpMPMApi = {
             }
             Vue.http.post("api/groups/" + group.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -160,10 +196,14 @@ const phpMPMApi = {
             }
             Vue.http.put("api/groups/" + group.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -173,10 +213,14 @@ const phpMPMApi = {
         delete: function (id, callback) {
             Vue.http.delete("api/groups/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -194,10 +238,14 @@ const phpMPMApi = {
             };
             Vue.http.post("api/groups/", params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
 
@@ -210,10 +258,14 @@ const phpMPMApi = {
         get: function (id, callback) {
             Vue.http.get("api/attributes/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -223,10 +275,14 @@ const phpMPMApi = {
         getTypes: function (callback) {
             Vue.http.get("api/attribute_types").then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -239,10 +295,14 @@ const phpMPMApi = {
             }
             Vue.http.post("api/attributes/" + attribute.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -255,10 +315,14 @@ const phpMPMApi = {
             }
             Vue.http.put("api/attributes/" + attribute.id, params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -268,10 +332,14 @@ const phpMPMApi = {
         delete: function (id, callback) {
             Vue.http.delete("api/attributes/" + id).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
         },
@@ -290,10 +358,14 @@ const phpMPMApi = {
             };
             Vue.http.post("api/attributes/", params).then(
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 },
                 response => {
-                    callback(response);
+                    if (callback && typeof callback === "function") {
+                        callback(response);
+                    }
                 }
             );
 
